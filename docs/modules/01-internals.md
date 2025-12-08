@@ -108,7 +108,7 @@ if response.choices[0].message.get("function_call"):
 Codex now sees the function result and can continue reasoning.
 
 ### Tool wrappers instead of built-in tools
-In Claude Code you had baked-in tools like `Read` or `Bash`. With OpenAI Codex you build such helpers yourself:
+Instead of relying on built-in tools such as `Read` or `Bash`, OpenAI Codex sessions run helper functions that you package and register yourself:
 - Write a `scripts/commands/read_file.py` that reads a path, formats the contents, and returns JSON
 - Expose a `run_tests` function that runs `pytest` and returns pass/fail metadata
 - Wrap HTTP APIs (GitHub, Jira, search) with consistent parameter/response shapes

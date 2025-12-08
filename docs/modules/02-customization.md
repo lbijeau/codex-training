@@ -46,7 +46,7 @@ The renderer replaces `{{task}}` with the provided value, so sessions stay consi
 
 ## 2. Function Wrappers Instead of Skills
 
-Claude Code had named skills and slash commands. For Codex, you implement those capabilities as helper functions and expose them via the `functions` parameter.
+Some platforms expose named skills and slash commands, but Codex expects you to implement those capabilities as helper functions and expose them via the `functions` parameter.
 
 ### Catalog your helpers
 Create a manifest file (`codex_helpers/functions.json`) listing each helper’s schema:

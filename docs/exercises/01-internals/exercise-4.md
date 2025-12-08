@@ -2,7 +2,7 @@
 
 ## Objective
 
-Build the lightweight scripts you run before or after a Codex session to inject context, log actions, or validate outputs. Think of them as the hooks you can control without relying on a Claude-style `.codex/config` file.
+Build the lightweight scripts you run before or after a Codex session to inject context, log actions, or validate outputs. Think of them as the hooks you can control without depending on framework-specific automation files like `.codex/config`.
 
 ## Part A: Session Start Script
 
@@ -49,5 +49,5 @@ Build the lightweight scripts you run before or after a Codex session to inject 
 
 Answer these questions:
 1. What criteria should determine when a pre-session script runs vs a post-session script?
-2. How do these scripts replace the idea of “hooks” from Claude Code?
+2. How do these scripts replace the idea of “hooks” from other assistant platforms?
 3. What safeguards can you add so scripts themselves don’t leak secrets?

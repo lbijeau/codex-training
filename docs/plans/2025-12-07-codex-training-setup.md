@@ -21,7 +21,7 @@ Expected: no tracked content (might show the empty directory we started in).
 
 **Step 2: Copy the source training files (minus Git history) into codex-training**
 Run: `rsync -a --exclude='.git' /tmp/source-training/ /Users/lucbijeau/repositories/codex-training/`
-Expected: The root of `codex-training` contains the same directories and Markdown files as the Claude repo.
+Expected: The root of `codex-training` contains the same directories and Markdown files as the original training repo.
 
 **Step 3: Initialize a fresh Git repository around the copied files**
 Run: `git -C /Users/lucbijeau/repositories/codex-training init`

@@ -36,6 +36,11 @@ This file will be populated as you discover patterns. After each module and exer
 
 Add your discovered scenarios below as you learn:
 
+**Scenario**: Documenting a helper function for Codex
+**Approach**: Use `docs/templates/helper-doc-template.md` to capture schema, usage, validation, then publish it under `docs/helpers/` and link it in `codex_helpers/README.md`
+**Why**: Keeps helper contracts consistent and makes prompt reviews easier
+**See**: [Helper Documentation Template](../templates/helper-doc-template.md)
+
 <!-- Example:
 **Scenario**: [Description]
 **Approach**: [What to do]

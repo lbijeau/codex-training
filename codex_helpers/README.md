@@ -18,6 +18,10 @@ Invoke helpers directly for testing:
 ./codex_helpers/run_tests.py --target tests/
 ```
 
+## Operational tooling
+- `scripts/helper_usage.sh` parses `logs/session_history.log` to show helper invocation counts.
+- `scripts/update_context.sh` refreshes `.codex/context.md` with git + TODO status (see `scripts/update_context.sh`).
+
 ## Logging & safety
 - Wrap any destructive helpers with validation scripts (see `scripts/validate_ranges.py`).
 - Log every helper invocation using `scripts/post_session_logger.sh` so you can trace what Codex asked for.
