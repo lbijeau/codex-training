@@ -1,0 +1,20 @@
+{
+  "helpers": {
+    "functionsManifest": "codex_helpers/functions.json",
+    "scriptsDirectory": "scripts/"
+  },
+  "hooks": {
+    "SessionStart:Callback": {
+      "command": "cat",
+      "args": [".codex/context.md"]
+    },
+    "Write:Callback": {
+      "command": "sh",
+      "args": [
+        "-c",
+        "prettier --write \"$FILE_PATH\" 2>/dev/null || true"
+      ]
+    }
+  },
+  "defaultModel": "sonnet"
+}

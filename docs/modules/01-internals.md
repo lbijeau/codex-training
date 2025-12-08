@@ -1,0 +1,220 @@
+# Module 1: Codex Code Internals
+
+## Overview
+
+Understanding how OpenAI Codex works under the hood is essential for mastering it. This module explores the chat-based architecture, function-calling workflow, and context strategies that determine how Codex behaves during a session.
+
+**Learning Objectives**:
+- Understand the message types that make up a Codex session and how system/user/assistant instructions shape each interaction
+- Master function calling so Codex can reason about external data sources without hallucinating
+- Keep the context window healthy through summarization, chunking, and smart request sequencing
+- Break large problems into prompt chains, verifying each step and feeding results into the next
+
+**Time**: 3-4 hours
+
+---
+
+## 1. Codex Session Architecture
+
+### What is a Codex session?
+A Codex session is a conversation with the OpenAI Chat Completion API. Every request includes a series of messages, typically:
+- **System**: Persistent instructions about tone, safety, and available functions
+- **User**: The current request or question
+- **Assistant**: Codex's response (either text or a `function_call` payload)
+- **Function**: When Codex asks your code to run a helper, you call that function, then supply the result back as a `function` message
+
+Think of it as a structured turn-taking system where Codex only knows what you feed it in those messages.</n
+### Message flow
+```
+System  →  User prompt → Assistant (text or function call)
+                                   ↓
+                           Function execution
+                                   ↓
+                         You supply function result
+                                   ↓
+                           Assistant (final response)
+```
+This means there is no persistent agent memory outside the conversation history — context resets when you start a new sequence.
+
+### Designing the system message
+- State the role clearly (e.g., “You are Codex, an assistant that edits Python code”) and keep it short
+- Declare the functions you expose (name, description, parameters) so Codex can reference them
+- Mention safety constraints (don’t expose secrets, log everything, prefer explanations)
+- Refresh the system prompt for each new session or when you need to pivot behavior
+
+### What Codex retains
+- Everything in the current message array (system + history + functions)
+- Function results you provide after a `function_call`
+- Recent pieces of context you keep near the end of the history
+
+Anything outside that sequence is invisible until you mention it again, so plan to summarize or re-send as needed.
+
+---
+
+## 2. Function Calling & Tool Wrappers
+
+Function calling lets Codex delegate tasks to your own code. Instead of dreaming up how to make an API call, Codex returns a structured `function_call` object that you execute.
+
+### Declaring functions
+In the request you send to the OpenAI client, register each helper you want Codex to use:
+```python
+from openai import OpenAI
+client = OpenAI()
+
+response = client.chat.completions.create(
+    model="codex-1",
+    messages=[
+        {"role": "system", "content": "You are a thoughtful coding assistant."},
+        {"role": "user", "content": "Get the list of TODOs."},
+    ],
+    functions=[
+        {
+            "name": "list_todos",
+            "description": "Collect TODO comments from a repo",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "paths": {
+                        "type": "array",
+                        "items": {"type": "string"}
+                    }
+                },
+                "required": ["paths"]
+            }
+        }
+    ],
+    function_call="auto"
+)
+```
+Codex may respond with a `function_call` telling you which helper to invoke and what arguments to pass.
+
+### Running the helper
+After you see a `function_call`, run the matching helper and send the result back:
+```python
+if response.choices[0].message.get("function_call"):
+    call = response.choices[0].message.function_call
+    result = list_todos(call.arguments)
+    follow_up = client.chat.completions.create(
+        model="codex-1",
+        messages=response.messages + [
+            {
+                "role": "function",
+                "name": call.name,
+                "content": result
+            }
+        ]
+    )
+```
+Codex now sees the function result and can continue reasoning.
+
+### Tool wrappers instead of built-in tools
+In Claude Code you had baked-in tools like `Read` or `Bash`. With OpenAI Codex you build such helpers yourself:
+- Write a `scripts/commands/read_file.py` that reads a path, formats the contents, and returns JSON
+- Expose a `run_tests` function that runs `pytest` and returns pass/fail metadata
+- Wrap HTTP APIs (GitHub, Jira, search) with consistent parameter/response shapes
+
+Store these helpers in `./codex_helpers/` or another folder, and keep a manifest (`functions.json`) describing their schema. That way every session reuses the same catalog of trusted operations.
+
+### Function-calling best practices
+- Keep each function focused; the schema should surface clear input/output types
+- Limit responses (e.g., 800 tokens) so Codex does not wander into noisy results
+- Validate and sanitize all arguments — Codex can hallucinate parameter names
+- Never expose secrets; load API keys from environment variables outside the message stream
+- Log every call (name, args, result) for reproducibility
+
+---
+
+## 3. Managing Context and Tokens
+
+### The context window
+OpenAI models have finite context windows (e.g., 128K tokens for later Codex models). Each message contributes to this total:
+```
+Total context = system prompt + user/assistant history + function results + new generation
+```
+The window includes both incoming message tokens and the tokens you expect the model to emit, so budget accordingly.
+
+### Strategies to stay inside the window
+1. **Summaries**: Periodically summarize prior exchanges into a single message and drop long transcripts
+2. **Chunking**: Feed only the relevant files for the current problem (use grep/local search before sharing)
+3. **Streaming**: For long outputs, stream them so you can stop early if you detect divergence
+4. **Cache context**: Store intermediate summaries (e.g., “Task status: exploring backend”) and prepend them when resuming
+
+### Monitoring tokens
+Use the OpenAI response metadata to inspect `usage.total_tokens`. If you approach the limit:
+- Roll-up earlier messages into a short summary
+- Re-open a new session with the summary as the first message
+- Use function calls to fetch external data instead of embedding extra files directly
+
+---
+
+## 4. Chaining Requests and Planning
+
+### When to split work
+Large problems benefit from staged prompts:
+1. **Discover**: Ask Codex to describe the problem space or analyze a diff
+2. **Plan**: Have it reason about steps and output a plan (list of actions)
+3. **Execute**: Apply a plan step-by-step, feeding results back
+4. **Verify**: Run tests/functions to confirm the change
+5. **Document**: Summarize what changed and how to continue
+
+Each stage adds a small amount to the context, so keep plan outputs concise.
+
+### Re-using plan templates
+Maintain prompt templates in `docs/prompt_templates/` with placeholders like `{{task}}` so you can quickly spin up new sessions:
+```
+System: You are a Codex assistant that…
+User: I need to {{task}}. Start by summarizing the current state and then propose the next 3 steps.
+```
+Use a small templating utility (`python render_prompt.py --template plan.md --task="audit dependencies"`) to inject the task.
+
+### Feedback loops
+After every Codex response:
+- Inspect for hallucinated or unsafe content
+- Correct it by sending follow-up user messages or function calls
+- Lock deterministic operations into functions so Codex cannot deviate
+
+---
+
+## 5. Working with Local Data and Scripts
+
+You cannot rely on built-in file tools, so build lightweight wrappers:
+- `codex_helpers/read_file(path)` returns the file content and optionally tokenizes it
+- `codex_helpers/run_tests()` runs your test suite and returns structured results
+- `codex_helpers/git_status()` summarizes untracked/modified files
+
+Expose these helpers as functions. When Codex calls `read_file`, run the wrapper, capture the bytes, and feed them back as a `function` message.
+
+### File sharing strategy
+- Never send whole repos. Instead: search, read relevant snippets, and summarize (attach line numbers)
+- Use `git diff --stat` combined with `codex_helpers/git_status` to tell Codex what changed
+- Keep large files in a shared artifact (e.g., zipped) and describe them rather than sending the whole text
+
+### Security and secrets
+- Store API keys in environment variables (`OPENAI_API_KEY`) and never include them in prompts
+- Sanitize file paths/functions exposed to Codex
+- Audit logs of function calls for suspicious patterns
+
+---
+
+## 6. Quick Reference
+
+| Concept | Codex equivalent |
+| --- | --- |
+| Agents | A single chat session with message history
+| Tools | Your own function wrappers and helper scripts
+| Subtasks | Split problems over multiple prompts or function calls
+| Hooks | Logging, validation, and wrappers you run before/after executing helpers
+
+**Best practices**:
+- Keep system instructions constant per session
+- Use function calling to handle structured data safely
+- Summarize and chunk to maintain context health
+- Lock repetitive or risky operations behind deterministic helpers
+
+---
+
+## Next Steps
+1. Try the Module 1 exercises to practice designing prompts and function calls
+2. Build a helper that searches files and registers itself as a function
+3. Experiment with chaining requests and summarizing long histories
+4. Document any useful prompts in `docs/prompts/`
