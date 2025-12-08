@@ -21,6 +21,7 @@ Invoke helpers directly for testing:
 ## Operational tooling
 - `scripts/helper_usage.sh` parses `logs/session_history.log` to show helper invocation counts.
 - `scripts/update_context.sh` refreshes `.codex/context.md` with git + TODO status (see `scripts/update_context.sh`).
+- `scripts/run_static_checks.sh` bundles the JS/TS static analyzers (`check_duplicates.js`, `report_complexity_diff.js`, `check_cross_layer_imports.js`) so you can log and review quality findings before invoking Codex.
 
 ## Logging & safety
 - Wrap any destructive helpers with validation scripts (see `scripts/validate_ranges.py`).
