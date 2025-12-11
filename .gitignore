@@ -55,6 +55,21 @@ build/
 *.tmp
 *.temp
 .cache/
+.slideshow-temp/
+
+# Generated output
+output/
+
+# Browser automation
+.puppeteer-home/
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+secrets.json
 
 # OS-specific
 *.icloud
