@@ -174,3 +174,14 @@ Update module status as you complete them:
 - **`.codex-examples/`** holds sample helper functions, prompt templates, logging scripts, and context files. Copy the pieces you need into your own `.codex/` folder to jumpstart a session.
 - **`.codex/functions.json`** documents the helper functions you register with each session (name, description, parameter schema). Keep it synced with `codex_helpers/` so prompts see the same catalog every time.
 - **Context files** like `.codex/context.md` describe the current project state. Include them at the start of a session so Codex understands your assumptions without re-reading every detail.
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+- Reporting issues and suggesting enhancements
+- Adding patterns, exercises, and examples
+- Code style and pull request process
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
