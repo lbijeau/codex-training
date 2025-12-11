@@ -395,6 +395,47 @@ Reduces context consumption by focusing on relevant files.
 
 ---
 
+## Maintenance
+
+### For Repository Maintainers
+
+#### Weekly Tasks
+
+- [ ] Review and triage new issues
+- [ ] Review pending pull requests
+- [ ] Add patterns discovered during the week
+- [ ] Update playbook with new scenarios
+
+#### Monthly Tasks
+
+- [ ] Review pattern library organization
+- [ ] Update progress metrics in documentation
+- [ ] Archive outdated design docs
+- [ ] Check for broken links
+- [ ] Review and update module content if needed
+
+### Archiving Content
+
+When content becomes outdated:
+
+1. **Don't delete it** - maintain history
+2. Add `[DEPRECATED]` to the title
+3. Add a note at the top explaining why
+4. Link to the replacement content
+5. Move to an `archive/` folder if appropriate
+
+Example:
+```markdown
+# [DEPRECATED] Old Pattern Name
+
+> **Note**: This pattern has been superseded by [New Pattern](path/to/new-pattern.md).
+> Reason: [Brief explanation of why this changed]
+
+[Original content below for reference]
+```
+
+---
+
 ## Community
 
 ### Questions and Discussions
@@ -419,7 +460,7 @@ If you've built something great using this program:
 
 ## License
 
-By contributing to this project, you agree that your contributions will be licensed under the same license as the project.
+By contributing to this project, you agree that your contributions will be licensed under the [MIT License](LICENSE).
 
 ---
 
