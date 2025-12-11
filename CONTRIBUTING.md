@@ -1,33 +1,202 @@
-# Contributing to Your Learning
+# Contributing to Codex Code Mastery Program
 
-This guide helps you maintain and evolve this training program as you learn.
+Thank you for your interest in contributing to the Codex Code Mastery Program! This document provides guidelines for contributing to this educational resource.
 
-## Philosophy
+## Table of Contents
 
-This is YOUR learning repository. The structure is a starting point, but you should:
-- Add patterns you discover
-- Update modules with your insights
-- Create new exercises
-- Evolve the playbook to match your workflow
-
-**Make it yours!**
+- [Code of Conduct](#code-of-conduct)
+- [How Can I Contribute?](#how-can-i-contribute)
+- [Getting Started](#getting-started)
+- [Development Setup](#development-setup)
+- [Contribution Workflow](#contribution-workflow)
+- [Style Guidelines](#style-guidelines)
+- [Adding Content](#adding-content)
+- [Pull Request Process](#pull-request-process)
+- [Community](#community)
 
 ---
 
-## Adding Patterns
+## Code of Conduct
 
-As you discover useful patterns through exercises or real work, document them.
+This project adheres to a code of conduct that all contributors are expected to follow:
 
-### Pattern Template
+- **Be Respectful**: Treat all contributors with respect and professionalism
+- **Be Inclusive**: Welcome contributors of all backgrounds and experience levels
+- **Be Constructive**: Provide helpful feedback and accept criticism gracefully
+- **Be Collaborative**: Work together to improve the learning experience
 
-Create a new file in the appropriate category:
-- `docs/patterns/speed/` - Performance and efficiency
-- `docs/patterns/quality/` - Code quality and verification
-- `docs/patterns/debugging/` - Problem-solving approaches
-- `docs/patterns/planning/` - Task decomposition and execution
-- `docs/patterns/architecture/` - Design and exploration
+---
 
-**File Structure**:
+## How Can I Contribute?
+
+### Reporting Issues
+
+If you find bugs, errors, or areas for improvement:
+
+1. **Check existing issues** to avoid duplicates
+2. **Create a new issue** with a clear, descriptive title
+3. **Include details**:
+   - Which module/exercise is affected
+   - What you expected vs. what happened
+   - Steps to reproduce (if applicable)
+   - Suggestions for improvement
+
+### Suggesting Enhancements
+
+Have ideas for new content or improvements?
+
+1. **Open a discussion or issue** describing your suggestion
+2. **Explain the benefit** to learners
+3. **Provide examples** if possible
+
+### Contributing Content
+
+You can contribute:
+
+- **New patterns** for the pattern library
+- **Exercises** for existing or new modules
+- **Module improvements** (clarifications, examples, corrections)
+- **Playbook entries** (scenarios, checklists)
+- **Code examples** demonstrating concepts
+- **Documentation improvements**
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Git for version control
+- A text editor (VS Code, Vim, etc.)
+- Familiarity with Markdown
+- Basic understanding of Codex Code concepts (read Module 1 first)
+
+### Fork and Clone
+
+```bash
+# Fork the repository on GitHub, then:
+git clone https://github.com/YOUR-USERNAME/codex-training.git
+cd codex-training
+```
+
+---
+
+## Development Setup
+
+This is primarily a documentation/educational repository. No special build tools are required.
+
+### Directory Structure
+
+```
+codex-training/
+├── docs/
+│   ├── modules/          # Core learning content
+│   ├── exercises/        # Hands-on practice
+│   ├── patterns/         # Reusable pattern library
+│   ├── playbook/         # Quick reference guides
+│   ├── plans/            # Design documents
+│   ├── templates/        # Document templates
+│   └── prompt_templates/ # Prompt templates
+├── examples/             # Code examples
+├── practice/             # Practice workspace
+├── codex_helpers/        # Helper scripts
+└── .codex-examples/      # Sample workspace configuration
+```
+
+### Validation (Optional)
+
+If you want to validate your Markdown:
+
+```bash
+# Install markdownlint (optional)
+npm install -g markdownlint-cli
+
+# Check markdown files
+markdownlint docs/**/*.md
+```
+
+---
+
+## Contribution Workflow
+
+### 1. Create a Branch
+
+```bash
+git checkout -b feature/add-new-pattern
+# or
+git checkout -b fix/correct-module-typo
+```
+
+**Branch naming conventions**:
+- `feature/description` - New content or features
+- `fix/description` - Bug fixes or corrections
+- `docs/description` - Documentation improvements
+- `refactor/description` - Restructuring without changing content
+
+### 2. Make Your Changes
+
+- Follow the [Style Guidelines](#style-guidelines)
+- Keep commits focused and atomic
+- Write clear commit messages
+
+### 3. Test Your Changes
+
+- Verify Markdown renders correctly
+- Check all links work
+- Ensure code examples are valid (if applicable)
+
+### 4. Submit a Pull Request
+
+```bash
+git push origin feature/add-new-pattern
+```
+
+Then create a Pull Request on GitHub.
+
+---
+
+## Style Guidelines
+
+### Markdown
+
+- Use ATX-style headers (`#`, `##`, `###`)
+- Use fenced code blocks with language specifiers
+- Keep lines under 100 characters when practical
+- Use consistent list formatting (either `-` or `*`, not mixed)
+- Include blank lines before and after headers and code blocks
+
+### File Naming
+
+- Use lowercase with hyphens: `my-new-pattern.md`
+- Be descriptive but concise
+- Follow existing naming conventions in each directory
+
+### Content Style
+
+- Write in clear, accessible language
+- Use active voice when possible
+- Include practical examples
+- Link to related content
+- Define acronyms on first use
+
+---
+
+## Adding Content
+
+### Adding Patterns
+
+Patterns go in `docs/patterns/` organized by category:
+
+| Category | Directory | Description |
+|----------|-----------|-------------|
+| Speed | `docs/patterns/speed/` | Performance and efficiency |
+| Quality | `docs/patterns/quality/` | Code quality and verification |
+| Debugging | `docs/patterns/debugging/` | Problem-solving approaches |
+| Planning | `docs/patterns/planning/` | Task decomposition and execution |
+| Architecture | `docs/patterns/architecture/` | Design and exploration |
+
+**Pattern Template**:
+
 ```markdown
 # Pattern Name
 
@@ -41,6 +210,7 @@ What specific problem does it solve?
 How do you apply this pattern?
 
 ## Trade-offs
+
 **Pros**:
 - Benefits
 
@@ -51,44 +221,66 @@ How do you apply this pattern?
 - Other approaches
 
 ## Examples
-Real-world scenarios where you've used this
+Real-world scenarios where this pattern applies
 
 ## Related Patterns
 - [Other Pattern](../category/pattern.md)
 ```
 
-### Good Pattern Names
-
-✅ Good (Specific, descriptive):
+**Good pattern names**:
 - `parallel-execution.md`
 - `context-optimization.md`
 - `root-cause-tracing.md`
 
-❌ Bad (Vague, generic):
-- `better-way.md`
-- `tips.md`
-- `notes.md`
+### Adding Exercises
 
----
+Exercises go in `docs/exercises/[module-number]-[module-name]/`:
 
-## Updating Your Playbook
+```markdown
+# Exercise N: [Name]
 
-As you learn, keep `docs/playbook/` current.
+## Objective
+What learners will accomplish
 
-### Adding Scenarios
+## Prerequisites
+- Required knowledge or completed exercises
 
-In `docs/playbook/scenarios.md`:
+## Task
+Clear instructions for what to do
+
+## Hints
+<details>
+<summary>Hint 1</summary>
+First hint content
+</details>
+
+<details>
+<summary>Hint 2</summary>
+Second hint content
+</details>
+
+## Solution Discussion
+<details>
+<summary>Solution</summary>
+Explanation of the solution approach
+</details>
+
+## Key Takeaways
+- What learners should remember
+```
+
+### Adding Playbook Entries
+
+**Scenarios** (`docs/playbook/scenarios.md`):
 
 ```markdown
 **Scenario**: [What you're trying to do]
 **Approach**: [Quick guidance]
 **Why**: [Reasoning]
-**See**: [Link to pattern]
+**See**: [Link to pattern or module]
 ```
 
-### Adding Checklists
-
-In `docs/playbook/checklists.md`:
+**Checklists** (`docs/playbook/checklists.md`):
 
 ```markdown
 ## [Workflow Name]
@@ -100,115 +292,72 @@ In `docs/playbook/checklists.md`:
 **When to use**: [Situation]
 ```
 
----
-
-## Documenting Insights
-
-### During Exercises
-
-When completing exercises:
-1. Note what worked well
-2. Document what was confusing
-3. Add clarifying notes to exercise files
-4. Extract patterns to pattern library
-
-### During Real Work
-
-When applying learnings to actual projects:
-1. Document variations you discover
-2. Add real-world examples to patterns
-3. Update playbook with context from your domain
-4. Note superpowers skill discoveries
-
----
-
-## Module Updates
-
-Feel free to enhance module content:
-
 ### Adding Examples
 
-```markdown
-## New Example: [Scenario]
+Code examples go in `examples/[category]/`:
 
-[Your discovery from real work]
-```
-
-### Clarifying Concepts
-
-```markdown
-> **Note from experience**: [Your insight]
-```
-
-### Adding Tips
-
-```markdown
-**Pro Tip**: [Something you learned]
-```
+- Include clear comments
+- Show both input and expected output
+- Demonstrate the concept concisely
+- Add a README if needed for context
 
 ---
 
-## Exercise Evolution
+## Pull Request Process
 
-### Marking Completion
+### Before Submitting
 
-Update `README.md` as you complete exercises:
-```markdown
-- [x] Module 1: Codex Code Internals
-- [ ] Module 2: Advanced Customization
-```
+- [ ] Read and follow the contribution guidelines
+- [ ] Ensure your changes follow the style guidelines
+- [ ] Test that Markdown renders correctly
+- [ ] Verify all links work
+- [ ] Write a clear PR description
 
-### Adding Your Own Exercises
-
-Create new exercises in `docs/exercises/[module]/`:
+### PR Description Template
 
 ```markdown
-# Exercise N: [Name]
+## Summary
+Brief description of the changes
 
-## Objective
-What you'll learn
+## Type of Change
+- [ ] New content (pattern, exercise, example)
+- [ ] Bug fix / correction
+- [ ] Documentation improvement
+- [ ] Restructuring / refactoring
 
-## Task
-What to do
+## Related Issues
+Fixes #(issue number)
 
-## Hints
-<details>
-<summary>Hint 1</summary>
-[Hint content]
-</details>
-
-## Solution Discussion
-<details>
-<summary>Solution</summary>
-[Your learnings]
-</details>
+## Checklist
+- [ ] I have read the contributing guidelines
+- [ ] My changes follow the style guidelines
+- [ ] I have tested my changes locally
+- [ ] I have updated related documentation if needed
 ```
 
----
+### Review Process
 
-## Git Workflow
+1. Maintainers will review your PR
+2. Address any requested changes
+3. Once approved, your PR will be merged
+4. Your contribution will be acknowledged
 
-### Committing Changes
+### Commit Message Guidelines
 
-Good commit messages:
+Write clear, descriptive commit messages:
+
 ```
 Add pattern: parallel-grep-then-read
 
-Discovered while working on [project].
+Discovered while working on large codebase exploration.
 Combines Grep for discovery with targeted Read.
-Reduces context by 60% vs reading all files.
+Reduces context consumption by focusing on relevant files.
 ```
 
-### Branch Strategy (Optional)
-
-For major updates, consider branches:
-```bash
-git checkout -b add-security-patterns
-# Make changes
-git commit -m "Add security review patterns"
-git checkout master
-git merge add-security-patterns
-```
+**Format**:
+- First line: Brief summary (50 chars or less)
+- Blank line
+- Body: Detailed explanation (wrap at 72 chars)
 
 ---
 
@@ -216,138 +365,68 @@ git merge add-security-patterns
 
 ### For Patterns
 
-- ✅ Specific and actionable
-- ✅ Based on real experience
-- ✅ Includes examples
-- ✅ Documents trade-offs
-- ✅ Links to related patterns
+- Specific and actionable
+- Based on real experience
+- Includes practical examples
+- Documents trade-offs
+- Links to related patterns
 
-### For Playbook
+### For Exercises
 
-- ✅ Quick to scan
-- ✅ Scenario-based
-- ✅ Links to details
-- ✅ Regularly updated
+- Clear learning objectives
+- Progressive difficulty
+- Includes hints for struggling learners
+- Has solution discussion
+- Tests specific concepts
+
+### For Playbook Entries
+
+- Quick to scan
+- Scenario-based
+- Links to detailed content
+- Actionable guidance
 
 ### For Examples
 
-- ✅ Runnable code
-- ✅ Clear purpose
-- ✅ Well-commented
-- ✅ Demonstrates pattern
+- Runnable code (where applicable)
+- Clear purpose stated
+- Well-commented
+- Demonstrates pattern effectively
 
 ---
 
-## Sharing (Optional)
+## Community
 
-If you want to share learnings:
+### Questions and Discussions
 
-### Make Public
+- Open an issue for questions about contributing
+- Use GitHub Discussions (if enabled) for broader topics
+- Be patient and respectful with responses
 
-```bash
-gh repo edit lbijeau/codex-training --visibility public --accept-visibility-change-consequences
-```
+### Recognition
 
-### Create Discussions
+All contributors are valued! Significant contributions will be recognized in project documentation.
 
-Enable GitHub Discussions to share with others learning Codex Code.
+### Sharing Your Learning
 
-### Contribute Upstream
+If you've built something great using this program:
 
-Found a great pattern? Consider contributing to:
-- superpowers plugin
-- Codex Code documentation
-- Community resources
-
----
-
-## File Organization
-
-### Keep It Clean
-
-```
-docs/
-├── modules/          # Reference material (stable)
-├── exercises/        # Learning exercises (stable)
-├── patterns/         # Growing library (you add to this)
-├── playbook/         # Daily reference (frequently updated)
-└── plans/            # Design docs (archival)
-
-practice/
-└── scratch/          # Temporary work (not committed)
-
-examples/             # Code samples (you may add)
-```
-
-### When to Archive
-
-If a pattern becomes outdated:
-1. Don't delete it
-2. Add **[DEPRECATED]** to title
-3. Link to replacement pattern
-4. Explain why it changed
+- Share your experience in discussions
+- Consider contributing patterns you've discovered
+- Help others in their learning journey
 
 ---
 
-## Growth Metrics
+## License
 
-Track your progress:
-
-### Pattern Library
-
-- Started: 12 patterns
-- Goal: 30+ patterns
-- Current: [Update as you add]
-
-### Playbook
-
-- Scenarios documented: [Track count]
-- Checklists created: [Track count]
-- Last updated: [Date]
-
-### Modules Completed
-
-- [x] Module 1
-- [ ] Module 2
-- ...
+By contributing to this project, you agree that your contributions will be licensed under the same license as the project.
 
 ---
 
-## Questions or Issues?
+## Thank You!
 
-This is your repository. If something doesn't work for your learning style:
-- **Change it!**
-- Reorganize
-- Add sections
-- Remove what's not useful
-- Make it work for you
-
-The structure is a guide, not a rulebook.
+Every contribution helps make this learning resource better for everyone. Whether you're fixing a typo, adding a pattern, or creating new exercises, your efforts are appreciated!
 
 ---
 
-## Regular Maintenance
-
-### Weekly
-
-- [ ] Add patterns discovered this week
-- [ ] Update playbook with new scenarios
-- [ ] Review and clean up practice/scratch/
-
-### Monthly
-
-- [ ] Review pattern library for organization
-- [ ] Update progress metrics
-- [ ] Archive old design docs
-- [ ] Commit and push changes
-
-### Per Module
-
-- [ ] Complete exercises
-- [ ] Extract patterns
-- [ ] Update playbook
-- [ ] Mark module complete in README
-
----
-
-**Remember**: This is a living learning resource. It grows with you!
+*Questions about contributing? Open an issue and we'll help you get started.*
