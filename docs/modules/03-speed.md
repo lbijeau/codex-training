@@ -123,18 +123,35 @@ codex exec "summarize the codebase architecture" > contexts/architecture-summary
 Keep summaries under 500 tokens. Use them instead of re-reading files.
 
 **3. Context caches** – Save state between sessions:
+
+*Option A: Use Codex's built-in session resume (for sequential work):*
 ```bash
-# Create a contexts/ directory for session state
+# Sessions are stored in ~/.codex/sessions/
+# Resume the most recent session:
+codex resume --last
+
+# Or pick from a list of recent sessions:
+codex resume
+
+# Or resume a specific session by ID (from /status or ~/.codex/sessions/):
+codex resume abc123-def456
+```
+
+*Option B: Manual context files (for parallel work or cross-session sharing):*
+```bash
+# Create a contexts/ directory for shared state
 mkdir -p contexts/
 
 # After each major discovery, save a summary:
 codex exec "summarize current progress and open questions" > contexts/session-state.md
 
-# When resuming, prepend the context:
+# When starting a NEW session, prepend the context manually:
 codex "$(cat contexts/session-state.md)
 
 Continue from where we left off: implement the caching layer"
 ```
+
+**Note:** Parallel `codex` instances do NOT share context automatically. Each is independent. Use manual file passing (Option B) when running parallel investigations that need to share findings.
 
 **4. Scoped prompts** – Keep system prompts minimal:
 ```bash
