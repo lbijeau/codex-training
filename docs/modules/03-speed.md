@@ -102,10 +102,54 @@ This approach lets you explore multiple hypotheses concurrently without waiting 
 Tokens are finite. Every `read_file`, prompt, and response consumes part of the window. When you hit the limit, Codex forgets earlier data.
 
 ### Strategies
-1. **Targeted sharing**: Use `grep` or helper functions to pull only the relevant pile of text
-2. **Summaries**: Replace long transcripts with short summaries (`Summary: ...`). Keep them under 500 tokens.
-3. **Context caches**: Save summaries or metadata (e.g., key file status) in `contexts/` and prepend them when resuming work
-4. **Scoped prompts**: Trim system prompts to essentials; use templates to keep them from drifting
+
+**1. Targeted sharing** – Pull only relevant text instead of entire files:
+```bash
+# Instead of "read src/auth.ts" (might be 500+ lines), ask for specific parts:
+codex "show me only the login() and logout() functions from src/auth.ts"
+
+# Or use grep to find specific patterns first:
+codex "grep for 'async function' in src/auth.ts and show those functions"
+```
+
+**2. Summaries** – Replace long outputs with condensed versions:
+```bash
+# After a long exploration, ask Codex to summarize:
+codex "summarize what we learned about the auth system in 3 bullet points"
+
+# Save the summary for later use:
+codex exec "summarize the codebase architecture" > contexts/architecture-summary.md
+```
+Keep summaries under 500 tokens. Use them instead of re-reading files.
+
+**3. Context caches** – Save state between sessions:
+```bash
+# Create a contexts/ directory for session state
+mkdir -p contexts/
+
+# After each major discovery, save a summary:
+codex exec "summarize current progress and open questions" > contexts/session-state.md
+
+# When resuming, prepend the context:
+codex "$(cat contexts/session-state.md)
+
+Continue from where we left off: implement the caching layer"
+```
+
+**4. Scoped prompts** – Keep system prompts minimal:
+```bash
+# Create reusable prompt templates in prompts/
+cat > prompts/code-review.md << 'EOF'
+Review this code for bugs and security issues. Be concise.
+Focus on: null checks, error handling, input validation.
+EOF
+
+# Use the template:
+codex "$(cat prompts/code-review.md)
+
+$(cat src/auth.ts)"
+```
+Templates prevent prompt drift and keep token usage predictable.
 
 ### Avoid
 - Re-reading the same file multiple times
