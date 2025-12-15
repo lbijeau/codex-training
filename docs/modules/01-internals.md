@@ -818,23 +818,6 @@ def detect_suspicious(func_name, args):
 
 ---
 
-## 6. Quick Reference
-
-| Concept | Codex equivalent |
-| --- | --- |
-| Agents | A single chat session with message history
-| Tools | Your own function wrappers and helper scripts
-| Subtasks | Split problems over multiple prompts or function calls
-| Hooks | Logging, validation, and wrappers you run before/after executing helpers
-
-**Best practices**:
-- Keep system instructions constant per session
-- Use function calling to handle structured data safely
-- Summarize and chunk to maintain context health
-- Lock repetitive or risky operations behind deterministic helpers
-
----
-
 ## Next Steps
 1. Try the Module 1 exercises to practice designing prompts and function calls
 2. Build a helper that searches files and registers itself as a function
