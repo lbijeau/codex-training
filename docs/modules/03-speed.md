@@ -320,10 +320,65 @@ Are we good to proceed? Answer YES or NO with explanation."
 | Complex refactor | Rolled plan | Break into discovery → plan → implement |
 | Quick fix | Single prompt | Minimal context needed |
 
-**Execution patterns**
-- **Batch**: Fire multiple `read_file` or `grep` helpers in the same request
+### Strategy Examples
+
+**Parallel bundle** (read 5 unrelated files):
+```bash
+# ONE prompt, multiple files - Codex reads all and synthesizes
+codex "Read and summarize the key responsibilities of each:
+- src/auth/login.ts
+- src/auth/logout.ts
+- src/api/users.ts
+- src/api/sessions.ts
+- src/middleware/cors.ts"
+```
+
+**Sequential pipeline** (find then edit):
+```bash
+# Step 1: Find what needs changing
+codex "grep for deprecated API calls in src/"
+# Step 2: Use the results to make targeted edits
+codex "Update the deprecated calls you found to use the new API"
+```
+
+**Parallel prompts** (multiple hypotheses):
+```bash
+# Run investigations concurrently
+codex exec "Is the bug in the auth layer? Check src/auth/" > hyp1.txt &
+codex exec "Is the bug in the caching layer? Check src/cache/" > hyp2.txt &
+codex exec "Is the bug in the API layer? Check src/api/" > hyp3.txt &
+wait
+
+# Synthesize findings
+codex "Which hypothesis is most likely?
+Auth: $(cat hyp1.txt)
+Cache: $(cat hyp2.txt)
+API: $(cat hyp3.txt)"
+```
+
+**Rolled plan** (complex refactor):
+```bash
+# Phase 1: Discovery
+codex exec "Map all usages of the old UserService class" > discovery.txt
+
+# Phase 2: Planning
+codex "Based on: $(cat discovery.txt)
+Create a step-by-step plan to migrate to the new UserRepository pattern"
+
+# Phase 3: Execute (after reviewing plan)
+codex "Execute step 1 of the migration plan"
+```
+
+**Single prompt** (quick fix):
+```bash
+# Simple, self-contained change
+codex "Fix the typo in src/config.ts line 42: 'recieve' should be 'receive'"
+```
+
+### Execution Pattern Summary
+- **Batch**: Bundle independent operations in one prompt
 - **Pipeline**: Chain prompts with explicit hand-offs (summaries, plan, execute)
-- **Verify**: Always finish with a validation prompt (and helper call) before closing the session
+- **Verify**: Always finish with a validation prompt before closing the session
 
 ---
 
