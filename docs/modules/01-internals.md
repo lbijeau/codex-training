@@ -587,22 +587,232 @@ if issues:
 
 > **Note**: Codex CLI has built-in file and shell tools. This section is for **API users** building custom integrations who need to implement their own tool wrappers.
 
-When using the API directly, you provide your own tool implementations:
-- `codex_helpers/read_file(path)` returns the file content and optionally tokenizes it
-- `codex_helpers/run_tests()` runs your test suite and returns structured results
-- `codex_helpers/git_status()` summarizes untracked/modified files
+When using the API directly, you provide your own tool implementations. Here's a complete `git_status` wrapper:
 
-Expose these helpers as functions. When Codex calls `read_file`, run the wrapper, capture the bytes, and feed them back as a `function` message.
+```python
+# codex_helpers/git_status.py
+import subprocess
+import json
+
+def git_status(args):
+    """
+    Get current git state: branch, modified files, staged changes.
+    Returns structured data Codex can reason about.
+    """
+    result = {}
+
+    # Current branch
+    branch = subprocess.run(
+        ["git", "branch", "--show-current"],
+        capture_output=True, text=True
+    )
+    result["branch"] = branch.stdout.strip()
+
+    # Modified files (unstaged)
+    modified = subprocess.run(
+        ["git", "diff", "--name-only"],
+        capture_output=True, text=True
+    )
+    result["modified"] = modified.stdout.strip().split("\n") if modified.stdout.strip() else []
+
+    # Staged files
+    staged = subprocess.run(
+        ["git", "diff", "--staged", "--name-only"],
+        capture_output=True, text=True
+    )
+    result["staged"] = staged.stdout.strip().split("\n") if staged.stdout.strip() else []
+
+    # Untracked files
+    untracked = subprocess.run(
+        ["git", "ls-files", "--others", "--exclude-standard"],
+        capture_output=True, text=True
+    )
+    result["untracked"] = untracked.stdout.strip().split("\n") if untracked.stdout.strip() else []
+
+    # Recent commits (for context)
+    log = subprocess.run(
+        ["git", "log", "--oneline", "-5"],
+        capture_output=True, text=True
+    )
+    result["recent_commits"] = log.stdout.strip().split("\n") if log.stdout.strip() else []
+
+    return json.dumps(result, indent=2)
+```
 
 ### File sharing strategy
-- Never send whole repos. Instead: search, read relevant snippets, and summarize (attach line numbers)
-- Use `git diff --stat` combined with `codex_helpers/git_status` to tell Codex what changed
-- Keep large files in a shared artifact (e.g., zipped) and describe them rather than sending the whole text
+
+**Don't send entire files** — search first, then share relevant snippets:
+
+```python
+# codex_helpers/search_files.py
+import subprocess
+import json
+
+def search_files(args):
+    """
+    Search for a pattern in the codebase. Returns matching lines with context.
+    Much more efficient than sending whole files to Codex.
+    """
+    pattern = args.get("pattern")
+    path = args.get("path", ".")
+    context_lines = args.get("context", 3)
+
+    # Use ripgrep for fast searching (fall back to grep)
+    try:
+        result = subprocess.run(
+            ["rg", "--json", "-C", str(context_lines), pattern, path],
+            capture_output=True, text=True, timeout=30
+        )
+    except FileNotFoundError:
+        result = subprocess.run(
+            ["grep", "-rn", "-C", str(context_lines), pattern, path],
+            capture_output=True, text=True, timeout=30
+        )
+
+    # Limit output to prevent context overflow
+    lines = result.stdout.split("\n")[:100]
+
+    return json.dumps({
+        "pattern": pattern,
+        "path": path,
+        "matches": len([l for l in lines if l.strip()]),
+        "output": "\n".join(lines),
+        "truncated": len(result.stdout.split("\n")) > 100
+    })
+```
+
+**When sharing code, include line numbers:**
+
+```python
+def read_file_with_lines(args):
+    """Read file with line numbers so Codex can reference specific locations."""
+    path = args.get("path")
+    start_line = args.get("start_line", 1)
+    end_line = args.get("end_line", None)
+
+    with open(path) as f:
+        lines = f.readlines()
+
+    # Slice if range specified
+    if end_line:
+        lines = lines[start_line-1:end_line]
+    else:
+        lines = lines[start_line-1:]
+
+    # Add line numbers
+    numbered = [f"{start_line + i:4d} | {line.rstrip()}"
+                for i, line in enumerate(lines)]
+
+    # Truncate if too long
+    if len(numbered) > 200:
+        numbered = numbered[:200] + ["... (truncated, use start_line/end_line to page)"]
+
+    return json.dumps({
+        "path": path,
+        "start_line": start_line,
+        "total_lines": len(lines),
+        "content": "\n".join(numbered)
+    })
+```
+
+**Use git diff to show what changed:**
+
+```python
+def git_diff(args):
+    """Show diff for specific file or all changes."""
+    file_path = args.get("path")  # Optional: specific file
+    staged = args.get("staged", False)
+
+    cmd = ["git", "diff"]
+    if staged:
+        cmd.append("--staged")
+    if file_path:
+        cmd.append(file_path)
+
+    result = subprocess.run(cmd, capture_output=True, text=True)
+
+    # Truncate large diffs
+    diff_output = result.stdout
+    if len(diff_output) > 5000:
+        diff_output = diff_output[:5000] + "\n... (diff truncated)"
+
+    return json.dumps({
+        "path": file_path or "all files",
+        "staged": staged,
+        "diff": diff_output
+    })
+```
 
 ### Security and secrets
-- Store API keys in environment variables (`OPENAI_API_KEY`) and never include them in prompts
-- Sanitize file paths/functions exposed to Codex
-- Audit logs of function calls for suspicious patterns
+
+**Never expose secrets in prompts or function results:**
+
+```python
+import os
+import re
+
+# Load secrets from environment, never hardcode
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+def sanitize_output(text):
+    """Remove potential secrets before sending to Codex."""
+    patterns = [
+        (r'sk-[a-zA-Z0-9]{20,}', '[OPENAI_KEY_REDACTED]'),
+        (r'ghp_[a-zA-Z0-9]{36}', '[GITHUB_TOKEN_REDACTED]'),
+        (r'password["\']?\s*[:=]\s*["\'][^"\']+["\']', 'password="[REDACTED]"'),
+        (r'postgres://[^@]+@', 'postgres://[REDACTED]@'),
+        (r'Bearer [a-zA-Z0-9._-]+', 'Bearer [REDACTED]'),
+    ]
+    for pattern, replacement in patterns:
+        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+    return text
+
+# Wrap all function outputs
+def safe_read_file(args):
+    result = read_file(args)
+    return sanitize_output(result)
+```
+
+**Audit logging for function calls:**
+
+```python
+import logging
+from datetime import datetime
+
+# Set up audit log
+audit_logger = logging.getLogger("codex_audit")
+audit_logger.setLevel(logging.INFO)
+handler = logging.FileHandler("codex_audit.log")
+handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
+audit_logger.addHandler(handler)
+
+def audit_function_call(func_name, args, result, user_id=None):
+    """Log every function call for security review."""
+    audit_logger.info(json.dumps({
+        "timestamp": datetime.utcnow().isoformat(),
+        "user": user_id,
+        "function": func_name,
+        "args": args,
+        "result_length": len(result),
+        # Flag suspicious patterns
+        "flags": detect_suspicious(func_name, args)
+    }))
+
+def detect_suspicious(func_name, args):
+    """Flag potentially dangerous operations."""
+    flags = []
+    args_str = json.dumps(args)
+
+    if ".." in args_str:
+        flags.append("path_traversal_attempt")
+    if "/etc/" in args_str or "/root/" in args_str:
+        flags.append("system_path_access")
+    if func_name == "run_command" and any(d in args_str for d in ["rm ", "dd ", "mkfs"]):
+        flags.append("destructive_command")
+
+    return flags
+```
 
 ---
 
