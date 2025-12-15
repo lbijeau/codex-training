@@ -55,11 +55,26 @@ OpenAI Codex does not spawn agents; you split work by chaining prompts. Think of
 Each stage adds a short chunk of context. Store intermediate summaries in variables so you can reuse them in the next prompt.
 
 **Pattern: Parallel Investigations via prompts**
-If you need to explore multiple hypotheses, run separate prompt streams and merge their outputs manually:
-- Prompt A: focus on auth
-- Prompt B: focus on caching
-- Prompt C: focus on tests
-Then combine the findings in a final “synthesizer” prompt.
+If you need to explore multiple hypotheses, run separate prompt streams and merge their outputs manually.
+
+**How to run parallel streams:**
+1. **Multiple terminals**: Open 2-3 terminal windows, each running `codex --cd /your/repo`
+2. **Using `codex exec`**: Run background jobs in parallel:
+   ```bash
+   codex exec "analyze auth flow and summarize findings" > auth.txt &
+   codex exec "analyze caching strategy and summarize findings" > cache.txt &
+   codex exec "analyze test coverage gaps and summarize findings" > tests.txt &
+   wait
+   ```
+3. **Merge in a synthesizer prompt**: Feed the outputs back into a final session:
+   ```bash
+   codex "Given these findings, identify the root cause:
+   AUTH: $(cat auth.txt)
+   CACHE: $(cat cache.txt)
+   TESTS: $(cat tests.txt)"
+   ```
+
+This approach lets you explore multiple hypotheses concurrently without waiting for each to complete sequentially.
 
 ---
 
