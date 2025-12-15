@@ -475,18 +475,111 @@ messages.append({"role": "user", "content": """
 Each stage adds a small amount to the context, so keep plan outputs concise.
 
 ### Re-using plan templates
-Maintain prompt templates in `docs/prompt_templates/` with placeholders like `{{task}}` so you can quickly spin up new sessions:
+
+Maintain prompt templates with placeholders so you can quickly spin up consistent sessions:
+
+**Template file: `prompts/feature_plan.md`**
+```markdown
+System: You are a senior engineer helping implement features.
+Always explain your reasoning. Never modify files outside src/.
+
+User: I need to {{task}}.
+
+First, use read_file to examine the relevant code, then:
+1. Summarize the current implementation
+2. Propose a 3-step plan (keep each step small and testable)
+3. Ask me to confirm before proceeding
 ```
-System: You are a Codex assistant that…
-User: I need to {{task}}. Start by summarizing the current state and then propose the next 3 steps.
+
+**Template file: `prompts/bug_fix.md`**
+```markdown
+System: You are debugging a production issue. Be methodical.
+
+User: Bug report: {{bug_description}}
+
+Steps:
+1. Use read_file to examine the reported location
+2. Form a hypothesis about the root cause
+3. Propose a minimal fix (no refactoring)
+4. Suggest a test to prevent regression
 ```
-Use a small templating utility (`python render_prompt.py --template plan.md --task="audit dependencies"`) to inject the task.
+
+**Rendering script: `scripts/render_prompt.py`**
+```python
+import sys
+import re
+
+def render(template_path, **variables):
+    with open(template_path) as f:
+        content = f.read()
+    for key, value in variables.items():
+        content = content.replace(f"{{{{{key}}}}}", value)
+    return content
+
+# Usage: python render_prompt.py prompts/feature_plan.md task="add caching to user lookup"
+if __name__ == "__main__":
+    template = sys.argv[1]
+    kwargs = dict(arg.split("=", 1) for arg in sys.argv[2:])
+    print(render(template, **kwargs))
+```
 
 ### Feedback loops
-After every Codex response:
-- Inspect for hallucinated or unsafe content
-- Correct it by sending follow-up user messages or function calls
-- Lock deterministic operations into functions so Codex cannot deviate
+
+After every Codex response, validate before proceeding:
+
+```python
+def validate_response(response, context):
+    """Check for common issues in Codex responses."""
+    content = response.choices[0].message.content or ""
+    issues = []
+
+    # Check for hallucinated file paths
+    mentioned_files = re.findall(r'[`\'"]([^`\'"]+\.(py|js|ts))[`\'"]', content)
+    for file in mentioned_files:
+        if not os.path.exists(file):
+            issues.append(f"Referenced non-existent file: {file}")
+
+    # Check for dangerous operations
+    danger_patterns = ["rm -rf", "DROP TABLE", "DELETE FROM", "> /dev/"]
+    for pattern in danger_patterns:
+        if pattern in content:
+            issues.append(f"Dangerous operation detected: {pattern}")
+
+    # Check for secrets/keys in output
+    if re.search(r'(sk-[a-zA-Z0-9]{20,}|password\s*=\s*["\'][^"\']+["\'])', content):
+        issues.append("Possible secret in response")
+
+    return issues
+
+# In your main loop:
+response = client.chat.completions.create(...)
+issues = validate_response(response, context)
+
+if issues:
+    # Send correction back to Codex
+    messages.append({
+        "role": "user",
+        "content": f"Hold on. I found issues with your response:\n"
+                   f"{chr(10).join('- ' + i for i in issues)}\n\n"
+                   f"Please revise your answer."
+    })
+    response = client.chat.completions.create(model="codex-1", messages=messages)
+```
+
+**Common corrections to send:**
+```python
+# Codex referenced a file that doesn't exist
+"That file doesn't exist. Use read_file to check what files are in src/auth/"
+
+# Codex suggested too many changes at once
+"That's too much at once. Let's do step 1 first, then verify it works."
+
+# Codex made assumptions instead of checking
+"Don't assume - use read_file to check the actual implementation first."
+
+# Codex output was too vague
+"Be more specific. Show me the exact code changes as a diff."
+```
 
 ---
 
