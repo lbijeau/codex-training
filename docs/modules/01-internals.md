@@ -132,12 +132,88 @@ if response.choices[0].message.get("function_call"):
 Codex now sees the function result and can continue reasoning.
 
 ### Tool wrappers instead of built-in tools
-Instead of relying on built-in tools such as `Read` or `Bash`, OpenAI Codex sessions run helper functions that you package and register yourself:
-- Write a `scripts/commands/read_file.py` that reads a path, formats the contents, and returns JSON
-- Expose a `run_tests` function that runs `pytest` and returns pass/fail metadata
-- Wrap HTTP APIs (GitHub, Jira, search) with consistent parameter/response shapes
 
-Store these helpers in `./codex_helpers/` or another folder, and keep a manifest (`functions.json`) describing their schema. That way every session reuses the same catalog of trusted operations.
+> **Why wrappers?** The Codex API is a raw language model—it can only send and receive text. Unlike Codex CLI (which has built-in file/shell tools), the API cannot read files, run commands, or access the internet on its own. You must provide these capabilities by:
+> 1. Declaring functions that describe what operations are available
+> 2. Implementing those functions in your code
+> 3. Running them when Codex requests, and sending results back
+
+**Common wrappers to build:**
+
+```python
+# codex_helpers/read_file.py
+import json
+
+def read_file(args):
+    """
+    Wrapper for file reading. Codex calls this instead of reading files directly.
+    Returns JSON so Codex can parse structured data.
+    """
+    path = args.get("path")
+
+    # Security: prevent escaping the project directory
+    if not path or ".." in path or path.startswith("/"):
+        return json.dumps({"error": "Invalid path - must be relative, no ../"})
+
+    try:
+        with open(path, "r") as f:
+            content = f.read()
+
+        # Truncate large files to avoid blowing up context
+        if len(content) > 10000:
+            content = content[:10000] + "\n... (truncated)"
+
+        return json.dumps({
+            "path": path,
+            "content": content,
+            "lines": len(content.splitlines())
+        })
+    except FileNotFoundError:
+        return json.dumps({"error": f"File not found: {path}"})
+```
+
+```python
+# codex_helpers/run_tests.py
+import subprocess
+import json
+
+def run_tests(args):
+    """
+    Wrapper for running tests. Returns structured pass/fail data.
+    """
+    target = args.get("target", "tests/")  # Default to tests/ directory
+
+    # Run pytest with JSON output
+    result = subprocess.run(
+        ["pytest", target, "-v", "--tb=short"],
+        capture_output=True,
+        text=True,
+        timeout=60  # Prevent runaway tests
+    )
+
+    return json.dumps({
+        "exit_code": result.returncode,          # 0 = all passed
+        "passed": result.returncode == 0,
+        "stdout": result.stdout[:5000],          # Truncate output
+        "stderr": result.stderr[:1000] if result.stderr else None
+    })
+```
+
+**Recommended folder structure:**
+```
+project/
+├── codex_helpers/
+│   ├── __init__.py
+│   ├── read_file.py      # File reading wrapper
+│   ├── run_tests.py      # Test runner wrapper
+│   ├── git_status.py     # Git operations wrapper
+│   └── functions.json    # Schema manifest for all functions
+├── scripts/
+│   └── codex_session.py  # Your main API integration script
+└── .env                  # API keys (gitignored)
+```
+
+Store your wrappers in `./codex_helpers/` and keep a manifest (`functions.json`) describing their schemas. This way every session reuses the same catalog of trusted, validated operations.
 
 ### Function-calling best practices
 
