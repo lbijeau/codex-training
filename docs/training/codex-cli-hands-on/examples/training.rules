@@ -1,0 +1,20 @@
+prefix_rule(
+    pattern = ["rm", ["-rf", "-r"]],
+    decision = "forbidden",
+    match = [["rm", "-rf", "/tmp"]],
+    not_match = [["rm", "--help"]],
+)
+
+prefix_rule(
+    pattern = [["npm", "pnpm", "yarn"], ["install", "update"]],
+    decision = "prompt",
+    match = [["npm", "install"]],
+    not_match = [["npm", "test"]],
+)
+
+prefix_rule(
+    pattern = ["git", ["push", "fetch"]],
+    decision = "prompt",
+    match = [["git", "push", "origin", "main"]],
+    not_match = [["git", "status"]],
+)
