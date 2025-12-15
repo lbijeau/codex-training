@@ -65,31 +65,34 @@ Function calling lets Codex delegate tasks to your own code. Instead of dreaming
 In the request you send to the OpenAI client, register each helper you want Codex to use:
 ```python
 from openai import OpenAI
-client = OpenAI()
+client = OpenAI()  # Reads OPENAI_API_KEY from environment
 
 response = client.chat.completions.create(
     model="codex-1",
     messages=[
+        # System message: sets AI behavior and context
         {"role": "system", "content": "You are a thoughtful coding assistant."},
+        # User message: the actual request
         {"role": "user", "content": "Get the list of TODOs."},
     ],
+    # Functions: tools Codex can ask you to run
     functions=[
         {
-            "name": "list_todos",
-            "description": "Collect TODO comments from a repo",
-            "parameters": {
+            "name": "list_todos",                           # Function identifier
+            "description": "Collect TODO comments from a repo",  # Helps Codex decide when to use it
+            "parameters": {                                 # JSON Schema for arguments
                 "type": "object",
                 "properties": {
                     "paths": {
                         "type": "array",
-                        "items": {"type": "string"}
+                        "items": {"type": "string"}         # Array of file paths
                     }
                 },
-                "required": ["paths"]
+                "required": ["paths"]                       # paths is mandatory
             }
         }
     ],
-    function_call="auto"
+    function_call="auto"  # Let Codex decide when to call functions
 )
 ```
 Codex may respond with a `function_call` telling you which helper to invoke and what arguments to pass.
@@ -97,16 +100,21 @@ Codex may respond with a `function_call` telling you which helper to invoke and 
 ### Running the helper
 After you see a `function_call`, run the matching helper and send the result back:
 ```python
+# Check if Codex wants to call a function
 if response.choices[0].message.get("function_call"):
-    call = response.choices[0].message.function_call
+    call = response.choices[0].message.function_call  # Extract function name and args
+
+    # Run YOUR implementation of the function
     result = list_todos(call.arguments)
+
+    # Send the result back to Codex as a "function" message
     follow_up = client.chat.completions.create(
         model="codex-1",
         messages=response.messages + [
             {
-                "role": "function",
-                "name": call.name,
-                "content": result
+                "role": "function",      # Special role for function results
+                "name": call.name,       # Must match the function that was called
+                "content": result        # Your function's output (usually JSON)
             }
         ]
     )
