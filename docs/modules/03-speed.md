@@ -290,7 +290,7 @@ $(cat test-results.txt)
 Do all tests pass? If yes, we can proceed. If no, what needs to be fixed?"
 ```
 
-**Verification loop as a script:**
+**Verification script (run after each change):**
 ```bash
 #!/bin/bash
 # verify-change.sh - Run after each significant change
