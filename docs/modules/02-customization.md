@@ -130,27 +130,7 @@ These scripts run outside the API; Codex never executes them directly.
 
 ---
 
-## 5. Documenting Customization Patterns
-
-Add a subsection to `docs/playbook/index.md` describing how to:
-1. Update the prompt template library
-2. Register new helper functions
-3. Run the wrapper scripts (e.g., `./scripts/start_session.sh`)
-4. Validate function responses
-
-For example, a playbook entry might look like:
-```
-Scenario: I need to refactor a component
-Approach:
-- Use `feature_refactor.md` template
-- Call `list_todos` helper to gather open tasks
-- After Codex suggests edits, run `run_tests`
-```
-
----
-
 ## Next Steps
 1. Create a prompt template for the feature you are working on
 2. Add at least one helper function implementation to `codex_helpers/`
 3. Update `codex_helpers/functions.json` and register the helper in your session script
-4. Document the new helper in the playbook so teammates can reuse it
