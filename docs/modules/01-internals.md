@@ -95,6 +95,16 @@ response = client.chat.completions.create(
     function_call="auto"  # Let Codex decide when to call functions
 )
 ```
+
+**`function_call` options:**
+| Value | Behavior |
+|-------|----------|
+| `"auto"` | Codex decides whether to call a function or respond with text (recommended default) |
+| `"none"` | Codex will only respond with text, even if functions are available |
+| `{"name": "list_todos"}` | Force Codex to call a specific function |
+
+Use `"auto"` for most cases. Use `{"name": "..."}` when you know a function must be called (e.g., first step of a workflow).
+
 Codex may respond with a `function_call` telling you which helper to invoke and what arguments to pass.
 
 ### Running the helper
