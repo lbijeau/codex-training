@@ -415,6 +415,63 @@ Large problems benefit from staged prompts:
 4. **Verify**: Run tests/functions to confirm the change
 5. **Document**: Summarize what changed and how to continue
 
+**Example: Adding rate limiting to an API endpoint**
+
+```python
+# Stage 1: DISCOVER - Gather context about current implementation
+messages = [
+    {"role": "system", "content": "You are a senior backend engineer."},
+    {"role": "user", "content": """
+        I need to add rate limiting to our login endpoint.
+        First, analyze the current implementation and tell me:
+        1. How authentication currently works
+        2. Where rate limiting should be added
+        3. What existing middleware patterns we use
+    """}
+]
+# Codex calls read_file("src/auth/login.py"), read_file("src/middleware/index.py")
+# You run those functions and feed results back
+# Codex responds with analysis
+
+# Stage 2: PLAN - Get a concrete action plan
+messages.append({"role": "user", "content": """
+    Based on your analysis, create a numbered implementation plan.
+    Each step should be small and testable.
+    Include which files to modify and what changes to make.
+"""})
+# Codex responds with plan:
+# 1. Create src/middleware/rate_limit.py with token bucket algorithm
+# 2. Add rate limit config to src/config.py
+# 3. Apply middleware to login route in src/auth/routes.py
+# 4. Add tests in tests/test_rate_limit.py
+
+# Stage 3: EXECUTE - Implement step by step
+messages.append({"role": "user", "content": """
+    Implement step 1: Create the rate limiting middleware.
+    Show me the complete file content.
+"""})
+# Codex responds with code
+# You write it to disk, then continue to step 2...
+
+# Stage 4: VERIFY - Run tests
+messages.append({
+    "role": "function",
+    "name": "run_tests",
+    "content": '{"passed": false, "stdout": "FAILED test_rate_limit.py::test_blocks_after_limit"}'
+})
+messages.append({"role": "user", "content": "Tests failed. Fix the issue."})
+# Codex analyzes failure and provides fix
+
+# Stage 5: DOCUMENT - Summarize for future context
+messages.append({"role": "user", "content": """
+    Tests pass. Summarize what we changed in 3 bullet points.
+    I'll use this summary to continue in a future session.
+"""})
+# Codex: "• Added token bucket rate limiter at src/middleware/rate_limit.py
+#         • Login endpoint now allows 5 attempts per minute per IP
+#         • Tests added covering limit enforcement and reset behavior"
+```
+
 Each stage adds a small amount to the context, so keep plan outputs concise.
 
 ### Re-using plan templates
