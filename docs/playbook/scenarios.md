@@ -42,7 +42,7 @@ Add your discovered scenarios below as you learn:
 **See**: [Helper Documentation Template](../templates/helper-doc-template.md)
 
 **Scenario**: I want Codex to know about static analysis findings before refactoring
-**Approach**: Run `bash scripts/run_static_checks.sh`, record the outputs in `docs/templates/static-analysis-report.md`, and paste the summarized bullets into the prompt along with helper names.
+**Approach**: Review your code for duplicates, complexity, and architectural issues, record findings in `docs/templates/static-analysis-report.md`, and paste the summarized bullets into the prompt along with helper names.
 **Why**: Keeps Codex focused on the previously flagged duplicates, complexity spikes, or forbidden imports without rehashing the entire diff.
 **See**: [Static Analysis Report Template](../templates/static-analysis-report.md)
 

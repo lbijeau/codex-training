@@ -30,8 +30,8 @@ Codex describes the plan and may call `run_tests` (functionically) to validate a
 ## Step 4: Execute and validate
 After Codex outputs diffs, apply them manually. Run `./codex_helpers/run_tests.py --target tests/` when requested. Feed the test JSON back into Codex so it can confirm the fix.
 
-## Step 5: Run static checks
-Run `bash scripts/run_static_checks.sh practice/static-checks` before you finalize edits so you can highlight duplicated logic, complexity deltas, or forbidden imports. Capture the warnings in `docs/templates/static-analysis-report.md` and paste the key lines into your Codex prompt along with the helper findings.
+## Step 5: Review before finalizing
+Before finalizing edits, review your changes for duplicated logic, complexity, or architectural concerns. Document findings in `docs/templates/static-analysis-report.md` and include key observations in your Codex prompt along with the helper findings.
 
 ## Step 6: Log and summarize
 Capture the session using `scripts/post_session_logger.sh`. Run `scripts/helper_usage.sh` afterward to verify which helpers fired.

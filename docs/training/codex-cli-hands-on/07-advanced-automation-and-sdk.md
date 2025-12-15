@@ -21,10 +21,10 @@ Use this module as an add-on after the core labs. Focus: automation with `codex 
 
 ## Config profiles and feature flags
 - Profiles in `config.toml` let you swap defaults (models, approvals, sandbox, features).
-- Example snippet:
+- Example snippet (model names may change; check `codex --help` for current options):
   ```toml
   [profile.demo]
-  model = "gpt-5.1"
+  model = "codex-max"  # or current default model
   ask_for_approval = true
   sandbox_mode = "workspace-write"
   [profile.demo.features]
@@ -51,7 +51,7 @@ Use this module as an add-on after the core labs. Focus: automation with `codex 
 - Lab idea: run a failing command, inspect the log tail, and correlate with `--json` events from `codex exec`.
 
 ## MCP client setup
-- Configure servers in `config.toml` (see `../codex/docs/config.md#mcp-integration`). Example:
+- Configure servers in `config.toml` (see [MCP integration](https://github.com/openai/codex/blob/main/docs/config.md#mcp-integration)). Example:
   ```toml
   [[mcp_servers]]
   name = "example-tools"
@@ -61,9 +61,13 @@ Use this module as an add-on after the core labs. Focus: automation with `codex 
 - After enabling, tools appear in Codex (TUI or exec). Mention timeouts if using MCP inspector with `codex mcp-server`.
 - Lab idea: add a simple server, then ask Codex to list MCP tools and call one.
 
-## TypeScript SDK quickstart (from `../sdk/typescript/README.md`)
-- Minimal session starter:
+## TypeScript SDK quickstart
+
+> **Note:** The SDK package name and API may change. Verify the current package at [npmjs.com/@openai](https://www.npmjs.com/search?q=%40openai%20codex) or the [official Codex SDK docs](https://github.com/openai/codex).
+
+- Minimal session starter (illustrative; verify current API):
   ```ts
+  // Package name subject to change - verify at npmjs.com/@openai
   import { CodexClient } from "@openai/codex-sdk";
 
   const client = new CodexClient({ apiKey: process.env.OPENAI_API_KEY! });
@@ -71,7 +75,7 @@ Use this module as an add-on after the core labs. Focus: automation with `codex 
   async function run() {
     const session = await client.sessions.start({
       prompt: "Summarize src/app.ts",
-      model: "gpt-5.1",
+      model: "codex-max",  // Use current default model
       approvalPolicy: "never",
       sandbox: "read-only",
     });

@@ -2,8 +2,8 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Build a fresh hands-on training track for Codex CLI users and PM/trainer audiences, including repo review findings and Jupyter-friendly exercises.  
-**Architecture:** Author a concise plan-first structure, create a dedicated training directory with modular markdown labs, and capture a findings report based on the upstream `../codex` repository review.  
+**Goal:** Build a fresh hands-on training track for Codex CLI users and PM/trainer audiences, including repo review findings and Jupyter-friendly exercises.
+**Architecture:** Author a concise plan-first structure, create a dedicated training directory with modular markdown labs, and capture a findings report based on the upstream [openai/codex](https://github.com/openai/codex) repository review.  
 **Tech Stack:** Markdown, Codex CLI usage patterns, Jupyter notebook workflows (documented), shell commands.
 
 ## Stage 1: Review upstream Codex repo and capture gaps
@@ -41,8 +41,8 @@ Status: Complete
 - Modify: `docs/training/codex-cli-hands-on/` (new directory to hold notes if needed)  
 - Output: Findings summarized later in `docs/training/codex-cli-hands-on/repo-review-findings.md`
 
-**Step 1: Gather evidence from README and key docs**  
-Run: `rg --files ../codex/docs | head` to scope docs, then skim `README.md`, `docs/getting-started.md`, `docs/config.md`.  
+**Step 1: Gather evidence from README and key docs**
+Review the [openai/codex docs](https://github.com/openai/codex/tree/main/docs), then skim `README.md`, `docs/getting-started.md`, `docs/config.md`.
 Expected: Notes on CLI usage, exec mode, AGENTS, MCP, sandboxing.
 
 **Step 2: Capture gaps and priorities**  

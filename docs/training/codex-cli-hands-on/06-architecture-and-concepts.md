@@ -12,30 +12,31 @@ Codex modes:
 - Non-interactive automation (`codex exec`): no approvals by default; starts in `read-only` unless `--full-auto` or sandbox loosened.
 - MCP server (`codex mcp-server`): run Codex as a server for other agents; tools `codex` and `codex-reply`.
 
-Instruction stack (per `docs/agents_md.md`):
+Instruction stack (see [AGENTS.md docs](https://github.com/openai/codex/blob/main/docs/agents_md.md)):
 - Global: `~/.codex/AGENTS.override.md` or `AGENTS.md`.
 - Project: walk from repo root to cwd, preferring `AGENTS.override.md`, then `AGENTS.md`, then configured fallbacks.
 - Combined in order; deeper paths override earlier guidance. Size capped by `project_doc_max_bytes`.
 
-Skills (per `docs/skills.md`):
+Skills (see [skills docs](https://github.com/openai/codex/blob/main/docs/skills.md)):
 - Experimental feature flag: enable via `config.toml [features] skills = true` or `--enable skills`.
 - Skills live under `~/.codex/skills/**/SKILL.md` with YAML frontmatter (name, description).
 - Runtime shows names/descriptions; bodies stay on disk. Mention `$skill-name` or use `/skills` in TUI to insert.
 - Invalid skills trigger startup modal; fix and restart.
+- **Verify skills are enabled:** In TUI, use `/skills` command to list available skills. If empty, check your config.
 
 Sandboxing, approvals, execpolicy:
-- Sandbox modes: `read-only`, `workspace-write`, `danger-full-access`. TUI start banner shows roots; `codex exec` defaults to `read-only`.
-- Approval policies: `untrusted` (strict), `on-request`, `on-failure`, `never` (no approvals). Use `--ask-for-approval` to enforce in TUI.
-- Execpolicy (see `docs/execpolicy.md`): repo rules to allow/deny commands or files; enforce guardrails beyond approvals.
+- Sandbox modes: `read-only`, `workspace-write`, `danger-full-access` (⚠️ completely disables sandboxing; use only for trusted automation). TUI start banner shows roots; `codex exec` defaults to `read-only`.
+- Approval policies (verify with `codex --help`): `suggest` (default), `auto-edit`, `full-auto`. Use `--ask-for-approval` or `-a` flag to require approvals for commands.
+- Execpolicy (see [execpolicy docs](https://github.com/openai/codex/blob/main/docs/execpolicy.md)): repo rules to allow/deny commands or files; enforce guardrails beyond approvals.
 - Safety best practice: request plan + diff before writes; decline broad/deleting commands; prefer minimal scope.
 
-MCP integration (per `docs/advanced.md` and `config.md#mcp-integration`):
+MCP integration (see [advanced docs](https://github.com/openai/codex/blob/main/docs/advanced.md) and [MCP config](https://github.com/openai/codex/blob/main/docs/config.md#mcp-integration)):
 - As a client: configure MCP servers in `config.toml`; Codex gains tools from those servers.
 - As a server: `codex mcp-server` exposes Codex to other frameworks; tools include `codex` (start session) and `codex-reply` (continue).
 - Inspector quickstart: `npx @modelcontextprotocol/inspector codex mcp-server` and send `tools/list` requests; increase timeouts for long runs.
 
 Observability:
-- Logs: `~/.codex/log/codex-tui.log` (TUI), `RUST_LOG` env for verbosity.
+- Logs: `~/.codex/log/codex-tui.log` (TUI), `RUST_LOG` env for verbosity. Note: paths may vary on Windows/WSL.
 - `codex exec` JSON mode (`--json`) streams events (`command_execution`, `file_change`, `mcp_tool_call`, etc.).
 - Structured outputs: `--output-schema` for JSON schema; `-o/--output-last-message` to capture final output.
 

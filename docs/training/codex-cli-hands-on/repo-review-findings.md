@@ -2,12 +2,12 @@
 
 Target for this training: enable new Codex CLI users and PM/trainer audiences to run hands-on sessions confidently (install → safety → interactive labs → automation → Jupyter companion), with clear evaluation heuristics.
 
-Evidence (from `../codex`):
-- `README.md` highlights install commands, interactive TUI, `codex exec`, and links to docs.
-- `docs/getting-started.md` covers CLI usage, resume flows, prompt-seeded runs, and tips (`--cd`, `--add-dir`, shell completions, image input).
-- `docs/authentication.md` explains ChatGPT login vs API key and headless flows.
-- `docs/config.md` details config file and MCP server setup.
-- `docs/sandbox.md` and `docs/execpolicy.md` describe sandboxing, approvals, and policy rules.
+Evidence (from [openai/codex](https://github.com/openai/codex)):
+- [README.md](https://github.com/openai/codex#readme) highlights install commands, interactive TUI, `codex exec`, and links to docs.
+- [getting-started.md](https://github.com/openai/codex/blob/main/docs/getting-started.md) covers CLI usage, resume flows, prompt-seeded runs, and tips (`--cd`, `--add-dir`, shell completions, image input).
+- [authentication.md](https://github.com/openai/codex/blob/main/docs/authentication.md) explains ChatGPT login vs API key and headless flows.
+- [config.md](https://github.com/openai/codex/blob/main/docs/config.md) details config file and MCP server setup.
+- [sandbox.md](https://github.com/openai/codex/blob/main/docs/sandbox.md) and [execpolicy.md](https://github.com/openai/codex/blob/main/docs/execpolicy.md) describe sandboxing, approvals, and policy rules.
 - Documentation is comprehensive but leans reference-style; limited “do this now” lab scripts and no Jupyter pairing guidance.
 
 Gap table (criterion → current → target → delta):

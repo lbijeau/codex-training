@@ -52,6 +52,15 @@ graph TB
     ROOT --> resources["RESOURCES.md\nLinks & references"]
 ```
 
+## Additional Training Tracks
+
+### Codex CLI Hands-on Training
+A standalone training track for new Codex CLI users and PM/trainers. Covers installation, safety model, interactive labs, automation with `codex exec`, and Jupyter integration.
+
+📁 **[Start Here](docs/training/codex-cli-hands-on/README.md)** | ⏱️ ~90 minutes total
+
+---
+
 ## Modules
 
 ### Module 1: Codex Code Internals

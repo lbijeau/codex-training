@@ -5,7 +5,7 @@ Objectives:
 - Learn the core safety model (sandboxing, approvals) and how to keep control.
 - Set expectations for session flow, deliverables, and success checks.
 
-What Codex CLI is (per `../codex/README.md`):
+What Codex CLI is (see [official README](https://github.com/openai/codex#readme)):
 - Local coding agent that reads/writes your workspace, with optional MCP servers.
 - Interactive TUI (`codex`), prompt-seeded runs (`codex "..."`), and automation mode (`codex exec`).
 - Honors `AGENTS.md` memory, approval policies, and sandbox settings from the host.
