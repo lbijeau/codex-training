@@ -178,26 +178,135 @@ Templates prevent prompt drift and keep token usage predictable.
 ## 4. Task Decomposition Frameworks
 
 ### Framework 1: Dependency-first
+
+**Steps:**
 1. List all operations you must perform
 2. Identify which data each needs
 3. Group operations without dependencies into a single prompt
 4. Sequence dependent operations (e.g., plan before edit)
 
-### Framework 2: Role-Based Prompting
-Use prompt templates to mimic specialized roles:
-- `Discoverer` template: Fact gathering, uses `grep` helper
-- `Planner` template: Creates step-by-step plan
-- `Implementer` template: Executes plan with function calls
-- `Verifier` template: Runs tests or chooses validation steps
+**Example: Adding a new API endpoint**
+```bash
+# Step 1-2: Map out operations and dependencies
+# - Read existing routes (no dependency)
+# - Read existing models (no dependency)
+# - Read tests (no dependency)
+# - Plan the endpoint (depends on above)
+# - Implement (depends on plan)
+# - Test (depends on implementation)
 
-Switch templates instead of spawning new agents.
+# Step 3: Bundle independent reads in ONE prompt
+codex "Read these files and summarize their patterns:
+- src/routes/index.ts
+- src/models/user.ts
+- tests/routes.test.ts"
+
+# Step 4: Sequential prompts for dependent operations
+codex "Based on the patterns above, plan a new GET /users/:id endpoint"
+codex "Implement the plan in src/routes/users.ts"
+codex "Add tests for the new endpoint"
+```
+
+### Framework 2: Role-Based Prompting
+
+Create reusable prompt templates for each role:
+
+```bash
+# Create templates directory
+mkdir -p prompts/
+
+# Discoverer template - fact gathering
+cat > prompts/discoverer.md << 'EOF'
+You are gathering facts. Do NOT make changes.
+Search the codebase and report findings as bullet points.
+Use grep to find relevant code. Summarize patterns you see.
+EOF
+
+# Planner template - step-by-step planning
+cat > prompts/planner.md << 'EOF'
+You are creating a plan. Do NOT implement yet.
+Given the facts below, create a numbered step-by-step plan.
+Each step should be small and testable.
+EOF
+
+# Implementer template - execution
+cat > prompts/implementer.md << 'EOF'
+You are implementing a plan. Follow it exactly.
+Make one change at a time. Show diffs before applying.
+EOF
+
+# Verifier template - validation
+cat > prompts/verifier.md << 'EOF'
+You are verifying changes. Run tests and report results.
+Check for: syntax errors, type errors, failing tests, security issues.
+EOF
+```
+
+**Using the templates in sequence:**
+```bash
+# 1. Discover
+codex "$(cat prompts/discoverer.md)
+
+Find all authentication-related code in src/"
+
+# 2. Plan (feed in discovery results)
+codex "$(cat prompts/planner.md)
+
+Facts: [paste discoverer output]
+Task: Add rate limiting to auth endpoints"
+
+# 3. Implement
+codex "$(cat prompts/implementer.md)
+
+Plan: [paste planner output]"
+
+# 4. Verify
+codex "$(cat prompts/verifier.md)
+
+Run the test suite and check for regressions"
+```
 
 ### Framework 3: Verification Chains
-After every significant change:
-1. Summarize the change (one sentence)
-2. Ask Codex to propose tests or validations
-3. Run the helper (e.g., `run_tests`) and feed results back
-4. Only proceed once Codex acknowledges the tests
+
+After every significant change, run this verification loop:
+
+```bash
+# Step 1: Make a change and summarize it
+codex "Add input validation to the login endpoint"
+codex exec "Summarize the change you just made in one sentence" > change-summary.txt
+
+# Step 2: Ask Codex to propose validations
+codex "$(cat change-summary.txt)
+
+What tests or validations should we run to verify this change?"
+
+# Step 3: Run the tests and capture results
+codex exec "Run pytest on tests/auth/ and report results" > test-results.txt
+
+# Step 4: Feed results back - only proceed if tests pass
+codex "Test results:
+$(cat test-results.txt)
+
+Do all tests pass? If yes, we can proceed. If no, what needs to be fixed?"
+```
+
+**Verification loop as a script:**
+```bash
+#!/bin/bash
+# verify-change.sh - Run after each significant change
+
+echo "=== Summarizing change ==="
+codex exec "Summarize the most recent code change in one sentence" | tee change.txt
+
+echo "=== Running tests ==="
+codex exec "Run the test suite" | tee tests.txt
+
+echo "=== Checking results ==="
+codex "Change: $(cat change.txt)
+Tests: $(cat tests.txt)
+
+Are we good to proceed? Answer YES or NO with explanation."
+```
 
 ---
 
