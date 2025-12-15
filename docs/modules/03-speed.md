@@ -75,6 +75,8 @@ Each stage adds a short chunk of context. Store intermediate summaries in variab
 **Pattern: Parallel Investigations via prompts**
 If you need to explore multiple hypotheses, run separate prompt streams and merge their outputs manually.
 
+> **`codex` vs `codex exec`**: Use `codex "prompt"` to start an **interactive TUI session** where you can approve commands and continue the conversation. Use `codex exec "prompt"` for **non-interactive execution** that returns output directly—ideal for scripting, redirecting to files, or running in the background.
+
 **How to run parallel streams:**
 1. **Multiple terminals**: Open 2-3 terminal windows, each running `codex --cd /your/repo`
 2. **Using `codex exec`**: Run background jobs in parallel:
