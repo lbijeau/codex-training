@@ -192,16 +192,116 @@ Total context = system prompt + user/assistant history + function results + new 
 The window includes both incoming message tokens and the tokens you expect the model to emit, so budget accordingly.
 
 ### Strategies to stay inside the window
-1. **Summaries**: Periodically summarize prior exchanges into a single message and drop long transcripts
-2. **Chunking**: Feed only the relevant files for the current problem (use grep/local search before sharing)
-3. **Streaming**: For long outputs, stream them so you can stop early if you detect divergence
-4. **Cache context**: Store intermediate summaries (e.g., “Task status: exploring backend”) and prepend them when resuming
+
+**1. Summaries** — Periodically compress prior exchanges:
+
+*API approach:*
+```python
+# After a long exchange, ask for a summary
+messages.append({"role": "user", "content": "Summarize our progress in 3 bullet points."})
+response = client.chat.completions.create(model="codex-1", messages=messages)
+summary = response.choices[0].message.content
+
+# Start fresh with just the summary
+messages = [
+    {"role": "system", "content": system_prompt},
+    {"role": "assistant", "content": f"Progress so far:\n{summary}"}
+]
+```
+
+*CLI approach:*
+```bash
+codex exec "Summarize what we've learned about the auth system in 3 bullets" > context.txt
+# Start new session with context
+codex "Context: $(cat context.txt)
+
+Now implement the rate limiting we discussed."
+```
+
+**2. Chunking** — Search before sharing entire files:
+
+*API approach:*
+```python
+def get_relevant_snippet(filepath, keyword):
+    """Return only lines containing keyword, with context."""
+    with open(filepath) as f:
+        lines = f.readlines()
+    matches = [(i, line) for i, line in enumerate(lines) if keyword in line]
+    # Return matches with 3 lines of context
+    return format_with_context(lines, matches, context=3)
+
+# Instead of sending entire file:
+snippet = get_relevant_snippet("src/auth.ts", "validateUser")
+messages.append({"role": "user", "content": f"Review this code:\n{snippet}"})
+```
+
+*CLI approach:*
+```bash
+# Don't do this (sends entire file):
+codex "Review src/auth.ts"
+
+# Do this instead (targeted):
+codex "Show me only the validateUser function from src/auth.ts and review it"
+```
+
+**3. Streaming** — Stop early if output diverges:
+
+```python
+stream = client.chat.completions.create(
+    model="codex-1",
+    messages=messages,
+    stream=True
+)
+
+output = ""
+for chunk in stream:
+    delta = chunk.choices[0].delta.content or ""
+    output += delta
+    print(delta, end="", flush=True)
+
+    # Stop if we detect repetition or off-topic content
+    if len(output) > 2000 and is_repetitive(output):
+        break
+```
+
+**4. Cache context** — Store state between sessions:
+
+```bash
+# Save progress after each major step
+codex exec "Summarize: what files we changed, what's left to do" > .codex-context.md
+
+# Resume later
+codex "Previous context: $(cat .codex-context.md)
+
+Continue with the next step."
+```
 
 ### Monitoring tokens
-Use the OpenAI response metadata to inspect `usage.total_tokens`. If you approach the limit:
-- Roll-up earlier messages into a short summary
-- Re-open a new session with the summary as the first message
-- Use function calls to fetch external data instead of embedding extra files directly
+
+*API approach:*
+```python
+response = client.chat.completions.create(model="codex-1", messages=messages)
+
+# Check token usage
+usage = response.usage
+print(f"Prompt: {usage.prompt_tokens}, Completion: {usage.completion_tokens}, Total: {usage.total_tokens}")
+
+# If approaching limit (e.g., 100K of 128K), summarize and reset
+if usage.total_tokens > 100000:
+    summary = summarize_conversation(messages)
+    messages = [{"role": "system", "content": system_prompt},
+                {"role": "assistant", "content": summary}]
+```
+
+*CLI approach:*
+```bash
+# Codex CLI manages context automatically, but you can check session size:
+ls -la ~/.codex/sessions/
+
+# If a session feels slow or forgetful, start fresh with a summary:
+codex exec "Summarize our current task and progress" > summary.txt
+# Then start new session with that context
+```
 
 ---
 
