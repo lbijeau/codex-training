@@ -56,7 +56,7 @@ Instruction stack (source + PNG):
 graph TB
   subgraph Inputs
     A[Global AGENTS (~/.codex/AGENTS.md)]
-    B[Project AGENTS (root → cwd)]
+    B[Project AGENTS root to cwd]
     C[Skills (names + descriptions)]
     D[Config.toml flags]
   end
