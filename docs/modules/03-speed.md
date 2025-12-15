@@ -385,26 +385,49 @@ codex "Fix the typo in src/config.ts line 42: 'recieve' should be 'receive'"
 ## 6. Performance Pattern Library
 
 ### Pattern: Breadth-first discovery
-Use concurrent helper calls to map the codebase:
+Ask Codex to gather multiple pieces of information in a single prompt:
+```bash
+codex "Before we start, give me an overview:
+1. Read README.md and summarize the project
+2. Show git status (any uncommitted changes?)
+3. Find all TODO comments in src/**/*.ts
+4. List the main directories and their purposes"
 ```
-read_file("README.md")
-get_git_status()
-grep("TODO", "src/**/*.ts")
-```
-Return all outputs in one response and let Codex synthesize.
+Codex handles all of this internally and returns a synthesized response.
 
 ### Pattern: Parallel validation
-Ask Codex for multiple validation rubrics in one go:
+Run multiple validation checks in one prompt:
+```bash
+codex "Run these checks and report results:
+1. npm run lint
+2. npm test
+3. Check for console.log statements that should be removed"
 ```
-Assistant: Run lint, tests, security checks (call helpers list_lint, run_tests, security_scan)
+
+Or run them concurrently in the background:
+```bash
+codex exec "Run npm run lint and summarize issues" > lint.txt &
+codex exec "Run npm test and summarize failures" > tests.txt &
+codex exec "Find security issues: hardcoded secrets, SQL injection, XSS" > security.txt &
+wait
+
+# Review all results
+cat lint.txt tests.txt security.txt
 ```
-Structure the helpers so they all run and return JSON.
 
 ### Pattern: Progressive summarization
-When you finish a stage:
-1. Prompt Codex: “What changed in 2-3 sentences?”
-2. Save the summary and provide it in the next prompt
-3. Use it as the basis for the next question
+After each stage, capture a summary to reduce context in future prompts:
+```bash
+# After a discovery phase
+codex exec "Summarize what we learned about the auth system in 3 bullet points" > auth-summary.txt
+
+# Use the summary (not the full exploration) in the next prompt
+codex "Given this context: $(cat auth-summary.txt)
+
+Now plan how to add rate limiting to the login endpoint"
+```
+
+This keeps token usage low while preserving essential context.
 
 ---
 
@@ -413,12 +436,12 @@ When you finish a stage:
 2. **Chain prompts** instead of relying on multiple agents
 3. **Guard the context budget** with summaries and targeted sharing
 4. **Decompose tasks** by dependencies and template roles
-5. **Always validate** with helper calls before finishing
+5. **Always validate** with tests or checks before finishing
 
 ---
 
 ## Next Steps
-1. Practice bundling reads and helper calls in Module 3 exercises
-2. Create templates for each stage of your plan pipeline
-3. Document a validation workflow (helpers + prompts)
+1. Practice bundling reads and searches in a single prompt
+2. Create reusable templates in a `prompts/` directory
+3. Document a validation workflow (verification script + test runs)
 4. Measure token/message savings for a typical task
