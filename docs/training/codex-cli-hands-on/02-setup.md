@@ -33,3 +33,37 @@ Environment prep for labs:
 Readiness check:
 - Run: `codex "echo hello from Codex and tell me my current working directory"` with approvals required.
 - Confirm Codex prints the workdir and asks for approval before running commands.
+
+---
+
+## Quick Reference
+
+### Common CLI Flags
+
+| Flag | Description |
+|------|-------------|
+| `--cd <path>` | Set working directory to a specific repo |
+| `--add-dir <path>` | Add additional directories for multi-repo work |
+| `-a`, `--ask-for-approval` | Require approval before executing commands |
+| `--full-auto` | Enable writes without approval (use with caution) |
+| `--json` | Output structured JSON events (`codex exec` only) |
+| `--output-schema <file>` | Validate output against JSON schema |
+| `-o`, `--output-last-message` | Capture final response to file |
+| `--sandbox <mode>` | Set sandbox: `read-only`, `workspace-write`, `danger-full-access` |
+| `--profile <name>` | Use a named config profile |
+| `--enable <feature>` | Enable experimental features (e.g., `--enable skills`) |
+
+### TUI Slash Commands
+
+| Command | Description |
+|---------|-------------|
+| `/help` | Show available commands |
+| `/status` | Show session info (workdir, sandbox, session ID) |
+| `/skills` | List available skills (if enabled) |
+| `/clear` | Clear conversation history |
+| `/compact` | Summarize and compress context |
+| `/undo` | Undo last file change |
+| `/diff` | Show pending changes |
+| `/model` | Switch model mid-session |
+
+For the full reference, see the [official CLI docs](https://github.com/openai/codex/blob/main/docs/cli.md).
