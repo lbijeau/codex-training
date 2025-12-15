@@ -630,8 +630,9 @@ def git_status(args):
     result["untracked"] = untracked.stdout.strip().split("\n") if untracked.stdout.strip() else []
 
     # Recent commits (for context)
+    # --no-pager prevents git from waiting for interactive input
     log = subprocess.run(
-        ["git", "log", "--oneline", "-5"],
+        ["git", "--no-pager", "log", "--oneline", "-5"],
         capture_output=True, text=True
     )
     result["recent_commits"] = log.stdout.strip().split("\n") if log.stdout.strip() else []
@@ -723,7 +724,8 @@ def git_diff(args):
     file_path = args.get("path")  # Optional: specific file
     staged = args.get("staged", False)
 
-    cmd = ["git", "diff"]
+    # --no-pager prevents git from waiting for interactive pager input
+    cmd = ["git", "--no-pager", "diff"]
     if staged:
         cmd.append("--staged")
     if file_path:
