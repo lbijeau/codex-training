@@ -1,8 +1,10 @@
 # Module 1: Codex Code Internals
 
+> **⚠️ Advanced / API Focus**: This module covers the OpenAI Codex **API** internals—building custom integrations, function calling, and managing context programmatically. **If you're using Codex CLI**, you don't need this to get started. The CLI handles tools, context, and sessions automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead, and return here when you want to build custom API integrations.
+
 ## Overview
 
-Understanding how OpenAI Codex works under the hood is essential for mastering it. This module explores the chat-based architecture, function-calling workflow, and context strategies that determine how Codex behaves during a session.
+Understanding how OpenAI Codex works under the hood is essential for building custom integrations. This module explores the chat-based architecture, function-calling workflow, and context strategies that determine how Codex behaves during an API session.
 
 **Learning Objectives**:
 - Understand the message types that make up a Codex session and how system/user/assistant instructions shape each interaction
@@ -337,7 +339,9 @@ After every Codex response:
 
 ## 5. Working with Local Data and Scripts
 
-You cannot rely on built-in file tools, so build lightweight wrappers:
+> **Note**: Codex CLI has built-in file and shell tools. This section is for **API users** building custom integrations who need to implement their own tool wrappers.
+
+When using the API directly, you provide your own tool implementations:
 - `codex_helpers/read_file(path)` returns the file content and optionally tokenizes it
 - `codex_helpers/run_tests()` runs your test suite and returns structured results
 - `codex_helpers/git_status()` summarizes untracked/modified files
