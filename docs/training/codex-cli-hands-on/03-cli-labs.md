@@ -47,13 +47,60 @@ Checks:
 - Optional: `pytest -q` passes.
 
 ## Lab 5: Multi-directory exposure (optional)
-Goal: Demonstrate `--add-dir` for multi-repo work.  
-Steps:  
-1) From a parent directory: `codex --cd frontend --add-dir ../backend "list shared interfaces we might align"`  
-2) Approve read access; decline writes.  
-Checks:  
-- Codex lists both roots; suggestions reference both directories.  
+Goal: Demonstrate `--add-dir` for multi-repo work.
+Steps:
+1) From a parent directory: `codex --cd frontend --add-dir ../backend "list shared interfaces we might align"`
+2) Approve read access; decline writes.
+Checks:
+- Codex lists both roots; suggestions reference both directories.
 - No writes occur unless explicitly approved.
+
+## Lab 6: Saving and Reusing Context
+Goal: Learn to persist context between sessions using files.
+Steps:
+1) Start a session exploring a topic:
+   ```bash
+   codex "Explore hello.py and explain what it does, how it handles errors, and what could be improved"
+   ```
+2) Save the learnings to a file:
+   ```bash
+   codex exec "Summarize what we learned about hello.py in 3 bullet points" > context.txt
+   ```
+3) Verify the summary:
+   ```bash
+   cat context.txt
+   ```
+4) Start a NEW session using that context:
+   ```bash
+   codex "Previous context:
+   $(cat context.txt)
+
+   Now add input validation based on the improvements you suggested."
+   ```
+Checks:
+- `context.txt` contains a concise summary (not the full conversation).
+- The new session understands the prior analysis without re-exploring.
+- Codex builds on the previous suggestions.
+
+**Why this matters:**
+- Sessions don't share memory — each `codex` command starts fresh
+- Saving summaries lets you continue work across sessions
+- Keeps context small (summary vs. full transcript)
+- Useful for long-running tasks split across days
+
+**Pro tip:** Create a `contexts/` directory for larger projects:
+```bash
+mkdir -p contexts/
+codex exec "Summarize the auth system architecture" > contexts/auth.md
+codex exec "Summarize the API endpoints" > contexts/api.md
+
+# Later, start with combined context:
+codex "Context:
+$(cat contexts/auth.md)
+$(cat contexts/api.md)
+
+Now add rate limiting to the login endpoint."
+```
 
 Debrief prompts (facilitator):
 - What approvals were requested? Were they necessary?
