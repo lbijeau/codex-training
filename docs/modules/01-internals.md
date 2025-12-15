@@ -116,11 +116,69 @@ Instead of relying on built-in tools such as `Read` or `Bash`, OpenAI Codex sess
 Store these helpers in `./codex_helpers/` or another folder, and keep a manifest (`functions.json`) describing their schema. That way every session reuses the same catalog of trusted operations.
 
 ### Function-calling best practices
-- Keep each function focused; the schema should surface clear input/output types
-- Limit responses (e.g., 800 tokens) so Codex does not wander into noisy results
-- Validate and sanitize all arguments — Codex can hallucinate parameter names
-- Never expose secrets; load API keys from environment variables outside the message stream
-- Log every call (name, args, result) for reproducibility
+
+**Keep each function focused**
+```json
+{
+  "name": "read_file",
+  "description": "Read a file and return its contents",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "path": { "type": "string", "description": "Relative path to the file" }
+    },
+    "required": ["path"]
+  }
+}
+```
+
+**Limit responses to avoid noisy results**
+```python
+response = client.chat.completions.create(
+    model="codex-1",
+    messages=messages,
+    max_tokens=800,  # Cap output length
+    functions=functions
+)
+```
+
+**Validate and sanitize arguments** (Codex can hallucinate parameter names)
+```python
+def read_file(args):
+    path = args.get("path")
+    if not path or ".." in path:  # Prevent directory traversal
+        return {"error": "Invalid path"}
+    if not os.path.exists(path):
+        return {"error": f"File not found: {path}"}
+    with open(path) as f:
+        return {"content": f.read()[:10000]}  # Limit size
+```
+
+**Never expose secrets** — use `.env` files
+```bash
+# .env (add to .gitignore!)
+OPENAI_API_KEY=sk-...
+DATABASE_URL=postgres://...
+```
+```python
+# Load before any API calls
+from dotenv import load_dotenv
+load_dotenv()
+
+client = OpenAI()  # Reads OPENAI_API_KEY from environment
+```
+
+**Log every call for reproducibility**
+```python
+import logging
+logging.basicConfig(filename="codex_calls.log", level=logging.INFO)
+
+def log_function_call(name, args, result):
+    logging.info(f"Function: {name} | Args: {args} | Result: {result[:200]}")
+
+# After each function execution:
+log_function_call(func_name, func_args, json.dumps(result))
+```
 
 ---
 
