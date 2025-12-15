@@ -26,7 +26,7 @@ Skills (see [skills docs](https://github.com/openai/codex/blob/main/docs/skills.
 
 Sandboxing, approvals, execpolicy:
 - Sandbox modes: `read-only`, `workspace-write`, `danger-full-access` (⚠️ completely disables sandboxing; use only for trusted automation). TUI start banner shows roots; `codex exec` defaults to `read-only`.
-- Approval policies (verify with `codex --help`): `suggest` (default), `auto-edit`, `full-auto`. Use `--ask-for-approval` or `-a` flag to require approvals for commands.
+- Approval policies: `untrusted` (prompts for commands outside trusted set), `on-failure` (prompts if sandbox fails), `on-request` (model decides when to escalate), `never` (no prompts). Use `--ask-for-approval` or `-a` flag to require approvals.
 - Execpolicy (see [execpolicy docs](https://github.com/openai/codex/blob/main/docs/execpolicy.md)): repo rules to allow/deny commands or files; enforce guardrails beyond approvals.
 - Safety best practice: request plan + diff before writes; decline broad/deleting commands; prefer minimal scope.
 
