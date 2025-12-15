@@ -18,6 +18,40 @@ Each module follows a consistent rhythm:
 3. **Pattern**: Distill reusable patterns from experience
 4. **Document**: Add to your personal playbook
 
+## Visual Overview
+
+```mermaid
+graph LR
+    start([Start here]) --> M1["Module 1\nCodex Code Internals\n3-4h"]
+    M1 --> HUB{"Modules 2-4\nchoose order"}
+    HUB --> M2["Module 2\nAdvanced Customization\n3-4h"]
+    HUB --> M3["Module 3\nSpeed & Efficiency\n2-3h"]
+    HUB --> M4["Module 4\nQuality & Verification\n3-4h"]
+    M2 --> M5["Module 5\nPlanning & Execution\n2-3h"]
+    M3 --> M5
+    M4 --> M5
+    M5 --> M6["Module 6\nDomain-Specific Patterns\n3-4h"]
+    M6 --> M7["Module 7\nCollaboration & Communication\n2-3h"]
+    M7 --> M8["Module 8\nAdvanced Integration\n3-4h"]
+    M8 --> Z([Advanced workflows])
+```
+
+```mermaid
+graph TB
+    ROOT["codex-training repo"]
+    ROOT --> modules["docs/modules\nModule guides"]
+    ROOT --> exercises["docs/exercises\nHands-on practice"]
+    ROOT --> patterns["docs/patterns\nReusable patterns"]
+    ROOT --> playbook["docs/playbook\nQuick reference"]
+    ROOT --> outlines["docs/outlines\nModule outlines"]
+    ROOT --> practice["practice/\nWorkspace for exercises"]
+    ROOT --> helpers["codex_helpers/\nHelper functions for Codex"]
+    ROOT --> codexExamples[".codex-examples/\nSample prompts + functions"]
+    ROOT --> tests["tests/\nVerification suites"]
+    ROOT --> scripts["scripts/\nCLI helpers"]
+    ROOT --> resources["RESOURCES.md\nLinks & references"]
+```
+
 ## Modules
 
 ### Module 1: Codex Code Internals
