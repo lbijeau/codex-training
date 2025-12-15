@@ -66,7 +66,7 @@ OpenAI Codex does not spawn agents; you split work by chaining prompts. Think of
 **Pipeline blueprint**
 1. **Discovery prompt**: Ask Codex to summarize the problem or gather facts
 2. **Planning prompt**: Feed the summary plus constraints and ask for a plan
-3. **Execution prompt**: Supply the plan and implementation hints, run the helpers, and capture the edits
+3. **Execution prompt**: Supply the plan and ask Codex to implement it; review the edits
 4. **Validation prompt**: Ask Codex to confirm tests or verify safety
 5. **Documentation prompt**: Summarize the change
 
@@ -99,7 +99,7 @@ This approach lets you explore multiple hypotheses concurrently without waiting 
 ## 3. Context Optimization
 
 ### The context budget
-Tokens are finite. Every `read_file`, prompt, and response consumes part of the window. When you hit the limit, Codex forgets earlier data.
+Tokens are finite. Every file read, prompt, and response consumes part of the window. When you hit the limit, Codex forgets earlier data.
 
 ### Strategies
 
