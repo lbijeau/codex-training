@@ -28,10 +28,28 @@ Codex: {"A content": ..., "B content": ..., "C content": ...}
 This reduces round trips, keeps the context shorter, and lets Codex reason with all information at once.
 
 **Pattern: Multi-tool summaries**
-Wrap helper functions so Codex can call them in the same message:
-- `read_file(path)` for file contents
-- `grep(pattern, paths)` for search results
-- `run_tests()` for validation
+
+*Using Codex CLI (built-in tools):*
+Codex CLI has built-in capabilities for file operations. Ask for multiple things in one prompt:
+```
+User: Read src/auth.ts, search for "TODO" in src/, and show me the last 5 git commits
+```
+Codex executes these internally and returns combined results.
+
+*Using Codex API with custom helpers:*
+Register helper functions via `functions.json` schema (see `codex_helpers/README.md`):
+1. Create executable scripts that return JSON (e.g., `list_todos.py`, `run_tests.py`)
+2. Define schemas in `functions.json`:
+   ```json
+   {
+     "name": "run_tests",
+     "description": "Run pytest and return results",
+     "parameters": { "type": "object", "properties": { "target": { "type": "string" } } }
+   }
+   ```
+3. Pass `functions.json` to the Chat Completion API; Codex can call multiple helpers in one turn
+4. Execute the requested functions and return JSON results
+
 If each helper returns structured JSON, Codex can combine them in a single response.
 
 **Metrics to track**:
