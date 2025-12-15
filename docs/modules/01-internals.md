@@ -25,8 +25,6 @@ A Codex session is a conversation with the OpenAI Chat Completion API. Every req
 - **Assistant**: Codex's response (either text or a `function_call` payload)
 - **Function**: When Codex asks your code to run a helper, you call that function, then supply the result back as a `function` message
 
-> **What is a system prompt?** The system prompt (or "system message") is the first message in every conversation that defines the AI's behavior, capabilities, and constraints. Think of it as a job description you give before work begins. The AI reads this first and follows its instructions throughout the session. Example: *"You are Codex, a senior engineer. Always explain your reasoning. Never delete files without confirmation."*
-
 Think of it as a structured turn-taking system where Codex only knows what you feed it in those messages.</n
 ### Message flow
 ```
@@ -41,7 +39,11 @@ System  →  User prompt → Assistant (text or function call)
 This means there is no persistent agent memory outside the conversation history — context resets when you start a new sequence.
 
 ### Designing the system message
-- State the role clearly (e.g., “You are Codex, an assistant that edits Python code”) and keep it short
+
+> **What is a system prompt?** The system prompt (or "system message") is the first message in every conversation that defines the AI's behavior, capabilities, and constraints. Think of it as a job description you give before work begins. The AI reads this first and follows its instructions throughout the session.
+
+**Best practices:**
+- State the role clearly (e.g., "You are Codex, an assistant that edits Python code") and keep it short
 - Declare the functions you expose (name, description, parameters) so Codex can reference them
 - Mention safety constraints (don’t expose secrets, log everything, prefer explanations)
 - Refresh the system prompt for each new session or when you need to pivot behavior
