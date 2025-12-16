@@ -173,10 +173,61 @@ Current module: Module 2
 Include the context file at the start of every session (`prefill_context.py --file .codex/context.md`). This mirrors the context-injection pattern but now lives in a file you control.
 
 ### Hooks you can build
-- `session_start.sh`: prints the current git status
-- `before_request.py`: ensures your helpers are registered
-- `after_response.py`: archives the conversation for audit
-These scripts run outside the API; Codex never executes them directly.
+
+> **What are hooks?** Hooks are scripts YOU write and run at key points in your workflow—before starting a session, before sending a request, or after receiving a response. They're not built into Codex; they're part of your automation layer that wraps the API. Think of them as lifecycle callbacks you control.
+
+**Why use hooks?**
+- Inject consistent context into every session
+- Validate inputs/outputs for safety
+- Log conversations for debugging or compliance
+- Automate repetitive setup tasks
+
+**Example hooks:**
+
+| Hook | When it runs | What it does |
+|------|--------------|--------------|
+| `session_start.sh` | Before you start a Codex session | Gathers context to prepend to your first message |
+| `before_request.py` | Before each API call | Validates the request, ensures functions are registered |
+| `after_response.py` | After each API response | Logs the conversation, checks for policy violations |
+
+**`hooks/session_start.sh`** - Gathers project context:
+```bash
+#!/bin/bash
+echo "=== Git Status ==="
+git status -sb
+
+echo "=== Recent Commits ==="
+git log --oneline -5
+
+echo "=== Open TODOs ==="
+grep -r "TODO" src/ --include="*.py" | head -10
+```
+
+**`hooks/after_response.py`** - Archives conversations:
+```python
+import json
+from datetime import datetime
+
+def archive_response(messages, response):
+    """Save conversation to audit log."""
+    log_entry = {
+        "timestamp": datetime.now().isoformat(),
+        "messages": messages,
+        "response": response,
+    }
+    with open("logs/codex_audit.jsonl", "a") as f:
+        f.write(json.dumps(log_entry) + "\n")
+```
+
+**How to integrate hooks into your workflow:**
+```bash
+# Your wrapper script that calls Codex
+./hooks/session_start.sh > context.txt
+python send_to_codex.py --context context.txt --prompt "$1"
+python hooks/after_response.py
+```
+
+These scripts run outside the API; Codex never executes them directly—you call them from your own automation.
 
 ---
 
