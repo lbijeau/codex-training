@@ -1,4 +1,4 @@
-# Module 3: Skills & Reusable Workflows
+# Module 2: Skills & Reusable Workflows
 
 ## Overview
 
@@ -556,7 +556,7 @@ Run the full test suite and fix any failures.
 
 ## 8. Skills Integration
 
-### With Quality (Module 5)
+### With Quality (Module 4)
 
 Skills enhance every quality practice:
 
@@ -567,7 +567,7 @@ Skills enhance every quality practice:
 | Systematic debugging | `systematic-debugging` |
 | Pre-commit checks | `verification-before-completion` |
 
-### With Planning (Module 6)
+### With Planning (Module 5)
 
 Planning relies heavily on skills:
 
@@ -619,4 +619,4 @@ Planning relies heavily on skills:
 
 ---
 
-**Skills turn ad-hoc prompting into systematic workflows!** → [Module 5: Quality & Verification](05-quality.md)
+**Skills turn ad-hoc prompting into systematic workflows!** → [Module 4: Quality & Verification](04-quality.md)

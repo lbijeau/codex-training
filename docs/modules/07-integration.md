@@ -1,4 +1,4 @@
-# Module 8: Advanced Integration
+# Module 7: Advanced Integration
 
 ## Overview
 
@@ -276,7 +276,7 @@ Want me to add priority labels to these issues?
 ---
 
 ## 2. Multi-Tool Workflows
-> Need concrete syntax for registering/calling helpers? See Module 1 “Function Calling & Tool Wrappers” and the `functions.json` example in Module 4 for full code snippets.
+> Need concrete syntax for registering/calling helpers? See Module 8 “Function Calling & Tool Wrappers” and the `functions.json` example in Module 3 for full code snippets.
 
 ### Workflow ingredients
 A Codex-driven workflow typically coordinates:

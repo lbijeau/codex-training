@@ -1,6 +1,6 @@
-# Module 1 Exercises: Codex Code Internals
+# Module 8 Exercises: Codex API Internals
 
-These exercises will help you practice and internalize the concepts from Module 1.
+These exercises will help you practice and internalize the concepts from Module 8.
 
 ## Exercise Overview
 

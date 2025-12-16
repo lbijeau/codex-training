@@ -1,4 +1,4 @@
-# Module 3 Exercises: Skills & Reusable Workflows
+# Module 2 Exercises: Skills & Reusable Workflows
 
 Practice using and creating skills for common development tasks.
 

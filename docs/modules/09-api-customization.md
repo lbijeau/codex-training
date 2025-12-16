@@ -1,4 +1,4 @@
-# Module 2: Customization & Extensions
+# Module 9: API Customization & Extensions
 
 ## Overview
 
@@ -424,4 +424,4 @@ startup_timeout_sec = 20
 1. Create an AGENTS.md for your current project
 2. Set up a hook to auto-format code after edits
 3. Install one MCP server (GitHub is a good start)
-4. Proceed to [Module 3: Skills](03-skills.md)
+4. Proceed to [Module 2: Skills](02-skills.md)

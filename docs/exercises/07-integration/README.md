@@ -1,4 +1,4 @@
-# Module 8 Exercises: Advanced Integration
+# Module 7 Exercises: Advanced Integration
 
 Practice integrating Codex into complete workflows.
 
@@ -15,19 +15,17 @@ Each exercise: 30-40 minutes | Total: ~2.5 hours
 
 ---
 
-## Final Module!
+## Integration wrap-up before API deep-dive
 
-This is the last module of your training program. After completing these exercises:
+After completing these exercises:
 
-1. You'll have practiced all major concepts
-2. You'll have built end-to-end workflows
-3. You'll be ready to apply everything to real work
+1. You'll have practiced multi-tool workflows end-to-end
+2. You'll be ready to apply everything to real work
+3. You can move into the API-focused modules next
 
-**What's Next After Module 8**:
+**What's Next After Module 7**:
 1. Complete remaining exercises across all modules
 2. Build out your skill library
 3. Populate your personal playbook
 4. Apply to your actual projects
-5. Share your learnings!
-
-**Congratulations on reaching this point!**
+5. Continue to [Module 8: API Internals](../../modules/08-api-internals.md) and [Module 9: API Customization](../../modules/09-api-customization.md) when you need API integrations

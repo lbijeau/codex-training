@@ -1,4 +1,4 @@
-# Module 5: Quality & Verification
+# Module 4: Quality & Verification
 
 > **Applies to both API and CLI**: These quality patterns work whether you're using Codex programmatically or through the interactive CLI. The examples show CLI usage, but the principles transfer directly to API integrations.
 
@@ -238,7 +238,7 @@ Plan:
 | Self-review of complex changes | `requesting-code-review` | Fresh perspective on your own code |
 | Disagreeing with feedback | `receiving-code-review` | Formulate thoughtful responses |
 
-> **See Module 3** for installation and more details on using superpowers skills.
+> **See Module 2** for installation and more details on using superpowers skills.
 
 ### Layer 3: Manual Review (Human Judgment)
 
@@ -914,4 +914,4 @@ codex "Review my PR for issues before I submit"
 
 ---
 
-**Build quality in from the start!** → [Module 5 Exercises](../exercises/05-quality/)
+**Build quality in from the start!** → [Module 4 Exercises](../exercises/04-quality/)

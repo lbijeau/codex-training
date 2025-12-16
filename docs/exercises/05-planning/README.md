@@ -1,4 +1,4 @@
-# Module 6 Exercises: Planning & Execution
+# Module 5 Exercises: Planning & Execution
 
 Practice systematic planning and execution workflows.
 

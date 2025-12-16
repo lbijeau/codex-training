@@ -1,4 +1,4 @@
-# Module 7 Exercises: Domain-Specific Patterns
+# Module 6 Exercises: Domain-Specific Patterns
 
 Practice real-world development scenarios.
 

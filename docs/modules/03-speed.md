@@ -1,4 +1,4 @@
-# Module 4: Speed & Efficiency Patterns
+# Module 3: Speed & Efficiency Patterns
 
 ## Overview
 

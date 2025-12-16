@@ -1,4 +1,4 @@
-# Module 1: Codex Code Internals
+# Module 8: Codex API Internals
 
 > **⚠️ Advanced / API Focus**: This module covers the OpenAI Codex **API** internals—building custom integrations, function calling, and managing context programmatically. **If you're using Codex CLI**, you don't need this to get started. The CLI handles tools, context, and sessions automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead, and return here when you want to build custom API integrations.
 
@@ -868,7 +868,7 @@ def detect_suspicious(func_name, args):
 ---
 
 ## Next Steps
-1. Try the Module 1 exercises to practice designing prompts and function calls
+1. Try the Module 8 exercises to practice designing prompts and function calls
 2. Build a helper that searches files and registers itself as a function
 3. Experiment with chaining requests and summarizing long histories
 4. Document any useful prompts in `docs/prompts/`

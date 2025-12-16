@@ -1,6 +1,6 @@
-# Module 6: Planning & Execution
+# Module 5: Planning & Execution
 
-> **Prerequisite**: This module uses skills from Module 3. Make sure you understand how to invoke skills like `superpowers:brainstorming`, `superpowers:writing-plans`, and `superpowers:executing-plans` before proceeding.
+> **Prerequisite**: This module uses skills from Module 2. Make sure you understand how to invoke skills like `superpowers:brainstorming`, `superpowers:writing-plans`, and `superpowers:executing-plans` before proceeding.
 
 ## Overview
 
@@ -806,4 +806,4 @@ and clean up IMPLEMENTATION_PLAN.md"
 
 ---
 
-**Plan first, execute confidently!** → [Module 7: Domain-Specific Prompting](07-domain.md)
+**Plan first, execute confidently!** → [Module 6: Domain-Specific Prompting](06-domain.md)

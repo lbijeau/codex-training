@@ -1,6 +1,6 @@
-# Module 7: Domain-Specific Patterns
+# Module 6: Domain-Specific Patterns
 
-> **Prerequisite**: This module builds on Module 3 (Skills). You'll use existing skills and learn to create domain-specific skills for your team's recurring workflows.
+> **Prerequisite**: This module builds on Module 2 (Skills). You'll use existing skills and learn to create domain-specific skills for your team's recurring workflows.
 
 ## Overview
 
@@ -2673,7 +2673,7 @@ flowchart LR
 
 ## Next Steps
 
-1. Complete [Module 7 Exercises](../exercises/07-domain/)
+1. Complete [Module 6 Exercises](../exercises/06-domain/)
 2. Practice architecture exploration on unfamiliar code
 3. Refactor a piece of legacy code safely
 4. Conduct security review on a module
@@ -2681,4 +2681,4 @@ flowchart LR
 
 ---
 
-**Master the domains!** Head to [Exercise 1](../exercises/07-domain/exercise-1.md)
+**Master the domains!** Head to [Exercise 1](../exercises/06-domain/exercise-1.md)

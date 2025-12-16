@@ -1,4 +1,4 @@
-# Module 2 Exercises: Advanced Customization
+# Module 9 Exercises: API Customization
 
 Build your customization skills through hands-on practice.
 

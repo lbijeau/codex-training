@@ -9,7 +9,7 @@ Track your journey through the Codex Code Mastery Program.
 
 ## Module Completion
 
-### ✅ Module 1: Codex Code Internals
+### ✅ Module 1: Getting Started (CLI)
 - **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
 - **Started**: [Date]
 - **Completed**: [Date]
@@ -18,18 +18,18 @@ Track your journey through the Codex Code Mastery Program.
   - [What you learned]
   - [Patterns discovered]
   - [Insights gained]
-- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4 [ ] 5
+- **Exercises Completed**: [ ] Checklist done
 
 ---
 
-### Module 2: Advanced Customization
+### Module 2: Skills & Reusable Workflows
 - **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
 - **Started**: [Date]
 - **Completed**: [Date]
 - **Time Spent**: [Hours]
 - **Key Learnings**:
   -
-- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4 [ ] 5
+- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4
 
 ---
 
@@ -77,7 +77,7 @@ Track your journey through the Codex Code Mastery Program.
 
 ---
 
-### Module 7: Collaboration & Communication
+### Module 7: Advanced Integration
 - **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
 - **Started**: [Date]
 - **Completed**: [Date]
@@ -88,14 +88,25 @@ Track your journey through the Codex Code Mastery Program.
 
 ---
 
-### Module 8: Advanced Integration
+### Module 8: Codex API Internals
 - **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
 - **Started**: [Date]
 - **Completed**: [Date]
 - **Time Spent**: [Hours]
 - **Key Learnings**:
   -
-- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4
+- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4 [ ] 5
+
+---
+
+### Module 9: API Customization & Extensions
+- **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
+- **Started**: [Date]
+- **Completed**: [Date]
+- **Time Spent**: [Hours]
+- **Key Learnings**:
+  -
+- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4 [ ] 5
 
 ---
 
@@ -197,7 +208,7 @@ Track concrete improvements:
 - [ ] Completed first 4 modules
 - [ ] Applied to real project
 - [ ] 20 patterns documented
-- [ ] Completed all 8 modules
+- [ ] Completed all 9 modules
 - [ ] 30+ patterns documented
 - [ ] Built custom skill
 - [ ] Built prompt/helper guard rails
