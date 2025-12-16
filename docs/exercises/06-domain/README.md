@@ -11,5 +11,3 @@ Practice real-world development scenarios.
 5. **Exercise 5**: Security Review
 
 Each exercise: 25-35 minutes | Total: ~2.5 hours
-
-**Start**: [Exercise 1: Architecture Exploration Challenge](exercise-1.md)

@@ -4,15 +4,15 @@
 **Repo snapshot:**
 
 ## Duplicate Blocks
-- Findings: (paste output from `node scripts/check_duplicates.js`)
+- Findings: (describe any duplicated logic found during review)
 - Action: (describe deduplication or refactoring idea)
 
 ## Complexity Deltas
-- Findings: (paste warnings from `node scripts/report_complexity_diff.js`)
+- Findings: (note any functions with high complexity or significant changes)
 - Action: (note which functions to simplify, split, or test)
 
 ## Cross-Layer Imports
-- Findings: (copy problematic imports from `node scripts/check_cross_layer_imports.js`)
+- Findings: (list any problematic imports that cross architectural boundaries)
 - Action: (describe how to enforce boundaries or move code)
 
 ## Summary for Codex

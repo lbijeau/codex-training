@@ -18,10 +18,10 @@ Patterns for exploring codebases, designing systems, and making architectural de
 
 ## Quick Tips
 
-1. **Use Explore agent**: For understanding unfamiliar codebases
+1. **Explore first**: Use Codex to understand unfamiliar codebases before changing
 2. **Find similar features**: Learn existing patterns first
 3. **Map before changing**: Understand dependencies
-4. **Design before implementing**: Plan agent for architectural work
+4. **Design before implementing**: Create a plan before making architectural changes
 5. **Follow existing patterns**: Consistency over cleverness
 
 ---

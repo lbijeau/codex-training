@@ -10,5 +10,3 @@ Practice parallelization and optimization techniques.
 4. **Exercise 4**: Speed Measurement & Analysis
 
 Each exercise: 20-30 minutes | Total: ~2 hours
-
-**Start**: [Exercise 1: Parallel Execution Drills](exercise-1.md)
