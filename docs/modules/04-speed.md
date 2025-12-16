@@ -337,10 +337,21 @@ codex "Read and summarize the key responsibilities of each:
 
 **Sequential pipeline** (find then edit):
 ```bash
-# Step 1: Find what needs changing
-codex "grep for deprecated API calls in src/"
-# Step 2: Use the results to make targeted edits
-codex "Update the deprecated calls you found to use the new API"
+# Step 1: Find what needs changing, capture output
+codex exec "grep for deprecated API calls in src/" > deprecated.txt
+
+# Step 2: Pass results explicitly to new session
+codex "Update these deprecated calls to use the new API:
+$(cat deprecated.txt)"
+```
+
+Or do both in a **single interactive session**:
+```bash
+codex
+> grep for deprecated API calls in src/
+# (Codex finds them)
+> Now update those calls to use the new API
+# (Codex remembers what it found)
 ```
 
 **Parallel prompts** (multiple hypotheses):
