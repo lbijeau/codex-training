@@ -1,239 +1,427 @@
-# Module 2: Advanced Customization
-
-> **⚠️ Advanced / API Focus**: This module covers customizing the OpenAI Codex **API**—prompt templates, function wrappers, and configuration for programmatic integrations. **If you're using Codex CLI**, most of this is handled automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead.
->
-> **What transfers to CLI**: Sections 1 (Prompt Templates) and 4 (Configuration & Context Files) work for both API and CLI users. Sections 2-3 (Function Wrappers, Guard Rails) are API-specific.
+# Module 2: Customization & Extensions
 
 ## Overview
 
-OpenAI Codex is programmable through the way you build prompts, register helper functions, and operate outside the model. This module teaches you how to craft reusable prompt templates, wrap helper scripts as functions, and build a configuration that keeps your sessions consistent.
+Claude Code is highly customizable. This module teaches you how to configure Claude Code for your workflow, set project-specific instructions, use hooks for automation, and extend capabilities with MCP servers.
 
 **Learning Objectives**:
-- Create prompt templates that capture your team’s tone and constraints
-- Register helper functions instead of assuming built-in skills or slash commands
-- Design guard rails for unsafe operations (validation, logging, rate limits)
-- Maintain a small configuration that documents trusted helpers and prompts
+- Configure Claude Code with CLAUDE.md for project-specific behavior
+- Manage settings and permissions
+- Use hooks to automate pre/post actions
+- Extend Claude Code with MCP servers for external tools
 
-**Time**: 3-4 hours
-
----
-
-## 1. Prompt Templates & Reusable Instructions
-
-Because every Codex session starts from scratch, save the prompts you use frequently in a template library. Store them in `docs/prompt_templates/` (or `.codex/prompts/`) with placeholders for the task-specific pieces.
-
-### Template structure example
-```
-# docs/prompt_templates/feature_request.md
-System: You are Codex, a senior engineer helper.
-User: I want to {{task}}. First, summarize the current issue, then propose the top three steps and the reason each is necessary.
-```
-Use a small templating script:
-```bash
-python helpers/render_prompt.py --template feature_request.md --task "refactor cache invalidation"
-```
-The renderer replaces `{{task}}` with the provided value, so sessions stay consistent.
-
-### Why templates matter
-- Prevents you from rewriting the same instruction each time
-- Keeps tone and expectations uniform across teammates
-- Lets you version prompts alongside code changes
-- Makes it easy to rerun older sessions by reusing the template
-
-**Without templates** (inconsistent, error-prone):
-```
-# Monday: "You're a helpful coder. Fix the bug in auth.py"
-# Tuesday: "As an expert Python dev, please look at the login issue"
-# Wednesday: "Debug authentication" (forgot safety constraints!)
-```
-
-**With templates** (consistent, versioned):
-```bash
-# Everyone uses the same template
-python render_prompt.py --template bug_fix.md --file="auth.py" --issue="login fails"
-# Template includes safety constraints, expected output format, available helpers
-```
-
-### Template best practices
-
-**1. Keep the system message short and precise**
-```markdown
-# ❌ Too verbose
-System: You are an incredibly helpful AI assistant that specializes in Python
-programming and will help the user with any coding task they have...
-
-# ✅ Concise
-System: You are a Python debugging assistant. Be direct. Show diffs.
-```
-
-**2. Highlight expected artifacts**
-```markdown
-User: Fix {{issue}} in {{file}}.
-
-Output format:
-1. Root cause (1-2 sentences)
-2. Fix as a diff
-3. Test to verify the fix
-```
-
-**3. Include constraints**
-```markdown
-Constraints:
-- Do NOT refactor unrelated code
-- Do NOT modify files outside src/
-- Maximum 50 lines changed
-```
-
-**4. Document available helpers**
-```markdown
-Available functions:
-- read_file(path): Read file contents
-- run_tests(target): Run pytest on target
-- git_diff(): Show uncommitted changes
-
-Use these instead of asking me to paste code.
-```
+**Time**: 2-3 hours
 
 ---
 
-## 2. Function Wrappers Instead of Skills
+## 1. CLAUDE.md - Project Instructions
 
-Some platforms expose named skills and slash commands, but Codex expects you to implement those capabilities as helper functions and expose them via the `functions` parameter.
+CLAUDE.md is a markdown file that Claude Code reads at the start of every conversation. Use it to give Claude context about your project, coding standards, and team conventions.
 
-### Catalog your helpers
-Create a manifest file (`codex_helpers/functions.json`) listing each helper’s schema:
+### Where to Put It
+
+| Location | Scope | Use Case |
+|----------|-------|----------|
+| `./CLAUDE.md` | Current project | Project-specific instructions |
+| `~/.claude/CLAUDE.md` | All projects | Personal preferences, global conventions |
+
+Project-level CLAUDE.md takes precedence and is combined with your global one.
+
+### What to Include
+
+```markdown
+# CLAUDE.md
+
+## Project Overview
+Brief description of what this project does.
+
+## Tech Stack
+- Node.js 20 + TypeScript
+- PostgreSQL database
+- Jest for testing
+
+## Code Conventions
+- Use functional components with hooks (no class components)
+- Prefer named exports over default exports
+- All functions must have JSDoc comments
+
+## Common Commands
+- `npm test` - Run tests
+- `npm run lint` - Run linter
+- `npm run build` - Build for production
+
+## Important Files
+- `src/config.ts` - All configuration
+- `src/db/schema.ts` - Database schema
+- `src/api/routes.ts` - API route definitions
+
+## Things to Avoid
+- Don't modify files in `vendor/`
+- Don't commit `.env` files
+- Don't use `any` type in TypeScript
+```
+
+### Example: Team CLAUDE.md
+
+```markdown
+# CLAUDE.md - Acme Corp Standards
+
+## Git Workflow
+- Branch naming: `feature/TICKET-123-description`
+- Commit messages: `feat(scope): description` (conventional commits)
+- Always rebase before merging
+
+## Code Review Requirements
+- All PRs need 2 approvals
+- Tests must pass before merge
+- No console.log in production code
+
+## Security Rules
+- Never hardcode secrets
+- Use parameterized queries for all database access
+- Validate all user input with Zod schemas
+
+## Preferred Libraries
+- HTTP client: axios (not fetch)
+- Date handling: date-fns (not moment)
+- Validation: zod
+```
+
+### Tips for Effective CLAUDE.md
+
+1. **Keep it focused** - Include what Claude needs to know, not everything about the project
+2. **Update it** - As conventions change, update CLAUDE.md
+3. **Be specific** - "Use camelCase" is better than "follow best practices"
+4. **Include examples** - Show the pattern you want, not just describe it
+
+---
+
+## 2. Settings & Configuration
+
+Claude Code settings control behavior, permissions, and defaults.
+
+### Settings Location
+
+```
+~/.claude/
+├── settings.json      # User settings
+├── CLAUDE.md          # Global instructions
+└── skills/            # Custom skills
+```
+
+### Key Settings
+
 ```json
-[
-  {
-    "name": "lint_code",
-    "description": "Run the linter and return issues",
-    "parameters": {
-      "type": "object",
-      "properties": {
-        "paths": {
-          "type": "array",
-          "items": {"type": "string"}
-        }
-      },
-      "required": ["paths"]
-    }
+{
+  "permissions": {
+    "allow_file_write": true,
+    "allow_bash": true,
+    "allowed_tools": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
+  },
+  "behavior": {
+    "auto_compact": true,
+    "verbose_errors": false
   }
-]
+}
 ```
-Every session loads this manifest and registers the functions with the API.
 
-### Example helper implementation
-```python
-def lint_code(paths: list[str]) -> str:
-    result = subprocess.run(["eslint"] + paths, capture_output=True, text=True)
-    return json.dumps({"status": result.returncode, "output": result.stdout})
+### Permission Management
+
+Claude Code asks for permission before potentially destructive actions. You can pre-approve certain operations:
+
 ```
-After running the helper, send its output back as a `function` message so Codex can reason over it.
+You: "I trust you to edit files in src/ without asking"
 
-### Replacement for slash commands
-- Slash commands become shell scripts you run before/after a request.
-- For example, `./scripts/plan_feature.sh` could gather git status, render a prompt template, and launch the session.
-- Document these scripts in `README.md` or `docs/scripts.md` so teammates know what they do.
+Claude: I'll remember that. For this session, I won't ask before
+editing files in the src/ directory.
+```
+
+Or set it in your CLAUDE.md:
+
+```markdown
+## Permissions
+- Edit files in `src/` without confirmation
+- Run `npm test` and `npm run lint` without confirmation
+- Always ask before running `rm` commands
+```
+
+### Project-Level Settings
+
+Create `.claude/settings.json` in your project root:
+
+```json
+{
+  "context_files": [
+    "docs/architecture.md",
+    "docs/api-spec.md"
+  ],
+  "ignore_patterns": [
+    "node_modules/**",
+    "dist/**",
+    "*.min.js"
+  ]
+}
+```
 
 ---
 
-## 3. Guard Rails & Policies
+## 3. Hooks
 
-Since the Codex API can generate anything you feed it, lock risky operations behind helpers:
-- Validate arguments before running tests or editing files
-- Encode policies (e.g., “never delete production data”) in helpers, not in prompts
-- Log every invocation (who requested, which helper, what response)
-- Track rate limits and throttle requests as needed
+Hooks are scripts that run automatically at specific points in Claude Code's workflow. They let you inject context, validate actions, or log activity.
 
-Example guard rail:
-```python
-def run_tests(target: str) -> dict:
-    if target.startswith("/etc"):
-        raise ValueError("Refusing to run tests on system directories")
-    ...
+### Available Hooks
+
+| Hook | When It Runs | Use Case |
+|------|--------------|----------|
+| `PreToolUse` | Before any tool executes | Validate, log, or modify tool calls |
+| `PostToolUse` | After any tool completes | Log results, trigger follow-up actions |
+| `Notification` | On specific events | Custom notifications |
+
+### Hook Configuration
+
+Create hooks in `.claude/hooks/`:
+
 ```
-Never expose the validation logic to Codex; keep it in the helper implementation.
-
----
-
-## 4. Configuration & Context Files
-
-Keep a lightweight configuration for your Codex sessions. For CLI users, prepend context with `codex "$(cat context.md) Your request"` or use `~/.codex/config.toml`.
+.claude/
+└── hooks/
+    ├── pre-tool-use.sh
+    └── post-tool-use.sh
 ```
-.codex/
-├── prompts/              # Optional folder of prompt fragments
-├── functions.json        # Manifest of helper functions
-├── context.md           # Summary you prepend to every session
-└── hooks/                # Scripts to run before/after sessions
-```
-Example `context.md`:
-```
-Project: Codex Training
-Primary stack: Python + React
-Current module: Module 2
-```
-Include the context file at the start of every session (`prefill_context.py --file .codex/context.md`). This mirrors the context-injection pattern but now lives in a file you control.
 
-### Hooks you can build
+### Example: Pre-Tool Hook for Logging
 
-> **What are hooks?** Hooks are scripts YOU write and run at key points in your workflow—before starting a session, before sending a request, or after receiving a response. They're not built into Codex; they're part of your automation layer that wraps the API. Think of them as lifecycle callbacks you control.
-
-**Why use hooks?**
-- Inject consistent context into every session
-- Validate inputs/outputs for safety
-- Log conversations for debugging or compliance
-- Automate repetitive setup tasks
-
-**Example hooks:**
-
-| Hook | When it runs | What it does |
-|------|--------------|--------------|
-| `session_start.sh` | Before you start a Codex session | Gathers context to prepend to your first message |
-| `before_request.py` | Before each API call | Validates the request, ensures functions are registered |
-| `after_response.py` | After each API response | Logs the conversation, checks for policy violations |
-
-**`hooks/session_start.sh`** - Gathers project context:
 ```bash
 #!/bin/bash
-echo "=== Git Status ==="
-git status -sb
+# .claude/hooks/pre-tool-use.sh
+# Logs all tool usage to a file
 
-echo "=== Recent Commits ==="
-git log --oneline -5
+TOOL_NAME="$1"
+TOOL_ARGS="$2"
 
-echo "=== Open TODOs ==="
-grep -r "TODO" src/ --include="*.py" | head -10
+echo "$(date '+%Y-%m-%d %H:%M:%S') | Tool: $TOOL_NAME | Args: $TOOL_ARGS" >> .claude/tool-log.txt
 ```
 
-**`hooks/after_response.py`** - Archives conversations:
-```python
-import json
-from datetime import datetime
+### Example: Block Dangerous Commands
 
-def archive_response(messages, response):
-    """Save conversation to audit log."""
-    log_entry = {
-        "timestamp": datetime.now().isoformat(),
-        "messages": messages,
-        "response": response,
-    }
-    with open("logs/codex_audit.jsonl", "a") as f:
-        f.write(json.dumps(log_entry) + "\n")
-```
-
-**How to integrate hooks into your workflow:**
 ```bash
-# Your wrapper script that calls Codex
-./hooks/session_start.sh > context.txt
-python send_to_codex.py --context context.txt --prompt "$1"
-python hooks/after_response.py
+#!/bin/bash
+# .claude/hooks/pre-tool-use.sh
+# Block dangerous bash commands
+
+TOOL_NAME="$1"
+TOOL_ARGS="$2"
+
+if [[ "$TOOL_NAME" == "Bash" ]]; then
+  # Block rm -rf on important directories
+  if echo "$TOOL_ARGS" | grep -qE "rm\s+-rf\s+(/|~|/home)"; then
+    echo "BLOCKED: Refusing to run dangerous rm command"
+    exit 1
+  fi
+fi
 ```
 
-These scripts run outside the API; Codex never executes them directly—you call them from your own automation.
+### Example: Auto-Format After Edits
+
+```bash
+#!/bin/bash
+# .claude/hooks/post-tool-use.sh
+# Run prettier after file edits
+
+TOOL_NAME="$1"
+FILE_PATH="$2"
+
+if [[ "$TOOL_NAME" == "Edit" || "$TOOL_NAME" == "Write" ]]; then
+  if [[ "$FILE_PATH" == *.ts || "$FILE_PATH" == *.tsx ]]; then
+    npx prettier --write "$FILE_PATH" 2>/dev/null
+  fi
+fi
+```
+
+---
+
+## 4. MCP Servers
+
+MCP (Model Context Protocol) servers extend Claude Code with new capabilities by connecting to external tools and services.
+
+### What MCP Servers Do
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     Claude Code                          │
+└─────────────────────────┬───────────────────────────────┘
+                          │
+          ┌───────────────┼───────────────┐
+          ▼               ▼               ▼
+    ┌──────────┐    ┌──────────┐    ┌──────────┐
+    │ Database │    │  GitHub  │    │  Slack   │
+    │   MCP    │    │   MCP    │    │   MCP    │
+    └──────────┘    └──────────┘    └──────────┘
+          │               │               │
+          ▼               ▼               ▼
+    ┌──────────┐    ┌──────────┐    ┌──────────┐
+    │ Postgres │    │ GitHub   │    │  Slack   │
+    │          │    │   API    │    │   API    │
+    └──────────┘    └──────────┘    └──────────┘
+```
+
+MCP servers give Claude Code new tools:
+- **Database MCP**: Query databases directly
+- **GitHub MCP**: Create issues, PRs, review code
+- **Slack MCP**: Send messages, read channels
+- **Browser MCP**: Navigate web pages, extract content
+- **File System MCP**: Access files outside the project
+
+### Installing MCP Servers
+
+MCP servers are configured in `~/.claude/mcp_servers.json`:
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    }
+  }
+}
+```
+
+### Common MCP Servers
+
+| Server | What It Does | Install |
+|--------|--------------|---------|
+| `server-github` | GitHub API access | `npx @modelcontextprotocol/server-github` |
+| `server-postgres` | PostgreSQL queries | `npx @modelcontextprotocol/server-postgres` |
+| `server-slack` | Slack messaging | `npx @modelcontextprotocol/server-slack` |
+| `server-filesystem` | Extended file access | `npx @modelcontextprotocol/server-filesystem` |
+| `server-puppeteer` | Browser automation | `npx @modelcontextprotocol/server-puppeteer` |
+
+### Using MCP Tools
+
+Once configured, MCP tools appear as regular tools:
+
+```
+You: "Query the database for all users created this week"
+
+Claude: I'll use the postgres MCP to query your database.
+
+Running: SELECT * FROM users WHERE created_at > NOW() - INTERVAL '7 days'
+
+Found 23 users created this week:
+| id  | email              | created_at          |
+|-----|-------------------|---------------------|
+| 145 | alice@example.com | 2024-01-15 09:23:00 |
+| 146 | bob@example.com   | 2024-01-15 14:45:00 |
+...
+```
+
+### Example: GitHub MCP Workflow
+
+```
+You: "Create a GitHub issue for the bug we just found in authentication"
+
+Claude: I'll create a GitHub issue using the GitHub MCP.
+
+Creating issue in owner/repo:
+- Title: "Authentication fails for users with special characters in email"
+- Labels: bug, authentication
+- Body: [detailed description based on our conversation]
+
+Issue created: https://github.com/owner/repo/issues/234
+```
+
+### Creating Custom MCP Servers
+
+For team-specific integrations, you can create custom MCP servers:
+
+```typescript
+// my-company-mcp/index.ts
+import { Server } from "@modelcontextprotocol/sdk/server";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio";
+
+const server = new Server({
+  name: "my-company-tools",
+  version: "1.0.0"
+}, {
+  capabilities: {
+    tools: {}
+  }
+});
+
+// Define your custom tools
+server.setRequestHandler("tools/list", async () => ({
+  tools: [{
+    name: "lookup_employee",
+    description: "Look up employee by email",
+    inputSchema: {
+      type: "object",
+      properties: {
+        email: { type: "string" }
+      },
+      required: ["email"]
+    }
+  }]
+}));
+
+server.setRequestHandler("tools/call", async (request) => {
+  if (request.params.name === "lookup_employee") {
+    // Call your internal API
+    const employee = await fetchEmployee(request.params.arguments.email);
+    return { content: [{ type: "text", text: JSON.stringify(employee) }] };
+  }
+});
+
+// Start the server
+const transport = new StdioServerTransport();
+await server.connect(transport);
+```
+
+Then register it:
+
+```json
+{
+  "mcpServers": {
+    "my-company": {
+      "command": "node",
+      "args": ["./my-company-mcp/index.js"]
+    }
+  }
+}
+```
+
+### MCP Security Considerations
+
+| Consideration | Recommendation |
+|---------------|----------------|
+| API keys | Store in environment variables, never in config files |
+| Database access | Use read-only credentials when possible |
+| Scope | Only enable MCP servers you actually need |
+| Audit | Log MCP tool usage for compliance |
+
+---
+
+## Key Takeaways
+
+1. **CLAUDE.md**: Project-specific instructions that shape every conversation
+2. **Settings**: Control permissions and behavior at user and project level
+3. **Hooks**: Automate pre/post actions for consistency and safety
+4. **MCP Servers**: Extend Claude Code with external tools and services
 
 ---
 
 ## Next Steps
-1. Create a prompt template for the feature you are working on
-2. Add at least one helper function implementation to `codex_helpers/`
-3. Update `codex_helpers/functions.json` and register the helper in your session script
+
+1. Create a CLAUDE.md for your current project
+2. Set up a hook to auto-format code after edits
+3. Install one MCP server (GitHub is a good start)
+4. Proceed to [Module 3: Skills](03-skills.md)
