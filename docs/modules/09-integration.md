@@ -2,19 +2,280 @@
 
 ## Overview
 
-Integrate OpenAI Codex into real-world workflows: coordinate multiple helpers, link into CI/CD, transfer knowledge between projects, and contribute reusable patterns back to the community.
+Integrate Codex into real-world workflows: use GitHub CLI for seamless PR management, coordinate multiple tools, link into CI/CD, and transfer knowledge between projects.
 
 **Learning Objectives**:
-- Design composite workflows that orchestrate prompt templates, function wrappers, and validation scripts
-- Plug Codex into CI/CD pipelines and automation tooling
-- Keep knowledge portable so future projects can reuse helpers and prompts
-- Document and share your integrations so the wider community benefits
+- Use `gh` CLI for GitHub operations (PRs, issues, checks)
+- Design composite workflows that orchestrate multiple tools
+- Plug Codex into CI/CD pipelines and automation
+- Keep knowledge portable across projects
 
 **Time**: 3-4 hours
 
 ---
 
-## 1. Multi-Tool Workflows
+## 1. GitHub CLI (`gh`) Integration
+
+The GitHub CLI (`gh`) is one of the most powerful tools Codex can use. It provides direct access to GitHub's API for managing PRs, issues, checks, and more—all without leaving the terminal.
+
+### Why `gh` Matters
+
+| Without `gh` | With `gh` |
+|--------------|-----------|
+| "Go to GitHub and create a PR" | Codex creates the PR directly |
+| Copy-paste issue details | Codex reads issue context automatically |
+| Check CI status in browser | Codex monitors and responds to failures |
+| Manual PR reviews | Codex fetches and analyzes PR diffs |
+
+### Common `gh` Commands
+
+#### Pull Requests
+
+```bash
+# Create a PR
+gh pr create --title "Add user authentication" --body "## Summary\n- Added login\n- Added logout"
+
+# List open PRs
+gh pr list
+
+# View PR details
+gh pr view 123
+
+# View PR diff
+gh pr diff 123
+
+# Check PR status (CI checks)
+gh pr checks 123
+
+# Merge a PR
+gh pr merge 123 --squash
+
+# Review PR comments
+gh api repos/owner/repo/pulls/123/comments
+```
+
+#### Issues
+
+```bash
+# Create an issue
+gh issue create --title "Bug: login fails" --body "Steps to reproduce..."
+
+# List issues
+gh issue list --label bug
+
+# View issue details
+gh issue view 456
+
+# Close an issue
+gh issue close 456 --reason completed
+```
+
+#### CI/CD Status
+
+```bash
+# View workflow runs
+gh run list
+
+# View specific run details
+gh run view 789
+
+# Watch a running workflow
+gh run watch 789
+
+# Re-run failed jobs
+gh run rerun 789 --failed
+```
+
+### Example: PR Creation Workflow
+
+```
+You: "Create a PR for the changes on this branch"
+
+Codex: I'll create a PR using the gh CLI.
+
+First, let me check the branch status and recent commits...
+
+Running: git status
+Running: git log main..HEAD --oneline
+
+Found 3 commits:
+- abc123 feat: add user authentication
+- def456 feat: add login form
+- ghi789 test: add auth tests
+
+Creating PR...
+
+Running: gh pr create --title "feat: add user authentication" --body "$(cat <<'EOF'
+## Summary
+- Added user authentication system
+- Added login/logout forms
+- Added comprehensive tests
+
+## Changes
+- `src/auth/` - New authentication module
+- `src/components/LoginForm.tsx` - Login UI
+- `tests/auth.test.ts` - Test coverage
+
+## Test Plan
+- [x] Unit tests pass
+- [x] Manual login/logout tested
+- [ ] Review security implications
+
+🤖 Generated with Codex
+EOF
+)"
+
+PR created: https://github.com/owner/repo/pull/234
+```
+
+### Example: PR Review Workflow
+
+```
+You: "Review PR #234 for any issues"
+
+Codex: I'll fetch and analyze PR #234.
+
+Running: gh pr view 234
+Running: gh pr diff 234
+
+## PR #234: Add user authentication
+
+### Changes Summary
+- 12 files changed
+- +847 lines, -23 lines
+- Main changes in src/auth/
+
+### Review Findings
+
+**Security Concerns:**
+1. `src/auth/session.ts:45` - JWT secret is hardcoded
+   ```typescript
+   const secret = "hardcoded-secret";  // Should use env var
+   ```
+
+2. `src/auth/login.ts:23` - No rate limiting on login attempts
+
+**Code Quality:**
+- Good test coverage (89%)
+- Follows project conventions
+- Types are well-defined
+
+**Suggestions:**
+1. Move JWT secret to environment variable
+2. Add rate limiting middleware
+3. Consider adding refresh token logic
+
+Want me to add these as PR comments?
+```
+
+### Example: CI Failure Investigation
+
+```
+You: "The CI is failing on PR #234. What's wrong?"
+
+Codex: I'll check the CI status and investigate.
+
+Running: gh pr checks 234
+
+Checks for PR #234:
+✓ lint (passed)
+✓ typecheck (passed)
+✗ test (failed)
+✓ build (passed)
+
+The test job failed. Let me get details...
+
+Running: gh run view 12345 --log-failed
+
+Failed test output:
+  FAIL src/auth/login.test.ts
+    ✕ should reject invalid credentials (45ms)
+
+    Expected: "Invalid email or password"
+    Received: "Invalid credentials"
+
+The error message changed but the test wasn't updated.
+
+Fix: Update the test expectation in src/auth/login.test.ts:67
+
+```typescript
+// Change this:
+expect(error.message).toBe("Invalid email or password");
+
+// To this:
+expect(error.message).toBe("Invalid credentials");
+```
+
+Want me to make this fix and push?
+```
+
+### Example: Issue Triage
+
+```
+You: "Look at our open bugs and prioritize them"
+
+Codex: I'll fetch and analyze open bug issues.
+
+Running: gh issue list --label bug --state open --limit 20
+
+Found 8 open bugs:
+
+| # | Title | Age | Comments |
+|---|-------|-----|----------|
+| 89 | Login fails on Safari | 5 days | 12 |
+| 87 | Memory leak in dashboard | 3 days | 3 |
+| 85 | Incorrect date formatting | 7 days | 1 |
+| 82 | Crash on empty cart | 2 weeks | 8 |
+
+Let me analyze each for priority...
+
+Running: gh issue view 89
+Running: gh issue view 87
+
+## Priority Recommendations
+
+**P0 - Critical (fix immediately):**
+- #89 Login fails on Safari - Blocks 15% of users
+
+**P1 - High (this sprint):**
+- #87 Memory leak - Causes crashes after 30min use
+- #82 Crash on empty cart - Poor UX, easy fix
+
+**P2 - Medium (next sprint):**
+- #85 Date formatting - Cosmetic, low impact
+
+Want me to add priority labels to these issues?
+```
+
+### Tips for Effective `gh` Usage
+
+1. **Authenticate first**: Run `gh auth login` before using Codex with `gh`
+
+2. **Use `gh api` for advanced queries**:
+   ```bash
+   # Get PR review comments
+   gh api repos/owner/repo/pulls/123/comments
+
+   # Get commit status
+   gh api repos/owner/repo/commits/abc123/status
+   ```
+
+3. **Combine with other tools**:
+   ```
+   You: "Check if the tests pass locally, then create a PR if they do"
+
+   Codex: Running tests first...
+   npm test → All 47 tests pass
+
+   Tests pass. Creating PR...
+   gh pr create...
+   ```
+
+4. **Let Codex write detailed PR descriptions**: Codex can analyze your commits and generate comprehensive PR descriptions automatically.
+
+---
+
+## 2. Multi-Tool Workflows
 
 ### Workflow ingredients
 A Codex-driven workflow typically coordinates:
@@ -51,7 +312,7 @@ This imitates parallel investigation without spawning multiple agents—just mul
 
 ---
 
-## 2. CI/CD Integration
+## 3. CI/CD Integration
 
 ### Principle
 Let Codex prepare the change; let your CI validate it. The model should never be the only gatekeeper—CI ensures repeatability.
@@ -96,7 +357,7 @@ Codex prepares the description, but CI validates before merging.
 
 ---
 
-## 3. Knowledge Transfer
+## 4. Knowledge Transfer
 
 ### Portable prompt library
 Store prompts that worked well in `docs/prompt_templates/` with metadata:
@@ -125,7 +386,7 @@ For every new project:
 
 ---
 
-## 4. Community Contribution
+## 5. Community Contribution
 
 ### Share your helpers
 Publish your helper catalog on GitHub:
