@@ -1,6 +1,8 @@
 # Module 2: Advanced Customization
 
-> **⚠️ Advanced / API Focus**: This module covers customizing the OpenAI Codex **API**—prompt templates, function wrappers, and configuration for programmatic integrations. **If you're using Codex CLI**, most of this is handled automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead. The template patterns (Section 1) are useful for CLI users; Sections 2-4 are API-specific.
+> **⚠️ Advanced / API Focus**: This module covers customizing the OpenAI Codex **API**—prompt templates, function wrappers, and configuration for programmatic integrations. **If you're using Codex CLI**, most of this is handled automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead.
+>
+> **What transfers to CLI**: Sections 1 (Prompt Templates) and 4 (Configuration & Context Files) work for both API and CLI users. Sections 2-3 (Function Wrappers, Guard Rails) are API-specific.
 
 ## Overview
 
@@ -156,9 +158,7 @@ Never expose the validation logic to Codex; keep it in the helper implementation
 
 ## 4. Configuration & Context Files
 
-> **Works for both API and CLI/TUI**: These patterns apply whether you're calling the API programmatically or using Codex CLI interactively. For CLI users, you can prepend context files to your prompts (`codex "$(cat context.md) Your request here"`) or use the CLI's built-in config at `~/.codex/config.toml`.
-
-Keep a lightweight configuration for your Codex sessions:
+Keep a lightweight configuration for your Codex sessions. For CLI users, prepend context with `codex "$(cat context.md) Your request"` or use `~/.codex/config.toml`.
 ```
 .codex/
 ├── prompts/              # Optional folder of prompt fragments
