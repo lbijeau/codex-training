@@ -9,7 +9,6 @@ Complex features fail not because the code is hard, but because the approach is 
 **Learning Objectives**:
 - Write implementation plans that prevent scope creep and missed requirements
 - Execute plans in controlled batches with review checkpoints
-- Track progress with to-do lists for visibility and accountability
 - Handle ambiguity through structured clarification
 - Choose the right decomposition framework for each situation
 
@@ -166,6 +165,18 @@ Before starting execution, verify your plan:
 [ ] **Dependencies**: Stages ordered correctly
 [ ] **No ambiguity**: All decisions made upfront
 ```
+
+**💡 Pro Tip: Be Specific**
+
+Vague goals lead to vague results. Compare:
+
+| Too Vague | Specific & Actionable |
+|-----------|----------------------|
+| "Fix the bug" | "Fix null check in UserService.getById" |
+| "Add feature" | "Add email validation to signup form" |
+| "Improve performance" | "Add database index on users.email" |
+
+Each goal and success criterion should be specific enough that you'll know unambiguously when it's done.
 
 ### Using the writing-plans Skill
 
@@ -411,102 +422,7 @@ git add . && git commit -m "Stage 1: Add notification model and tests"
 
 ---
 
-## 5. Progress Tracking with To-Do Lists
-
-### Why Track Progress?
-
-Codex's built-in to-do tracking provides:
-- **Visibility**: You and Codex both see what's done and what's remaining
-- **Accountability**: Tasks don't get forgotten mid-session
-- **Focus**: Work on one task at a time
-- **History**: Clear record of completed work
-
-### To-Do Structure
-
-Each to-do item has:
-
-| Field | Purpose | Example |
-|-------|---------|---------|
-| **Task** | What needs to be done | "Implement user authentication" |
-| **Status** | Current state | `pending`, `in_progress`, `completed` |
-| **Context** | What's happening now | "Implementing user authentication" |
-
-```
-[ ] Implement user authentication (pending)
-[→] Create API endpoints (in progress)
-[✓] Set up database schema (completed)
-```
-
-### Real-World Example
-
-**Starting a feature:**
-```
-To-Do List: User Notifications
-
-[→] Create notification model
-[ ] Write model tests
-[ ] Create API endpoints
-[ ] Write API tests
-[ ] Build frontend components
-```
-
-**Mid-execution:**
-```
-To-Do List: User Notifications
-
-[✓] Create notification model
-[✓] Write model tests
-[→] Create API endpoints
-[ ] Write API tests
-[ ] Build frontend components
-```
-
-Codex updates the list automatically as you work, giving you real-time visibility into progress.
-
-### Todo Patterns
-
-**Pattern 1: Stage-Based**
-```
-# Add todos for current stage only
-Stage 1: [in_progress]
-├── Create migration [completed]
-├── Create model [in_progress]
-└── Write tests [pending]
-
-# When Stage 1 complete, add Stage 2 todos
-Stage 2: [pending]
-├── Create controller [pending]
-├── Add routes [pending]
-└── Write request specs [pending]
-```
-
-**Pattern 2: Parallel Tracks**
-```
-# For work that can happen concurrently
-Frontend Track:
-├── NotificationBell component [in_progress]
-├── NotificationPanel component [pending]
-└── Hook: useNotifications [pending]
-
-Backend Track:
-├── Notifications controller [in_progress]
-├── WebSocket channel [pending]
-└── Background job [pending]
-```
-
-### Todo Anti-Patterns
-
-| Anti-Pattern | Problem | Fix |
-|--------------|---------|-----|
-| "Fix bug" | Too vague | "Fix null check in UserService.getById" |
-| "Write code" | Not actionable | "Add validation to signup form" |
-| Multiple in_progress | Lost focus | Complete one before starting another |
-| Never completing | Progress invisible | Mark complete immediately when done |
-| Forgetting to update | Stale state | Update as first action after completing |
-
----
-
-## 6. Handling Ambiguity
+## 5. Handling Ambiguity
 
 ### When Requirements Are Unclear
 
@@ -619,7 +535,7 @@ Stage 2 (revised): GraphQL Integration
 
 ---
 
-## 7. Feature Decomposition Frameworks
+## 6. Feature Decomposition Frameworks
 
 ### Choosing the Right Framework
 
@@ -778,7 +694,7 @@ Stage 4: Enhancement - Advanced Search
 
 ---
 
-## 8. Planning Patterns Library
+## 7. Planning Patterns Library
 
 ### Pattern: Spike-Then-Plan
 
@@ -849,7 +765,7 @@ What contracts need to be agreed upfront?"
 | **3-5 Stages** | Not too granular, not too coarse |
 | **Success Criteria** | Every stage has testable checkboxes |
 | **Batch Execution** | Review after each stage, not at the end |
-| **Track Progress** | One task in_progress, mark complete immediately |
+| **Update Status** | Mark stages complete in IMPLEMENTATION_PLAN.md as you go |
 | **Clarify Ambiguity** | Ask before assuming |
 | **Pivot When Needed** | Plans are living documents |
 
@@ -892,7 +808,7 @@ and clean up IMPLEMENTATION_PLAN.md"
 1. **Create a plan**: Pick a feature you've been thinking about. Use `writing-plans` to create IMPLEMENTATION_PLAN.md
 2. **Execute one stage**: Use `executing-plans` to complete Stage 1 with review checkpoint
 3. **Practice a pivot**: Intentionally discover something that requires a plan adjustment
-4. **Track with to-dos**: Use the to-do list throughout to maintain visibility
+4. **Update status**: Keep IMPLEMENTATION_PLAN.md status fields current as you work
 
 ---
 
