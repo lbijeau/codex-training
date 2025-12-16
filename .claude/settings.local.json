@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "mcp__imagegen__render-mermaid",
+      "Bash(git mv:*)",
+      "Bash(ls:*)"
     ]
   }
 }

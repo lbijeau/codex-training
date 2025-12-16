@@ -1,4 +1,4 @@
-# Module 7 Exercises: Collaboration & Communication
+# Module 8 Exercises: Collaboration & Communication
 
 Practice effective communication techniques.
 

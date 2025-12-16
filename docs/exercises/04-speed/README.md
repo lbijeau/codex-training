@@ -1,4 +1,4 @@
-# Module 3 Exercises: Speed & Efficiency Patterns
+# Module 4 Exercises: Speed & Efficiency Patterns
 
 Practice parallelization and optimization techniques.
 

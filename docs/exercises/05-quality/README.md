@@ -1,4 +1,4 @@
-# Module 4 Exercises: Quality & Verification
+# Module 5 Exercises: Quality & Verification
 
 Practice systematic quality assurance techniques.
 
