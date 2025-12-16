@@ -59,6 +59,13 @@ build/
 
 # Generated output
 output/
+logs/
+docs/modules/*.mp4
+docs/modules/*.srt
+docs/modules/*.mp3
+
+# Claude local settings
+.claude/settings.local.json
 
 # Browser automation
 .puppeteer-home/
