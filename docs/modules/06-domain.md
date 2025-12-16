@@ -27,12 +27,13 @@ Master patterns for common software development scenarios: refactoring, architec
 ### Refactoring Workflow
 
 **Phase 1: Understanding**
-```
-1. Spawn Explore agent to map current structure
+```bash
+codex "Explore this codebase and document:
+1. Map current structure
 2. Identify patterns and anti-patterns
 3. Find similar code (duplication)
 4. Understand dependencies
-5. Document current architecture
+5. Document current architecture"
 ```
 
 **Phase 2: Planning**
@@ -121,15 +122,19 @@ Process:
    - Test structure, coverage, patterns
 ```
 
-### Using Explore Agent
+### Using Codex for Exploration
 
-```
-"Spawn an Explore agent to:
+```bash
+# Map the directory structure and understand architecture
+codex "Explore this codebase:
 - Map the directory structure
 - Identify main entry points
 - Find core abstractions
 - Understand data flow patterns
-- Report architecture overview"
+- Summarize the architecture"
+
+# Save findings for later use
+codex exec "Summarize the codebase architecture in bullet points" > contexts/architecture.md
 ```
 
 ### Architecture Mapping Patterns
@@ -327,23 +332,27 @@ Process:
 
 ### Coordinating Performance Investigation
 
-Run focused prompt threads or helper calls for each area, then synthesize the results:
+Run parallel investigations for each area, then synthesize the results:
+
+```bash
+# Run investigations concurrently in the background
+codex exec "Profile API endpoints in api/ and describe latency hotspots" > perf-api.txt &
+codex exec "Analyze database queries in db/ for missing indexes" > perf-db.txt &
+codex exec "Analyze bundle size using webpack-bundle-analyzer output" > perf-bundle.txt &
+codex exec "Review caching strategy and TTLs in config/" > perf-cache.txt &
+wait
+
+# Synthesize findings
+codex "Performance investigation results:
+API: $(cat perf-api.txt)
+Database: $(cat perf-db.txt)
+Bundle: $(cat perf-bundle.txt)
+Cache: $(cat perf-cache.txt)
+
+Rank the top 3 optimizations by impact and propose a plan."
 ```
-Prompt 1: "Profile API endpoints and describe latency hotspots."
-Helper call: `run_profiler("api/*.py")`
 
-Prompt 2: "Analyze database queries for missing indexes and suggest improvements."
-Helper call: `analyze_queries("db/queries.sql")`
-
-Prompt 3: "Summarize bundle size issues."
-Helper call: `analyze_bundle("dist/stats.json")`
-
-Prompt 4: "Check caching strategy and TTLs."
-Helper call: `describe_cache("cache/config.yml")`
-
-Final prompt: "Combine the findings from the four investigations and propose the top changes."
-```
-Each investigation can run independently, but you remain responsible for synthesizing the outputs in a final summary prompt.
+Each investigation runs independently. The final prompt synthesizes all findings into actionable recommendations.
 
 ---
 
@@ -404,15 +413,21 @@ Each investigation can run independently, but you remain responsible for synthes
 
 ### Using Codex for Security Review
 
-```
-"Spawn a code-reviewer agent focused on security.
-Review the authentication module for:
-- Injection vulnerabilities
-- Broken authentication
-- Sensitive data exposure
-- XSS vulnerabilities
+```bash
+# Request a focused security review
+codex "Review the authentication module (src/auth/) for security issues:
+- Injection vulnerabilities (SQL, command, NoSQL)
+- Broken authentication (password storage, session handling)
+- Sensitive data exposure (logging, error messages)
+- XSS vulnerabilities (input sanitization, output encoding)
 
-Provide specific findings with severity and remediation."
+For each finding, provide:
+1. Severity (Critical/High/Medium/Low)
+2. Location (file and line)
+3. Recommended fix"
+
+# Save findings for tracking
+codex exec "List all security findings from the auth review as a markdown checklist" > security-findings.md
 ```
 
 ---
@@ -501,7 +516,7 @@ Provide specific findings with severity and remediation."
 - Breadth-first
 - Feature tracing
 - Dependency mapping
-- Use Explore agent
+- Save findings to `contexts/`
 
 ### Legacy Code
 - Characterization tests
