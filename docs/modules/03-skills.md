@@ -87,72 +87,90 @@ A skill typically includes:
 
 ## 2. Installing Superpowers
 
-Before using skills, you need to install the superpowers plugin. This is a one-time setup.
+Before using skills, you need to install the superpowers library. This is a one-time setup.
 
 ### Prerequisites
 
-- Claude Code version 2.0.13 or later
-- Active Claude Code session
+- Codex CLI installed
+- Git installed
+- Terminal access
 
 ### Installation Steps
 
-**Step 1: Add the superpowers marketplace**
+**Step 1: Clone the superpowers repository**
 
-In Claude Code, run:
-```
-/plugin marketplace add obra/superpowers-marketplace
-```
-
-**Step 2: Install the superpowers plugin**
-```
-/plugin install superpowers@superpowers-marketplace
+```bash
+mkdir -p ~/.codex/superpowers
+cd ~/.codex/superpowers
+git clone https://github.com/obra/superpowers.git .
 ```
 
-**Step 3: Restart Claude Code**
+**Step 2: Create your personal skills directory**
 
-Quit and restart Claude Code for the plugin to load.
+```bash
+mkdir -p ~/.codex/skills
+```
+
+This is where you'll store custom skills you create.
+
+**Step 3: Update your Codex configuration**
+
+Add a superpowers section to `~/.codex/AGENTS.md`:
+
+```markdown
+# Superpowers
+
+You have superpowers. Superpowers teach you new skills and capabilities.
+
+Run `~/.codex/superpowers/.codex/superpowers-codex bootstrap` and follow the instructions.
+```
 
 ### Verifying Installation
 
-After restart, you should see a message in your session indicating **"You have Superpowers."** This confirms the plugin is active and skills are available.
+Run the bootstrap command to verify everything is working:
 
-You can also verify by running:
-```
-/superpowers:brainstorm
+```bash
+~/.codex/superpowers/.codex/superpowers-codex bootstrap
 ```
 
-If the command is recognized, you're ready to go.
+Upon success, you'll see skill listings and bootstrap instructions, confirming the system is ready.
 
 ### What Gets Installed
 
-The superpowers plugin provides:
+The superpowers library provides:
 - **20+ battle-tested skills** for planning, debugging, TDD, and code review
-- **Slash commands**: `/superpowers:brainstorm`, `/superpowers:write-plan`, `/superpowers:execute-plan`
-- **Skills search tool** for discovering available skills
-- **SessionStart context injection** that loads skills automatically
+- **Skill invocation patterns** that Codex recognizes automatically
+- **Custom skills directory** for your team's workflows
+- **Bootstrap system** that loads skills into your session
 
-### Optional: Additional Plugins
+### Directory Structure
 
-The superpowers-marketplace includes related plugins you may want:
-
-| Plugin | Purpose |
-|--------|---------|
-| `superpowers-chrome` | Browser control for testing web apps |
-| `superpowers-lab` | Experimental/beta skills |
-| `episodic-memory` | Memory across sessions |
-
-Install additional plugins with:
+After installation:
 ```
-/plugin install <plugin-name>@superpowers-marketplace
+~/.codex/
+├── superpowers/          # Core superpowers library (cloned repo)
+│   └── .codex/
+│       └── superpowers-codex  # Bootstrap script
+├── skills/               # Your custom skills go here
+└── AGENTS.md             # Configuration that loads superpowers
+```
+
+### Updating Superpowers
+
+To get the latest skills:
+```bash
+cd ~/.codex/superpowers
+git pull
 ```
 
 ### Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
-| Command not recognized | Restart Claude Code after installation |
-| "Plugin not found" | Check you added the marketplace first |
-| Skills not loading | Verify with `/plugin list` that superpowers is installed |
+| Bootstrap command not found | Check the clone succeeded: `ls ~/.codex/superpowers` |
+| Skills not loading | Verify AGENTS.md includes the superpowers section |
+| Git clone fails | Ensure you have internet access and git installed |
+| Permission denied | Check directory permissions: `chmod -R 755 ~/.codex` |
 
 > **Source**: [obra/superpowers on GitHub](https://github.com/obra/superpowers)
 
