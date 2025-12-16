@@ -130,6 +130,50 @@ Use profiles: `codex --profile safe`
 - Browse `codex_helpers/` and `docs/prompt_templates/` to see reusable helpers and prompts.
 - Skim `docs/examples/session-drive.md` for an end-to-end session using helpers.
 
-## 5. Next Steps
-- Move on to [Module 2: Skills & Reusable Workflows](02-skills.md).
-- Return to API modules (8–9) later if you need to build custom integrations.
+## 5. From Commands to Workflows
+
+You now know how to run Codex, approve commands, and manage sessions. But there's a big difference between *using* Codex and *mastering* it.
+
+**The leap**: Instead of writing prompts from scratch every time, experts use **skills**—packaged workflows that encode proven techniques.
+
+### Quick Example: Debugging
+
+**Without skills** (ad-hoc prompting):
+```
+You: "Tests are failing, help me fix them"
+Codex: [guesses at a fix]
+You: "That didn't work"
+Codex: [guesses again]
+# 30 minutes of trial and error
+```
+
+**With skills** (systematic approach):
+```
+You: "Tests are failing. Use superpowers:systematic-debugging"
+Codex: [follows proven 4-phase framework]
+1. Reproduce → isolate the failure
+2. Trace → find root cause
+3. Hypothesize → form and test theory
+4. Fix → solve and prevent regression
+# Problem solved methodically
+```
+
+Skills turn "hoping it works" into "knowing the process."
+
+### What You'll Learn Next
+
+| Module | What It Unlocks |
+|--------|-----------------|
+| **Skills** | Reusable workflows for debugging, planning, quality |
+| **Speed** | Parallel execution, context optimization |
+| **Planning** | Breaking down complex work systematically |
+| **Quality** | Verification, testing, code review patterns |
+| **Domain** | Refactoring, legacy code, security, performance |
+| **Integration** | GitHub CLI, CI/CD, multi-tool workflows |
+
+---
+
+## Next Steps
+
+1. **[Module 2: Skills & Reusable Workflows](02-skills.md)** — Learn to use and create skills
+2. Return to API modules (8–9) later if you need custom integrations
