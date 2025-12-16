@@ -1,6 +1,6 @@
 # Module 6: Planning & Execution
 
-> **Prerequisite**: This module uses skills from Module 3. Make sure you understand how to invoke skills like `superpowers:writing-plans` and `superpowers:executing-plans` before proceeding.
+> **Prerequisite**: This module uses skills from Module 3. Make sure you understand how to invoke skills like `superpowers:brainstorming`, `superpowers:writing-plans`, and `superpowers:executing-plans` before proceeding.
 
 ## Overview
 
@@ -69,6 +69,33 @@ flowchart LR
 | Typo correction | No | Just do it |
 
 **Rule of thumb**: If you'll touch more than 3 files or need more than 30 minutes, plan first.
+
+### Before You Plan: Brainstorm
+
+Don't jump straight into writing a plan. Use `superpowers:brainstorming` to refine vague requirements into concrete specifications.
+
+**When to brainstorm first:**
+- Requirements are fuzzy ("add user notifications")
+- Multiple valid approaches exist
+- You're unsure about scope or constraints
+
+**Example:**
+```
+You: "I need to add password reset functionality.
+      Use superpowers:brainstorming to refine this."
+
+Codex: Using superpowers:brainstorming.
+
+Questions to clarify:
+1. How should users request a reset? (Email link? SMS?)
+2. How long should reset tokens be valid?
+3. Should we rate-limit reset requests?
+4. What happens to existing sessions after reset?
+
+Let's discuss each before writing the plan.
+```
+
+After brainstorming produces clear requirements, then write your plan with `superpowers:writing-plans`.
 
 ---
 
