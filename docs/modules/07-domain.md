@@ -442,9 +442,7 @@ Codex: Exploring the codebase...
 - Event-driven for async operations (orders → inventory → shipping)
 
 Want me to trace a specific feature, like order processing?
-```
 
-```
 You: "Yes, trace how an order flows through the system."
 
 Codex: Tracing order flow...
