@@ -23,21 +23,104 @@ Start here if you're new to Codex or using the Codex CLI. This module orients yo
 - Try `codex exec "prompt"` for non-interactive runs (good for scripted summaries).
 - Learn built-in tools: file reads, apply_patch, shell commands, and image viewing.
 
-## 2.1 CLI options you’ll use immediately
-- `--cd <path>`: set the working repo (required for safety). Add `--add-dir <path>` to include a second repo.
-- `-a` / `--ask-for-approval`: force approvals for every command. `--full-auto` removes approvals—avoid unless you’re sure.
-- `--sandbox <mode>`: `read-only`, `workspace-write` (default), or `danger-full-access` (avoid unless necessary).
-- `--profile <name>`: load a config profile from `~/.codex/config.toml` (e.g., `safe` vs `auto`).
-- `--enable skills`: turn on the local skills catalog.
-- `codex exec`: non-interactive mode; pair with `--json`, `--output-schema`, or `--output-last-message` to script runs.
+## 2.1 CLI Options Reference
 
-### TUI slash commands to remember
-- `/status`: show workdir, sandbox, approval policy, session ID.
-- `/diff`, `/undo`: inspect/undo pending changes.
-- `/compact`: summarize/trim context; `/clear`: clear chat history.
-- `/model`: switch model; `/skills`: list enabled skills.
+### Starting a Session
 
-See also: `~/.codex/config.toml` for defaults and named profiles. For a full flag list, run `codex --help` or see the CLI docs.
+| Flag | Description | Example |
+|------|-------------|---------|
+| `--cd <path>` | Set working directory (required) | `codex --cd ~/myproject` |
+| `--add-dir <path>` | Include additional directory | `codex --cd ~/api --add-dir ~/shared` |
+| `--resume` | Continue previous session | `codex --resume` |
+| `--continue <id>` | Continue specific session | `codex --continue abc123` |
+| `--model <name>` | Select model | `codex --model gpt-5.1-codex-max` |
+| `--profile <name>` | Load config profile | `codex --profile safe` |
+
+### Approval & Safety
+
+| Flag | Description | When to Use |
+|------|-------------|-------------|
+| `-a` / `--ask-for-approval` | Approve every command | Learning, sensitive repos |
+| `--full-auto` | No approvals needed | Trusted scripts only |
+| `--sandbox read-only` | Can't write files | Exploration, code review |
+| `--sandbox workspace-write` | Write to workdir + /tmp | Default, recommended |
+| `--sandbox danger-full-access` | Full system access | Avoid unless necessary |
+
+### Non-Interactive Mode (`codex exec`)
+
+```bash
+# Basic execution
+codex exec "Summarize the README"
+
+# Output to file
+codex exec "List all TODO comments" > todos.txt
+
+# JSON output for scripting
+codex exec --json "Analyze the codebase structure"
+
+# Extract just the final response
+codex exec --output-last-message "What's the main entry point?"
+
+# Parallel execution
+codex exec "Check auth code" > auth.txt &
+codex exec "Check api code" > api.txt &
+wait
+```
+
+### Skills & Extensions
+
+| Flag | Description |
+|------|-------------|
+| `--enable skills` | Enable skills catalog |
+| `--disable-mcp` | Disable MCP servers |
+| `--mcp-server <name>` | Enable specific MCP server |
+
+### Session Management
+
+```bash
+# List recent sessions
+codex sessions list
+
+# Resume most recent
+codex --resume
+
+# Resume specific session
+codex --continue <session-id>
+```
+
+### TUI Slash Commands
+
+| Command | Description |
+|---------|-------------|
+| `/status` | Show workdir, sandbox, approval policy, session ID |
+| `/diff` | Show pending file changes |
+| `/undo` | Undo last change |
+| `/compact` | Summarize and trim context |
+| `/clear` | Clear chat history |
+| `/model` | Switch model mid-session |
+| `/skills` | List enabled skills |
+| `/help` | Show all commands |
+
+### Configuration File
+
+Store defaults in `~/.codex/config.toml`:
+
+```toml
+# Default settings
+model = "gpt-5.1-codex-max"
+approval = "suggest"
+
+# Named profiles
+[profiles.safe]
+approval = "always"
+sandbox = "read-only"
+
+[profiles.auto]
+approval = "never"
+sandbox = "workspace-write"
+```
+
+Use profiles: `codex --profile safe`
 
 ## 3. Hands-on Training Path
 - Walk through `docs/training/codex-cli-hands-on/README.md`.
