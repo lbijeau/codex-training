@@ -153,45 +153,233 @@ Stage 1 complete. Ready for review before Stage 2.
 
 ### Refactoring Patterns
 
-**Pattern: Extract Function**
+#### Pattern: Extract Function
+
+When a function does too much, extract cohesive chunks into separate functions.
+
 ```
-Process:
-1. Identify code to extract
-2. Analyze dependencies (params, return)
-3. Create new function
-4. Replace original code
-5. Run tests
-6. Commit
+You: "This createOrder function is 150 lines. Help me extract
+      the validation logic into its own function."
+
+Codex: I'll extract the validation logic (lines 12-45).
+
+**Before:**
+// src/orders.ts
+function createOrder(data: OrderData): Order {
+  // Validation (lines 12-45)
+  if (!data.items || data.items.length === 0) {
+    throw new Error('Order must have items');
+  }
+  if (!data.customer.email) {
+    throw new Error('Customer email required');
+  }
+  if (!data.customer.address) {
+    throw new Error('Shipping address required');
+  }
+  for (const item of data.items) {
+    if (item.quantity < 1) {
+      throw new Error('Invalid quantity');
+    }
+    if (!inventory.has(item.sku)) {
+      throw new Error(`Item ${item.sku} not found`);
+    }
+  }
+
+  // Rest of function (lines 46-150)...
+}
+
+**After:**
+function validateOrderData(data: OrderData): void {
+  if (!data.items || data.items.length === 0) {
+    throw new Error('Order must have items');
+  }
+  if (!data.customer.email) {
+    throw new Error('Customer email required');
+  }
+  if (!data.customer.address) {
+    throw new Error('Shipping address required');
+  }
+  for (const item of data.items) {
+    if (item.quantity < 1) {
+      throw new Error('Invalid quantity');
+    }
+    if (!inventory.has(item.sku)) {
+      throw new Error(`Item ${item.sku} not found`);
+    }
+  }
+}
+
+function createOrder(data: OrderData): Order {
+  validateOrderData(data);  // Now 1 line instead of 34
+
+  // Rest of function...
+}
+
+Running tests: npm test
+✓ All 23 tests passing
 ```
 
-**Pattern: Rename for Clarity**
+#### Pattern: Rename for Clarity
+
+Unclear names make code hard to understand. Rename systematically.
+
 ```
-Process:
-1. Grep for all usages
-2. Rename systematically (use Edit with replace_all)
-3. Run tests
-4. Commit
+You: "The variable 'd' is used throughout the codebase.
+      Rename it to 'discountPercent' for clarity."
+
+Codex: I'll find all usages and rename systematically.
+
+Searching for 'd' as a variable name...
+Found 12 usages across 4 files:
+- src/pricing.ts: 6 usages
+- src/cart.ts: 3 usages
+- src/checkout.ts: 2 usages
+- src/reports.ts: 1 usage
+
+**Before:**
+// src/pricing.ts
+function calculateTotal(items: Item[], d: number): number {
+  const subtotal = items.reduce((sum, i) => sum + i.price, 0);
+  return subtotal * (1 - d / 100);
+}
+
+**After:**
+// src/pricing.ts
+function calculateTotal(items: Item[], discountPercent: number): number {
+  const subtotal = items.reduce((sum, item) => sum + item.price, 0);
+  return subtotal * (1 - discountPercent / 100);
+}
+
+Renamed in all 4 files.
+Running tests: npm test
+✓ All tests passing
 ```
 
-**Pattern: Move to Module**
+#### Pattern: Move to Module
+
+When related functions are scattered, consolidate them into a focused module.
+
 ```
-Process:
-1. Identify related functions
-2. Create new module
-3. Move functions incrementally
-4. Update imports
-5. Run tests after each move
-6. Commit each move
+You: "Email-related functions are spread across 5 files.
+      Consolidate them into a dedicated email module."
+
+Codex: I'll identify and move email functions incrementally.
+
+Found email-related functions:
+- src/orders.ts: sendOrderConfirmation()
+- src/auth.ts: sendPasswordReset(), sendWelcomeEmail()
+- src/shipping.ts: sendShippingNotification()
+- src/support.ts: sendTicketResponse()
+
+**Step 1: Create the module**
+// src/email/index.ts
+export { sendEmail } from './sender';
+export { templates } from './templates';
+
+**Step 2: Move first function**
+// src/email/notifications.ts
+export async function sendOrderConfirmation(order: Order): Promise<void> {
+  await sendEmail({
+    to: order.customer.email,
+    template: templates.orderConfirmation,
+    data: { order }
+  });
+}
+
+**Step 3: Update import in orders.ts**
+// Before:
+function sendOrderConfirmation(order) { ... }
+
+// After:
+import { sendOrderConfirmation } from './email/notifications';
+
+Running tests after each move...
+✓ Tests passing after moving sendOrderConfirmation
+✓ Tests passing after moving sendPasswordReset
+✓ Tests passing after moving sendWelcomeEmail
+✓ Tests passing after moving sendShippingNotification
+✓ Tests passing after moving sendTicketResponse
+
+Final structure:
+src/email/
+├── index.ts           # Public exports
+├── sender.ts          # Core send function
+├── templates.ts       # Email templates
+└── notifications.ts   # All notification functions
 ```
 
-**Pattern: Extract Interface**
+#### Pattern: Extract Interface
+
+When code depends on a concrete implementation, extract an interface to enable testing and flexibility.
+
 ```
-Process:
-1. Identify concrete dependency
-2. Define interface
-3. Update consumers to use interface
-4. Run tests
-5. Create alternative implementations if needed
+You: "The ReportGenerator class directly uses PostgresDB.
+      Extract an interface so we can use different databases
+      and mock it in tests."
+
+Codex: I'll extract a Database interface and update the code.
+
+**Before:**
+// src/reports/generator.ts
+import { PostgresDB } from '../db/postgres';
+
+class ReportGenerator {
+  private db: PostgresDB;
+
+  constructor() {
+    this.db = new PostgresDB();  // Hard dependency
+  }
+
+  async generateSalesReport(): Promise<Report> {
+    const sales = await this.db.query('SELECT * FROM sales');
+    // ... process sales
+  }
+}
+
+**After:**
+// src/db/database.interface.ts
+export interface Database {
+  query<T>(sql: string, params?: any[]): Promise<T[]>;
+  execute(sql: string, params?: any[]): Promise<void>;
+}
+
+// src/db/postgres.ts
+import { Database } from './database.interface';
+
+export class PostgresDB implements Database {
+  async query<T>(sql: string, params?: any[]): Promise<T[]> { ... }
+  async execute(sql: string, params?: any[]): Promise<void> { ... }
+}
+
+// src/reports/generator.ts
+import { Database } from '../db/database.interface';
+
+class ReportGenerator {
+  constructor(private db: Database) {}  // Injected dependency
+
+  async generateSalesReport(): Promise<Report> {
+    const sales = await this.db.query('SELECT * FROM sales');
+    // ... process sales
+  }
+}
+
+// Now tests can use a mock:
+// tests/reports/generator.test.ts
+class MockDatabase implements Database {
+  async query<T>(): Promise<T[]> {
+    return [{ id: 1, amount: 100 }] as T[];
+  }
+  async execute(): Promise<void> {}
+}
+
+test('generates sales report', async () => {
+  const generator = new ReportGenerator(new MockDatabase());
+  const report = await generator.generateSalesReport();
+  expect(report.total).toBe(100);
+});
+
+✓ All tests passing
+✓ ReportGenerator now testable without real database
 ```
 
 ---
