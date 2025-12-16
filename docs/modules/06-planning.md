@@ -375,23 +375,23 @@ Executing everything at once is risky:
 ### Batch Size Guidelines
 
 ```mermaid
-flowchart TD
-    subgraph small["🔹 SMALL BATCH (2-3 tasks)"]
+flowchart LR
+    subgraph small["🔹 SMALL BATCH<br/>2-3 tasks"]
         S1["Create model"]
-        S2["Write model tests"]
+        S2["Write tests"]
         S3["Review"]
     end
 
-    subgraph medium["🔸 MEDIUM BATCH (1 stage)"]
-        M1["Full API endpoint"]
-        M2["Controller + Routes + Tests"]
+    subgraph medium["🔸 MEDIUM BATCH<br/>1 stage"]
+        M1["Full endpoint"]
+        M2["Routes + Tests"]
         M3["Review"]
     end
 
     subgraph large["🔴 TOO LARGE"]
         L1["Entire feature"]
         L2["Multiple stages"]
-        L3["Impossible to review"]
+        L3["Hard to review"]
     end
 
     style small fill:#e8f5e9,stroke:#2e7d32
