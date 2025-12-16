@@ -460,4 +460,4 @@ MCP servers transform Codex from a coding assistant into an integrated developme
 
 ---
 
-**Next**: [Exercise 4: Build a Complete Customization](exercise-4.md)
+**Next**: [Exercise 4: Build Session Automation Scripts](exercise-4.md)
