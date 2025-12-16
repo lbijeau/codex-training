@@ -11,5 +11,3 @@ Practice systematic quality assurance techniques.
 5. **Exercise 5**: Root Cause Analysis
 
 Each exercise: 25-35 minutes | Total: ~2.5 hours
-
-**Start**: [Exercise 1: Multi-Layer Review Workflow](exercise-1.md)

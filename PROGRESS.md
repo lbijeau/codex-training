@@ -44,18 +44,7 @@ Track your journey through the Codex Code Mastery Program.
 
 ---
 
-### Module 4: Quality & Verification
-- **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
-- **Started**: [Date]
-- **Completed**: [Date]
-- **Time Spent**: [Hours]
-- **Key Learnings**:
-  -
-- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4 [ ] 5
-
----
-
-### Module 5: Planning & Execution
+### Module 4: Planning & Execution
 - **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
 - **Started**: [Date]
 - **Completed**: [Date]
@@ -63,6 +52,17 @@ Track your journey through the Codex Code Mastery Program.
 - **Key Learnings**:
   -
 - **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4
+
+---
+
+### Module 5: Quality & Verification
+- **Status**: [ ] Not Started / [ ] In Progress / [ ] Complete
+- **Started**: [Date]
+- **Completed**: [Date]
+- **Time Spent**: [Hours]
+- **Key Learnings**:
+  -
+- **Exercises Completed**: [ ] 1 [ ] 2 [ ] 3 [ ] 4 [ ] 5
 
 ---
 

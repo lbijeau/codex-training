@@ -11,8 +11,6 @@ Practice integrating Codex into complete workflows.
 
 Each exercise: 30-40 minutes | Total: ~2.5 hours
 
-**Start**: [Exercise 1: Design Multi-Tool Workflow](exercise-1.md)
-
 ---
 
 ## Integration wrap-up before API deep-dive

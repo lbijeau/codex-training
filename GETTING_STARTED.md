@@ -5,7 +5,7 @@ Welcome to your comprehensive Codex Code training program! This guide will help 
 ## 📚 What You Have
 
 **Complete Learning Program**:
-- **8 Comprehensive Modules** (~24,000 words of content)
+- **9 Comprehensive Modules** (~24,000 words of content)
 - **32 Markdown Files** of structured learning material
 - **30+ Exercises** across all modules (outlines ready)
 - **Pattern Library** structure ready to populate
@@ -195,8 +195,8 @@ codex-training/
 │   │   ├── 01-getting-started/   # ✅ Checklist ready
 │   │   ├── 02-skills/            # ✅ Outline ready
 │   │   ├── 03-speed/             # ✅ Outline ready
-│   │   ├── 04-quality/           # ✅ Outline ready
-│   │   ├── 05-planning/          # ✅ Outline ready
+│   │   ├── 04-planning/          # ✅ Outline ready
+│   │   ├── 05-quality/           # ✅ Outline ready
 │   │   ├── 06-domain/            # ✅ Outline ready
 │   │   ├── 07-integration/       # ✅ Outline ready
 │   │   ├── 08-api-internals/     # ✅ Outline ready

@@ -1,4 +1,4 @@
-# Module 5 Exercises: Planning & Execution
+# Module 4 Exercises: Planning & Execution
 
 Practice systematic planning and execution workflows.
 
@@ -10,5 +10,3 @@ Practice systematic planning and execution workflows.
 4. **Exercise 4**: Pivot Mid-Implementation
 
 Each exercise: 20-30 minutes | Total: ~2 hours
-
-**Start**: [Exercise 1: Write an Implementation Plan](exercise-1.md)

@@ -6,7 +6,7 @@
 
 ## Structure
 
-- `docs/modules/`: Learning content (8 modules)
+- `docs/modules/`: Learning content (9 modules)
 - `docs/exercises/`: Hands-on practice
 - `docs/patterns/`: Growing pattern library
 - `docs/playbook/`: Quick reference

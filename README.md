@@ -111,7 +111,7 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 - Progress tracking with TodoWrite
 - Handling ambiguity and pivots
 
-📁 [Module Content](docs/modules/04-planning.md) | 🏋️ [Exercises](docs/exercises/05-planning/)
+📁 [Module Content](docs/modules/04-planning.md) | 🏋️ [Exercises](docs/exercises/04-planning/)
 
 ---
 
@@ -182,6 +182,7 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 📁 [Module Content](docs/modules/09-api-customization.md) | 🏋️ [Exercises](docs/exercises/09-api-customization/)
 
 ---
+
 ## Learning Path
 
 **Recommended Progression**:

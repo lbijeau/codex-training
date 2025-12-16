@@ -11,5 +11,3 @@ Build your customization skills through hands-on practice.
 5. **Exercise 5**: Integrate Helpers into a Codex Workflow
 
 Each exercise: 20-30 minutes | Total: ~2.5 hours
-
-**Start**: [Exercise 1: Build Your First Skill](exercise-1.md)
