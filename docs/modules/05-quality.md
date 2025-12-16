@@ -125,6 +125,121 @@ Suggested fix for line 34:
 
 **💡 Pro Tip**: Be specific about what you want reviewed. "Review my code" gives generic feedback. "Review for SQL injection vulnerabilities" gives targeted, useful feedback.
 
+### Using Code Review Skills
+
+For consistent, thorough reviews, use the superpowers code review skills instead of ad-hoc prompts.
+
+#### Requesting Reviews: `superpowers:requesting-code-review`
+
+This skill provides a structured review workflow that ensures nothing gets missed:
+
+```bash
+codex "Use superpowers:requesting-code-review on my changes"
+```
+
+**What the skill does:**
+1. Gathers your changes (staged, unstaged, or specific files)
+2. Runs through a comprehensive checklist:
+   - Logic errors and bugs
+   - Edge cases and boundary conditions
+   - Error handling completeness
+   - Security vulnerabilities
+   - Code style and conventions
+   - Test coverage gaps
+3. Reports findings with severity levels
+4. Suggests specific fixes
+
+**Example session:**
+```
+You: I've finished the payment integration. Use superpowers:requesting-code-review
+
+Codex: Running code review on payment integration...
+
+📋 REVIEW SUMMARY
+
+🔴 CRITICAL (1):
+- src/payments/processor.ts:67 - API key exposed in error message
+  → Remove sensitive data from user-facing errors
+
+🟡 WARNINGS (2):
+- src/payments/processor.ts:34 - No timeout on external API call
+  → Add timeout to prevent hanging requests
+- src/payments/validator.ts:12 - Decimal precision loss possible
+  → Use decimal library for currency calculations
+
+🟢 SUGGESTIONS (1):
+- Consider adding idempotency key for retry safety
+
+📊 Coverage: 3 new functions, 2 have tests, 1 missing tests
+
+Shall I fix the critical issue first?
+```
+
+#### Receiving Feedback: `superpowers:receiving-code-review`
+
+When someone (human or AI) reviews your code, this skill helps you process feedback properly:
+
+```bash
+codex "Use superpowers:receiving-code-review for this feedback: [paste feedback]"
+```
+
+**What the skill does:**
+1. Parses and categorizes the feedback
+2. Identifies which comments require changes vs. discussion
+3. Helps you evaluate suggestions critically (not all feedback should be accepted)
+4. Creates a plan to address valid points
+5. Drafts responses for items you disagree with
+
+**Why this matters:**
+
+| Without Skill | With Skill |
+|---------------|------------|
+| Blindly accept all suggestions | Critically evaluate each point |
+| Miss subtle feedback | Categorize by type and priority |
+| No systematic response | Structured plan to address |
+| Forget to follow up | Track what's resolved |
+
+**Example: Processing PR feedback**
+```
+You: Use superpowers:receiving-code-review for this feedback:
+"The error handling looks fragile. Also, why not use the existing
+UserService instead of creating a new one? Minor: typo on line 34."
+
+Codex: Analyzing feedback...
+
+📋 FEEDBACK BREAKDOWN
+
+1. "Error handling looks fragile" - REQUIRES INVESTIGATION
+   → Vague feedback. Need to understand what specifically is fragile.
+   → Suggested response: "Could you point to specific error cases you're concerned about?"
+
+2. "Use existing UserService" - REQUIRES EVALUATION
+   → Valid architectural question. Let me check...
+   → Found: UserService exists at src/services/user.ts
+   → Assessment: The reviewer is right. UserService already handles user lookup.
+   → Action: Refactor to use UserService instead of duplicating logic.
+
+3. "Typo on line 34" - QUICK FIX
+   → Action: Fix typo
+
+Plan:
+1. [ ] Ask for clarification on error handling concern
+2. [ ] Refactor to use UserService
+3. [ ] Fix typo
+4. [ ] Re-request review after changes
+```
+
+#### When to Use Each Skill
+
+| Situation | Skill | Why |
+|-----------|-------|-----|
+| Before creating a PR | `requesting-code-review` | Catch issues before others see them |
+| After receiving PR comments | `receiving-code-review` | Process feedback systematically |
+| Self-review of complex changes | `requesting-code-review` | Fresh perspective on your own code |
+| Disagreeing with feedback | `receiving-code-review` | Formulate thoughtful responses |
+
+> **See Module 3** for installation and more details on using superpowers skills.
+
 ### Layer 3: Manual Review (Human Judgment)
 
 Humans excel at questions AI can't answer:
