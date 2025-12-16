@@ -424,32 +424,18 @@ flowchart TD
     style PROCEED fill:#e8f5e9,stroke:#2e7d32
 ```
 
-### Using AskUserQuestion Effectively
+### Clarifying Ambiguity
 
-When you hit ambiguity:
+When you hit ambiguity, ask focused questions with clear options:
 
-```javascript
-{
-  "questions": [{
-    "question": "How should password reset tokens be delivered?",
-    "header": "Delivery",
-    "options": [
-      {
-        "label": "Email only",
-        "description": "Traditional email link (most common)"
-      },
-      {
-        "label": "Email + SMS",
-        "description": "Send code to both channels (more secure)"
-      },
-      {
-        "label": "SMS only",
-        "description": "Text message with code (mobile-first)"
-      }
-    ],
-    "multiSelect": false
-  }]
-}
+```
+You: "Before I continue, I need to clarify token delivery:
+
+Option 1: Email only - Traditional email link (most common)
+Option 2: Email + SMS - Send code to both channels (more secure)
+Option 3: SMS only - Text message with code (mobile-first)
+
+Which approach should I use?"
 ```
 
 ### Pivot Pattern
