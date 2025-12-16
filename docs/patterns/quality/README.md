@@ -18,9 +18,9 @@ Patterns for ensuring code quality and catching issues early.
 
 ## Quick Tips
 
-1. **Review before committing**: Spawn code-reviewer agent after implementation
+1. **Review before committing**: Ask Codex to review your changes after implementation
 2. **Test first**: Write tests before implementation when possible
-3. **Multiple checks**: Use different agent types for comprehensive review
+3. **Multiple checks**: Use focused review prompts for comprehensive coverage
 4. **Automate with hooks**: Quality checks can run automatically
 5. **Verify, don't assume**: Always confirm tests pass
 

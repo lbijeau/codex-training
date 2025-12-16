@@ -240,4 +240,4 @@ In a typical debugging session:
 
 ---
 
-**Next**: [Exercise 3: Spawning and Coordinating Subagents](exercise-3.md)
+**Next**: [Exercise 3: Chaining Prompts and Breaking Work into Steps](exercise-3.md)

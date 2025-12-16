@@ -15,7 +15,7 @@ Implement multiple layers of review, each catching different categories of issue
 **The Review Pyramid**:
 ```
 Layer 3: Manual Review (Architecture, UX, Business Logic)
-Layer 2: Specialized Agents (code-reviewer, test-analyzer)
+Layer 2: AI-Assisted Review (focused review prompts)
 Layer 1: Automated Checks (Linters, Formatters via hooks)
 ```
 
@@ -41,83 +41,81 @@ Layer 1: Automated Checks (Linters, Formatters via hooks)
 
 ### Example 1: Feature Implementation
 
-```
-After implementing user registration feature:
+```bash
+# After implementing user registration feature:
 
-Layer 1 - Automated:
-- Hooks auto-format code (prettier)
-- Hooks run linter (eslint)
-- Hooks check types (tsc)
+# Layer 1 - Automated:
+# - Hooks auto-format code (prettier)
+# - Hooks run linter (eslint)
+# - Hooks check types (tsc)
 
-Layer 2 - Agents:
-"Spawn code-reviewer agent to review registration implementation.
-Focus on:
+# Layer 2 - AI-Assisted Review:
+codex "Review the registration implementation for:
 - Logic errors and edge cases
 - Error handling
 - Security issues
 - Code quality"
 
-Then:
-"Spawn pr-test-analyzer to review test coverage.
-Identify gaps in:
-- Edge case testing
-- Error scenario testing
-- Integration testing"
+codex "Review test coverage for the registration feature:
+- Edge case testing gaps
+- Error scenario testing gaps
+- Integration testing gaps"
 
-Layer 3 - Manual:
-- Review UX flow
-- Verify business requirements
-- Check architecture decisions
+# Layer 3 - Manual:
+# - Review UX flow
+# - Verify business requirements
+# - Check architecture decisions
 
-Result: Comprehensive quality assurance
+# Result: Comprehensive quality assurance
 ```
 
 ### Example 2: Bug Fix
 
-```
-After fixing authentication bug:
+```bash
+# After fixing authentication bug:
 
-Layer 1 - Automated:
-- Linter passes ✓
-- Tests pass ✓
-- Format correct ✓
+# Layer 1 - Automated:
+# - Linter passes ✓
+# - Tests pass ✓
+# - Format correct ✓
 
-Layer 2 - Agent:
-"Spawn code-reviewer focused on:
-- Did fix address root cause?
+# Layer 2 - AI-Assisted Review:
+codex "Review this bug fix:
+- Did the fix address the root cause?
 - Are there similar bugs elsewhere?
 - Is error handling comprehensive?
-- Should we add regression test?"
+- Should we add a regression test?"
 
-Layer 3 - Manual:
-- Verify fix works in browser
-- Check no side effects
-- Confirm fix matches issue description
+# Layer 3 - Manual:
+# - Verify fix works in browser
+# - Check no side effects
+# - Confirm fix matches issue description
 
-Result: High confidence in fix quality
+# Result: High confidence in fix quality
 ```
 
 ### Example 3: Refactoring
 
-```
-After refactoring data validation:
+```bash
+# After refactoring data validation:
 
-Layer 1 - Automated:
-- All tests still pass ✓
-- No lint errors ✓
-- Types correct ✓
+# Layer 1 - Automated:
+# - All tests still pass ✓
+# - No lint errors ✓
+# - Types correct ✓
 
-Layer 2 - Parallel Agents:
-"Spawn in parallel:
-- code-reviewer: Check refactor quality
-- pr-test-analyzer: Verify test coverage maintained"
+# Layer 2 - Parallel Reviews:
+codex exec "Review the refactor for code quality and maintainability" > review.txt &
+codex exec "Check that test coverage is maintained after refactoring" > coverage.txt &
+wait
+cat review.txt coverage.txt
 
-Layer 3 - Manual:
-- Verify behavior unchanged
-- Check performance not degraded
-- Confirm code more maintainable
+# Layer 3 - Manual:
+# - Verify behavior unchanged
+# - Check performance not degraded
+# - Confirm code more maintainable
 
-Result: Safe, quality refactoring
+# Result: Safe, quality refactoring
 ```
 
 ## Implementation
@@ -144,15 +142,21 @@ Result: Safe, quality refactoring
 }
 ```
 
-### Layer 2: Agent Workflow
+### Layer 2: AI-Assisted Review Workflow
 
-```
-After implementation:
-1. "Spawn code-reviewer agent to review my changes"
-2. Address findings
-3. "Spawn pr-test-analyzer to check test coverage"
-4. Add missing tests
-5. Proceed to manual review
+```bash
+# After implementation:
+# 1. Ask Codex to review your changes
+codex "Review my changes for bugs, logic errors, and quality issues"
+
+# 2. Address findings
+
+# 3. Check test coverage
+codex "Analyze test coverage for my changes - what's missing?"
+
+# 4. Add missing tests
+
+# 5. Proceed to manual review
 ```
 
 ### Layer 3: Manual Checklist
@@ -184,7 +188,7 @@ After implementation:
 Think of each layer as a gate:
 ```
 Code → Layer 1 Gate → Layer 2 Gate → Layer 3 Gate → Commit/PR
-       (Automated)    (Agents)       (Manual)
+       (Automated)    (AI Review)    (Manual)
 ```
 
 Block progression until each gate passes.

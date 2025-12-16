@@ -118,8 +118,8 @@ Pick a key feature and trace it:
 
 ### Example 1: Web API Exploration
 
-```
-"Spawn an Explore agent to map this codebase:
+```bash
+codex "Explore this codebase:
 
 Level 1 - Overview:
 - Read README.md and package.json
@@ -143,7 +143,7 @@ Level 4 - Data Flow:
 
 Report findings with architecture summary."
 
-Result: Comprehensive map of the codebase
+# Result: Comprehensive map of the codebase
 ```
 
 ### Example 2: Feature Tracing
@@ -191,20 +191,20 @@ Summarize:
 Result: Understand project conventions for errors
 ```
 
-## Using the Explore Agent
+## Exploration Strategy
 
 **Best for breadth-first discovery**:
 
-```
-"Spawn an Explore agent to:
+```bash
+codex "Explore this codebase:
 - Map directory structure of src/
 - Identify main entry points
 - Find core abstractions (models, services)
 - Document common patterns
 - Report architecture overview"
 
-Agent uses Glob, Grep, Read efficiently
-Returns summary without polluting main context
+# Codex uses file operations efficiently
+# and returns a summary without overwhelming context
 ```
 
 ## Exploration Patterns
