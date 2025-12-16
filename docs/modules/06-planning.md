@@ -21,7 +21,6 @@ Complex features fail not because the code is hard, but because the approach is 
 ### The Cost of Not Planning
 
 ```mermaid
-%%{init:{'themeCSS':'.cluster-label { background: none !important; }'}}%%
 flowchart LR
     subgraph no_plan["❌ WITHOUT PLAN"]
         N1["Start coding"]
