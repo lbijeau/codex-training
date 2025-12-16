@@ -774,9 +774,7 @@ I'll use the Sprout Method pattern:
 4. Leave the rest of processCheckout untouched
 
 Want me to implement this approach?
-```
 
-```
 You: "Yes, implement the discount code feature using that approach."
 
 Codex: Using superpowers:test-driven-development for the new code.
