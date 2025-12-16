@@ -224,6 +224,16 @@ flowchart TD
 
 ## 4. Using Skills in Practice
 
+### Before You Start
+
+Ensure superpowers is installed (Section 2) and bootstrapped. The bootstrap runs automatically when your `AGENTS.md` configuration is loaded, or you can run it manually:
+
+```bash
+~/.codex/superpowers/.codex/superpowers-codex bootstrap
+```
+
+Once bootstrapped, skills are available for the session. You'll see a list of available skills confirming everything is ready.
+
 ### How to Invoke a Skill
 
 **Pattern 1: Explicit invocation**
