@@ -23,17 +23,18 @@ Each module follows a consistent rhythm:
 ```mermaid
 graph LR
     start([Start here]) --> M1["Module 1\nCodex Code Internals\n3-4h"]
-    M1 --> HUB{"Modules 2-4\nchoose order"}
+    M1 --> M3["Module 3\nSkills & Workflows\n2-3h"]
+    M3 --> HUB{"Modules 2,4,5\nchoose order"}
     HUB --> M2["Module 2\nAdvanced Customization\n3-4h"]
-    HUB --> M3["Module 3\nSpeed & Efficiency\n2-3h"]
-    HUB --> M4["Module 4\nQuality & Verification\n3-4h"]
-    M2 --> M5["Module 5\nPlanning & Execution\n2-3h"]
-    M3 --> M5
-    M4 --> M5
-    M5 --> M6["Module 6\nDomain-Specific Patterns\n3-4h"]
-    M6 --> M7["Module 7\nCollaboration & Communication\n2-3h"]
-    M7 --> M8["Module 8\nAdvanced Integration\n3-4h"]
-    M8 --> Z([Advanced workflows])
+    HUB --> M4["Module 4\nSpeed & Efficiency\n2-3h"]
+    HUB --> M5["Module 5\nQuality & Verification\n3-4h"]
+    M2 --> M6["Module 6\nPlanning & Execution\n2-3h"]
+    M4 --> M6
+    M5 --> M6
+    M6 --> M7["Module 7\nDomain-Specific Patterns\n3-4h"]
+    M7 --> M8["Module 8\nCollaboration & Communication\n2-3h"]
+    M8 --> M9["Module 9\nAdvanced Integration\n3-4h"]
+    M9 --> Z([Advanced workflows])
 ```
 
 ```mermaid
@@ -89,7 +90,21 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 
 ---
 
-### Module 3: Speed & Efficiency Patterns
+### Module 3: Skills & Reusable Workflows
+**Status**: Not Started
+**Time**: 2-3 hours
+**Topics**:
+- What skills are and why they matter
+- Finding and using existing skills
+- The superpowers skill library
+- The 3-attempt rule for debugging
+- Creating custom skills for your team
+
+📁 [Module Content](docs/modules/03-skills.md) | 🏋️ [Exercises](docs/exercises/03-skills/)
+
+---
+
+### Module 4: Speed & Efficiency Patterns
 **Status**: Not Started
 **Time**: 2-3 hours
 **Topics**:
@@ -99,11 +114,11 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 - Task decomposition frameworks
 - Execution strategy selection (parallel vs sequential)
 
-📁 [Module Content](docs/modules/03-speed.md) | 🏋️ [Exercises](docs/exercises/03-speed/)
+📁 [Module Content](docs/modules/04-speed.md) | 🏋️ [Exercises](docs/exercises/04-speed/)
 
 ---
 
-### Module 4: Quality & Verification
+### Module 5: Quality & Verification
 **Status**: Not Started
 **Time**: 3-4 hours
 **Topics**:
@@ -113,25 +128,25 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 - Systematic debugging
 - Root cause analysis
 
-📁 [Module Content](docs/modules/04-quality.md) | 🏋️ [Exercises](docs/exercises/04-quality/)
+📁 [Module Content](docs/modules/05-quality.md) | 🏋️ [Exercises](docs/exercises/05-quality/)
 
 ---
 
-### Module 5: Planning & Execution
+### Module 6: Planning & Execution
 **Status**: Not Started
 **Time**: 2-3 hours
 **Topics**:
-- Writing effective plans
-- Plan-execute workflows
+- Writing effective implementation plans
+- Plan-execute workflows with batch reviews
 - Breaking down complex features
-- Progress tracking patterns
-- Handling ambiguity
+- Progress tracking with TodoWrite
+- Handling ambiguity and pivots
 
-📁 [Module Content](docs/modules/05-planning.md) | 🏋️ [Exercises](docs/exercises/05-planning/)
+📁 [Module Content](docs/modules/06-planning.md) | 🏋️ [Exercises](docs/exercises/06-planning/)
 
 ---
 
-### Module 6: Domain-Specific Patterns
+### Module 7: Domain-Specific Patterns
 **Status**: Not Started
 **Time**: 3-4 hours
 **Topics**:
@@ -141,11 +156,11 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 - Performance optimization
 - Security review patterns
 
-📁 [Module Content](docs/modules/06-domain.md) | 🏋️ [Exercises](docs/exercises/06-domain/)
+📁 [Module Content](docs/modules/07-domain.md) | 🏋️ [Exercises](docs/exercises/07-domain/)
 
 ---
 
-### Module 7: Collaboration & Communication
+### Module 8: Collaboration & Communication
 **Status**: Not Started
 **Time**: 2-3 hours
 **Topics**:
@@ -155,11 +170,11 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 - Iterating on solutions
 - Teaching Codex your patterns
 
-📁 [Module Content](docs/modules/07-collaboration.md) | 🏋️ [Exercises](docs/exercises/07-collaboration/)
+📁 [Module Content](docs/modules/08-collaboration.md) | 🏋️ [Exercises](docs/exercises/08-collaboration/)
 
 ---
 
-### Module 8: Advanced Integration
+### Module 9: Advanced Integration
 **Status**: Not Started
 **Time**: 3-4 hours
 **Topics**:
@@ -169,7 +184,7 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 - Custom agent development
 - Contributing to the ecosystem
 
-📁 [Module Content](docs/modules/08-integration.md) | 🏋️ [Exercises](docs/exercises/08-integration/)
+📁 [Module Content](docs/modules/09-integration.md) | 🏋️ [Exercises](docs/exercises/09-integration/)
 
 ---
 
@@ -177,11 +192,12 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 
 **Recommended Progression**:
 1. Start with Module 1 (foundation for everything else)
-2. Modules 2-4 can be done in any order based on interest
-3. Modules 5-6 build on 1-4
-4. Modules 7-8 are advanced integration
+2. Continue to Module 3 (skills are used throughout later modules)
+3. Modules 2, 4, 5 can be done in any order based on interest
+4. Module 6 builds on skills and quality patterns
+5. Modules 7-9 are advanced topics
 
-**Total Time**: 20-30 hours spread over weeks/months at your own pace
+**Total Time**: 22-33 hours spread over weeks/months at your own pace
 
 ## Your Resources
 
@@ -194,19 +210,21 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 Update module status as you complete them:
 - [ ] Module 1: Codex Code Internals
 - [ ] Module 2: Advanced Customization
-- [ ] Module 3: Speed & Efficiency Patterns
-- [ ] Module 4: Quality & Verification
-- [ ] Module 5: Planning & Execution
-- [ ] Module 6: Domain-Specific Patterns
-- [ ] Module 7: Collaboration & Communication
-- [ ] Module 8: Advanced Integration
+- [ ] Module 3: Skills & Reusable Workflows
+- [ ] Module 4: Speed & Efficiency Patterns
+- [ ] Module 5: Quality & Verification
+- [ ] Module 6: Planning & Execution
+- [ ] Module 7: Domain-Specific Patterns
+- [ ] Module 8: Collaboration & Communication
+- [ ] Module 9: Advanced Integration
 
 ## Getting Started
 
 1. Read [Module 1: Codex Code Internals](docs/modules/01-internals.md)
 2. Work through [Module 1 Exercises](docs/exercises/01-internals/)
-3. Document patterns you discover
-4. Move to next module
+3. Continue to [Module 3: Skills & Workflows](docs/modules/03-skills.md) for the foundation
+4. Document patterns you discover
+5. Move to next module
 
 ---
 

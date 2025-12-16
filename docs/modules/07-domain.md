@@ -1,4 +1,4 @@
-# Module 6: Domain-Specific Patterns
+# Module 7: Domain-Specific Patterns
 
 ## Overview
 
@@ -497,7 +497,7 @@ codex exec "List all security findings from the auth review as a markdown checkl
 
 ## Next Steps
 
-1. Complete [Module 6 Exercises](../exercises/06-domain/)
+1. Complete [Module 7 Exercises](../exercises/07-domain/)
 2. Practice architecture exploration on unfamiliar code
 3. Refactor a piece of legacy code safely
 4. Conduct security review on a module
@@ -538,4 +538,4 @@ codex exec "List all security findings from the auth review as a markdown checkl
 
 ---
 
-**Master the domains!** Head to [Exercise 1](../exercises/06-domain/exercise-1.md)
+**Master the domains!** Head to [Exercise 1](../exercises/07-domain/exercise-1.md)

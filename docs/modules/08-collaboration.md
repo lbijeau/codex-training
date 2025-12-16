@@ -1,4 +1,4 @@
-# Module 7: Collaboration & Communication
+# Module 8: Collaboration & Communication
 
 ## Overview
 
@@ -461,7 +461,7 @@ You: "Let's go with approach B. Create the implementation plan."
 
 ## Next Steps
 
-1. Complete [Module 7 Exercises](../exercises/07-collaboration/)
+1. Complete [Module 8 Exercises](../exercises/08-collaboration/)
 2. Practice crafting specific prompts
 3. Create a project-conventions skill
 4. Experiment with different questioning techniques
@@ -502,4 +502,4 @@ You: "Let's go with approach B. Create the implementation plan."
 
 ---
 
-**Communicate effectively!** Head to [Exercise 1](../exercises/07-collaboration/exercise-1.md)
+**Communicate effectively!** Head to [Exercise 1](../exercises/08-collaboration/exercise-1.md)
