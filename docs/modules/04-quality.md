@@ -1,17 +1,17 @@
 # Module 4: Quality & Verification
 
-> **Note on Tooling**: This module references some advanced tooling patterns (specialized review prompts, skills) that vary by environment. The core patterns—multi-layer reviews, TDD, systematic debugging, quality gates—apply universally. Adapt the tooling examples to what's available in your setup.
+> **Applies to both API and CLI**: These quality patterns work whether you're using Codex programmatically or through the interactive CLI. The examples show CLI usage, but the principles transfer directly to API integrations.
 
 ## Overview
 
-Build systematic approaches to ensure code quality, catch issues early, and maintain high standards.
+Quality isn't something you add at the end—it's built into every step. This module teaches you systematic approaches to catch issues early, maintain high standards, and build confidence in your code changes.
 
 **Learning Objectives**:
-- Implement multi-layer review patterns
-- Apply test-driven development with Codex
-- Use systematic debugging approaches
-- Create proactive quality gates
-- Master root cause analysis
+- Implement multi-layer review patterns that catch different types of issues
+- Apply test-driven development with Codex as your pair programmer
+- Debug systematically instead of guessing
+- Create quality gates that prevent bad code from progressing
+- Master root cause analysis techniques
 
 **Time**: 3-4 hours
 
@@ -19,36 +19,31 @@ Build systematic approaches to ensure code quality, catch issues early, and main
 
 ## 1. Multi-Layer Review Patterns
 
-### The Review Pyramid
+### Why Multiple Layers?
 
-```
-┌─────────────────────────────┐
-│   Manual Review (Top)       │  Human judgment
-├─────────────────────────────┤
-│   AI-Assisted Review        │  Focused review prompts
-├─────────────────────────────┤
-│   Automated Checks          │  Linters, formatters (hooks)
-└─────────────────────────────┘
-```
+Different review methods catch different problems:
+- **Automated tools** catch syntax, formatting, and known anti-patterns instantly
+- **AI review** catches logic errors, edge cases, and suggests improvements
+- **Human review** catches architecture issues, business logic errors, and UX problems
 
-### Layer 1: Automated Checks (Hooks)
+No single layer catches everything. Stack them.
 
-**Auto-format on Write**:
+<p align="center">
+  <img src="assets/review-pyramid.png" alt="Review Pyramid" width="700">
+</p>
+
+### Layer 1: Automated Checks (Instant Feedback)
+
+These run automatically via hooks—you don't even think about them.
+
+**Setup once, benefit forever:**
 ```json
 {
   "hooks": {
     "Write:Callback": {
       "command": "prettier",
       "args": ["--write", "$FILE_PATH"]
-    }
-  }
-}
-```
-
-**Lint Validation**:
-```json
-{
-  "hooks": {
+    },
     "Write:Validate": {
       "command": "eslint",
       "args": ["--quiet", "$FILE_PATH"]
@@ -57,140 +52,229 @@ Build systematic approaches to ensure code quality, catch issues early, and main
 }
 ```
 
-### Layer 2: AI-Assisted Review
+**What this catches:**
+| Tool | Catches | Example |
+|------|---------|---------|
+| Prettier | Inconsistent formatting | Mixed tabs/spaces, line length |
+| ESLint | Code smells, bugs | Unused variables, missing returns |
+| TypeScript | Type errors | Wrong argument types, null access |
+| Pre-commit | Policy violations | Console.logs, debug code |
 
-**Code Review Prompt**:
+### Layer 2: AI-Assisted Review (Smart Analysis)
+
+This is where Codex shines. Ask it to review with specific focus areas.
+
+**Effective code review prompt:**
 ```bash
-# After implementing feature, ask for a focused review
-codex "Review my changes for:
-- Logic errors
-- Edge cases
-- Error handling
-- Code quality
+codex "Review the changes I just made. Focus on:
 
-Show git diff first, then provide specific feedback."
+1. LOGIC: Are there any bugs or incorrect assumptions?
+2. EDGE CASES: What inputs would break this code?
+3. ERROR HANDLING: Are failures handled gracefully?
+4. SECURITY: Any vulnerabilities (injection, auth bypass)?
+
+Show the git diff first, then give specific feedback with line numbers."
 ```
 
-**Test Coverage Review Prompt**:
-```bash
-# Before creating PR, check test coverage
-codex "Review test coverage for the recent changes:
-- What test cases are missing?
-- What edge cases aren't covered?
-- Are there integration test gaps?
+**Example conversation:**
+```
+You: Review my changes for the login function
 
-Compare src/ changes against tests/ and report gaps."
+Codex: Looking at your changes to src/auth/login.ts:
+
+⚠️ LOGIC ISSUE (line 34):
+You're checking `user.isActive` after password validation.
+If user is inactive, you still leak that the password was correct.
+→ Check `isActive` before password comparison.
+
+⚠️ EDGE CASE (line 42):
+No handling for when `user.email` is null/undefined.
+→ Add null check or use optional chaining.
+
+✅ GOOD: Password comparison uses timing-safe comparison.
+✅ GOOD: Failed attempts are rate-limited.
+
+Suggested fix for line 34:
+- if (user && await bcrypt.compare(password, user.hash)) {
+-   if (!user.isActive) return { error: 'Account disabled' };
++ if (user && user.isActive && await bcrypt.compare(password, user.hash)) {
 ```
 
-### Layer 3: Manual Review
+**💡 Pro Tip**: Be specific about what you want reviewed. "Review my code" gives generic feedback. "Review for SQL injection vulnerabilities" gives targeted, useful feedback.
 
-**Human Focus Areas**:
-- Architecture decisions
-- UX considerations
-- Business logic correctness
-- Security implications
+### Layer 3: Manual Review (Human Judgment)
 
-### Review Workflow Pattern
+Humans excel at questions AI can't answer:
+- Does this match what the product team asked for?
+- Will users understand this interface?
+- Does this fit our architecture vision?
+- Are we solving the right problem?
+
+**Your manual review checklist:**
+```markdown
+- [ ] Does this solve the actual user problem?
+- [ ] Will this scale to 10x current usage?
+- [ ] Can a new team member understand this in 6 months?
+- [ ] Does this introduce technical debt we'll regret?
+- [ ] Are there compliance/legal considerations?
+```
+
+### The Complete Review Workflow
 
 ```bash
-# 1. Implement feature
-codex "Implement the user authentication feature"
+# 1. Make your changes
+codex "Add rate limiting to the /api/login endpoint"
 
-# 2. Automated checks run via hooks (formatting, linting)
+# 2. Automated checks run via hooks (you see errors immediately)
 
-# 3. Request code review
-codex "Review my changes for logic errors, edge cases, and quality issues"
+# 3. AI review for logic and edge cases
+codex "Review my rate limiting implementation:
+- Is the algorithm correct?
+- What happens at boundary conditions?
+- Can it be bypassed?"
 
-# 4. Address findings
-codex "Fix the issues identified in the review"
+# 4. Fix issues found
+codex "Fix the bypass vulnerability you identified"
 
-# 5. Check test coverage
-codex "What tests are missing for the changes I made?"
+# 5. Verify test coverage
+codex "What tests should I add for the rate limiter?"
 
 # 6. Add missing tests
-codex "Add the missing test cases you identified"
+codex "Add tests for the edge cases you identified"
 
-# 7. Self-review and create PR
-codex "Show me a summary of all changes ready for PR"
+# 7. Final human review - you look at the PR yourself
+codex "Summarize all changes for my PR description"
 ```
 
 ---
 
 ## 2. Test-Driven Development with Codex
 
-### TDD Cycle with Codex
+### The TDD Cycle
 
-**Red-Green-Refactor**:
-```
-1. RED: Write failing test
-   - Ask Codex to write test first
-   - Run test, confirm it fails
+TDD isn't about testing—it's about design. Writing tests first forces you to think about the interface before the implementation.
 
-2. GREEN: Implement minimal code
-   - Ask Codex to implement
-   - Run test, confirm it passes
+<p align="center">
+  <img src="assets/tdd-cycle.png" alt="TDD Cycle: Red-Green-Refactor" width="600">
+</p>
 
-3. REFACTOR: Improve code
-   - Ask Codex to refactor
-   - Tests still pass
-```
+### TDD with Codex: A Complete Example
 
-### TDD Patterns
+Let's build an email validator using TDD:
 
-**Pattern 1: Test-First Feature**
-```
-You: "I need a function to validate email addresses.
-      Write the test first following TDD."
-
-Codex: [Writes test]
-
-You: "Run the test" (it fails - RED)
-
-You: "Now implement the minimal code to pass"
-
-Codex: [Implements]
-
-You: "Run the test" (it passes - GREEN)
-
-You: "Refactor for clarity"
-
-Codex: [Refactors while keeping tests green]
-```
-
-**Pattern 2: Edge Case Discovery**
-```
-1. Implement basic functionality
-2. Ask: "What edge cases am I missing?"
-3. Add tests for edge cases
-4. Implement handling
-5. Verify all tests pass
-```
-
-**Pattern 3: Test Coverage Analysis**
+**🔴 RED: Write the failing test first**
 ```bash
-# 1-2. Implement feature and run coverage
-codex "Implement the feature with tests, then run coverage report"
-
-# 3-4. Analyze gaps
-codex "Look at the coverage report and identify:
-- Uncovered code paths
-- Missing edge case tests
-- Integration test gaps"
-
-# 5. Add missing tests
-codex "Add tests for the uncovered paths you identified"
+codex "I need to validate email addresses. Write the test first,
+following TDD. Don't implement yet—just the test."
 ```
 
-### TDD with Superpowers Skill
+Codex writes:
+```typescript
+// tests/emailValidator.test.ts
+describe('validateEmail', () => {
+  it('accepts valid email addresses', () => {
+    expect(validateEmail('user@example.com')).toBe(true);
+    expect(validateEmail('name.surname@company.co.uk')).toBe(true);
+  });
 
-Use `superpowers:test-driven-development` skill:
+  it('rejects invalid email addresses', () => {
+    expect(validateEmail('not-an-email')).toBe(false);
+    expect(validateEmail('@missing-local.com')).toBe(false);
+    expect(validateEmail('missing-domain@')).toBe(false);
+  });
+
+  it('rejects empty and null inputs', () => {
+    expect(validateEmail('')).toBe(false);
+    expect(validateEmail(null)).toBe(false);
+    expect(validateEmail(undefined)).toBe(false);
+  });
+});
 ```
-Features:
-- Enforces test-first approach
-- Watches for test failures
-- Ensures minimal implementation
-- Guides refactoring
+
+```bash
+# Run test - it fails because validateEmail doesn't exist
+npm test
+# ❌ FAIL: validateEmail is not defined
 ```
+
+**🟢 GREEN: Implement minimal code to pass**
+```bash
+codex "Now implement validateEmail with the minimum code to pass these tests."
+```
+
+Codex writes:
+```typescript
+// src/emailValidator.ts
+export function validateEmail(email: unknown): boolean {
+  if (typeof email !== 'string' || !email) return false;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+```
+
+```bash
+npm test
+# ✅ PASS: All tests passing
+```
+
+**🔵 REFACTOR: Improve without breaking tests**
+```bash
+codex "The tests pass. Now refactor for clarity and add edge cases we missed."
+```
+
+Codex responds:
+```typescript
+// Improved with constants and better organization
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_EMAIL_LENGTH = 254; // RFC 5321
+
+export function validateEmail(email: unknown): boolean {
+  if (typeof email !== 'string') return false;
+  if (email.length === 0 || email.length > MAX_EMAIL_LENGTH) return false;
+  return EMAIL_REGEX.test(email);
+}
+
+// Additional tests I'd recommend:
+// - Email at max length (254 chars)
+// - Email just over max length
+// - Unicode characters in local part
+// - Multiple @ symbols
+```
+
+### Edge Case Discovery Pattern
+
+After basic implementation, ask Codex to find what you missed:
+
+```bash
+codex "What edge cases might break my email validator?
+List inputs that a real attacker or buggy system might send."
+```
+
+Response:
+```
+Edge cases to consider:
+
+1. UNICODE ATTACKS:
+   - 'user@éxample.com' (IDN domains)
+   - 'üser@example.com' (unicode in local part)
+
+2. LENGTH ATTACKS:
+   - 'a'*1000 + '@example.com' (very long local part)
+   - 'a@' + 'b'*1000 + '.com' (very long domain)
+
+3. SPECIAL CHARACTERS:
+   - '"user name"@example.com' (quoted local part - valid!)
+   - 'user+tag@example.com' (plus addressing)
+   - 'user@[192.168.1.1]' (IP address domain)
+
+4. BOUNDARY CASES:
+   - 'a@b.c' (minimum valid email)
+   - '.user@example.com' (leading dot)
+   - 'user.@example.com' (trailing dot)
+
+Shall I add tests for these?
+```
+
+**💡 Pro Tip**: Always ask "What would break this?" after implementing. Codex is great at adversarial thinking.
 
 ---
 
@@ -198,244 +282,326 @@ Features:
 
 ### The 3-Attempt Rule
 
-**Rule**: After 3 failed attempts, STOP and use systematic approach.
+> **After 3 failed fix attempts, STOP GUESSING and switch to systematic debugging.**
 
-❌ **Guessing Approach**:
-```
-Try fix 1 → Doesn't work
-Try fix 2 → Doesn't work
-Try fix 3 → Doesn't work
-Try fix 4 → ...
-(Keep guessing)
-```
+Guessing wastes time and often introduces new bugs. Here's the pattern:
 
-✅ **Systematic Approach**:
-```
-Try fix 1 → Doesn't work
-Try fix 2 → Doesn't work
-Try fix 3 → Doesn't work
-STOP → Use superpowers:systematic-debugging
-```
+<p align="center">
+  <img src="assets/debugging-flow.png" alt="Debugging Flow" width="700">
+</p>
 
 ### Systematic Debugging Framework
 
-**Phase 1: Root Cause Investigation**
-```
-1. Reproduce the issue
-2. Identify the error location
-3. Trace execution backwards
-4. Find where data becomes invalid
-5. Identify the source
+When you hit the wall after 3 attempts, use this framework:
+
+**Phase 1: Reproduce Reliably**
+```bash
+codex "I'm getting intermittent 500 errors on /api/users. Help me create
+a reliable reproduction case. What information do you need?"
 ```
 
-**Phase 2: Pattern Analysis**
-```
-1. Is this a known pattern?
-2. Have we seen similar issues?
-3. What's the common cause?
-4. Is this systemic or isolated?
+Codex will ask for:
+- Exact request that fails (curl command, headers, body)
+- Error logs/stack trace
+- When it started (recent changes?)
+- Pattern (every time? Only certain users? Only under load?)
+
+**Phase 2: Trace Backwards**
+```bash
+codex "Here's the stack trace: [paste trace]
+Trace backwards from the error. What data becomes invalid and where?"
 ```
 
-**Phase 3: Hypothesis Testing**
+Example response:
 ```
-1. Form hypothesis about cause
-2. Design test to validate
-3. Add instrumentation if needed
-4. Run test
-5. Confirm or reject hypothesis
+Tracing backwards through your stack trace:
+
+ERROR: Cannot read property 'email' of undefined
+  at UserService.getProfile (user-service.ts:45)
+  at UserController.show (user-controller.ts:23)
+  at Router.handle (router.ts:156)
+
+🔍 ANALYSIS:
+Line 45: `return user.email` - 'user' is undefined
+Line 38: `const user = await this.repo.findById(id)`
+Line 23: `const id = req.params.id`
+
+HYPOTHESIS: The user ID from params isn't finding a user.
+
+Questions to investigate:
+1. Is `id` the correct format? (string vs number)
+2. Does this user exist in the database?
+3. Is there a race condition where user is deleted mid-request?
+
+To test, add logging at line 38:
+console.log('Looking for user:', id, typeof id);
 ```
 
-**Phase 4: Implementation**
+**Phase 3: Form and Test Hypothesis**
+```bash
+codex "I added logging. The ID is '123' (string) but the database
+expects a number. How should I fix this properly?"
 ```
-1. Implement fix
-2. Add test to prevent regression
-3. Verify fix works
-4. Check for similar issues
+
+**Phase 4: Fix and Prevent Regression**
+```bash
+codex "Fix the type mismatch and add a test that would have caught this."
 ```
 
 ### Debugging Patterns
 
-**Pattern: Root Cause Tracing**
-```
-Error occurs deep in call stack:
+**Pattern: Binary Search with Git Bisect**
 
-1. Note the error and location
-2. Trace backwards through calls
-3. At each level, check assumptions
-4. Add logging/instrumentation
-5. Find where data becomes invalid
-6. Fix at source, not symptom
+When "it worked yesterday":
+```bash
+codex "The login feature broke sometime this week. Help me use git bisect
+to find the breaking commit. What commands do I run?"
 ```
 
-**Pattern: Binary Search Debugging**
-```
-Feature worked, now broken:
+Response:
+```bash
+# Start bisect
+git bisect start
 
-1. Identify last known good state (commit)
-2. Identify first known bad state
-3. Binary search between them (git bisect)
-4. Find breaking commit
-5. Analyze what changed
+# Mark current (broken) as bad
+git bisect bad
+
+# Mark last known good commit (e.g., last Monday)
+git bisect good abc123
+
+# Git checks out a middle commit. Test it:
+npm test
+
+# Tell git the result
+git bisect good  # or 'git bisect bad'
+
+# Repeat until git identifies the breaking commit
+# Usually finds it in ~7 steps for 100 commits
 ```
 
 **Pattern: Isolation Testing**
-```
-Complex system failing:
 
-1. Isolate component
-2. Test in isolation
-3. If works → Integration issue
-4. If fails → Component issue
-5. Narrow scope iteratively
+When you don't know which component is failing:
+```bash
+codex "My API returns wrong data. I don't know if the bug is in:
+- The controller
+- The service layer
+- The database query
+- The serializer
+
+Help me test each layer in isolation."
 ```
 
 ---
 
 ## 4. Proactive Quality Gates
 
-### Quality Gates Framework
+Quality gates prevent bad code from progressing. Each gate must pass before moving forward.
 
-**Gate 1: Pre-Implementation**
-```
-- [ ] Requirements clear?
-- [ ] Design reviewed?
-- [ ] Test strategy defined?
-- [ ] Edge cases identified?
-```
+<p align="center">
+  <img src="assets/quality-gates.png" alt="Quality Gates Pipeline" width="700">
+</p>
 
-**Gate 2: During Implementation**
-```
-- [ ] Tests written first (TDD)?
-- [ ] Code formatted (hooks)?
-- [ ] Linter passing?
-- [ ] Incremental commits?
-```
+### Gate 1: Pre-Implementation
 
-**Gate 3: Post-Implementation**
-```
-- [ ] All tests passing?
-- [ ] Code reviewer run?
-- [ ] Test analyzer run?
-- [ ] Manual review done?
+Before writing code, verify you understand the problem:
+
+```bash
+codex "I'm about to implement user notifications. Before I start:
+
+1. What questions should I answer first?
+2. What edge cases should I consider?
+3. What's the simplest version I could ship?"
 ```
 
-**Gate 4: Pre-Commit**
-```
-- [ ] Tests pass?
-- [ ] No debug code?
-- [ ] Formatted?
-- [ ] Commit message clear?
+**Checklist:**
+- [ ] Requirements are written down (not just in your head)
+- [ ] Edge cases identified
+- [ ] Test strategy defined
+- [ ] Breaking changes identified
+
+### Gate 2: During Implementation
+
+While coding, maintain quality continuously:
+
+```bash
+# Every 30 minutes or after each feature chunk:
+codex "Quick check on my progress:
+- Am I following TDD?
+- Any obvious issues in what I've written?
+- Am I overcomplicating this?"
 ```
 
-**Gate 5: Pre-PR**
-```
-- [ ] All gates above passed?
-- [ ] PR description complete?
-- [ ] Reviewers identified?
-- [ ] CI will pass?
+**Checklist:**
+- [ ] Tests written before/with implementation
+- [ ] Commits are small and focused
+- [ ] No commented-out code accumulating
+- [ ] No TODO without a ticket number
+
+### Gate 3: Pre-Commit
+
+Before committing, run comprehensive checks:
+
+```bash
+# Parallel review before commit
+codex exec "Review my staged changes for bugs" > review.txt &
+codex exec "Check test coverage for staged changes" > coverage.txt &
+wait
+
+# Check results
+cat review.txt coverage.txt
+
+# If clean, commit
+git commit -m "Add user notifications"
 ```
 
-### Implementing Quality Gates
-
-**With Hooks**:
+**Automated gate with hooks:**
 ```json
 {
   "hooks": {
     "Bash:Validate": {
       "command": "sh",
-      "args": ["-c", "
-        if [[ $BASH_COMMAND == git\\ commit* ]]; then
-          npm test && npm run lint
-        fi
-      "]
+      "args": ["-c", "npm test && npm run lint && npm run typecheck"]
     }
   }
 }
 ```
 
-**With Parallel Review Prompts**:
+### Gate 4: Pre-PR
+
+Before creating a PR, ensure it's ready for others:
+
 ```bash
-# Run reviews concurrently before committing
-codex exec "Review my changes for bugs, logic errors, and quality issues" > code-review.txt &
-codex exec "Analyze test coverage gaps for my changes" > test-review.txt &
-wait
+codex "I'm about to create a PR. Check:
 
-# Check results before committing
-cat code-review.txt test-review.txt
+1. Do all tests pass?
+2. Is there adequate test coverage?
+3. Is the PR description clear?
+4. Are there any debugging artifacts to remove?
+
+Here's my diff: $(git diff main...HEAD)"
 ```
 
-**With Skills**:
-Use `superpowers:verification-before-completion`:
-```
-Ensures:
-- Tests pass
-- Code quality checks done
-- No TODOs without tickets
-- Documentation updated
+**💡 Pro Tip**: Create a personal pre-PR checklist and save it. Run it every time:
+
+```bash
+#!/bin/bash
+# scripts/pre-pr-check.sh
+
+echo "🔍 Running pre-PR checks..."
+
+echo "1. Running tests..."
+npm test || exit 1
+
+echo "2. Running linter..."
+npm run lint || exit 1
+
+echo "3. Checking for debug code..."
+if grep -r "console.log\|debugger" src/; then
+  echo "❌ Found debug code!"
+  exit 1
+fi
+
+echo "4. Checking for TODOs without tickets..."
+if grep -r "TODO:" src/ | grep -v "TODO(#"; then
+  echo "⚠️  Found TODOs without ticket numbers"
+fi
+
+echo "✅ All checks passed!"
 ```
 
 ---
 
-## 5. Root Cause Analysis Techniques
+## 5. Root Cause Analysis
 
-### The 5 Whys
+### The 5 Whys Technique
 
-**Technique**: Ask "why" 5 times to find root cause.
+Don't fix symptoms—fix causes. Ask "why" until you reach the root:
 
-**Example**:
 ```
-Bug: User login fails
+🐛 Bug: Users can't log in
 
-Why? → Token validation fails
-Why? → Token is expired
-Why? → Refresh wasn't called
-Why? → Refresh logic has bug
-Why? → Edge case not handled
-Root Cause: Missing edge case handling in token refresh
+Why? → The auth token is invalid
+Why? → The token expired
+Why? → Token refresh didn't run
+Why? → The refresh timer was cleared
+Why? → Component unmount clears all timers
+ROOT CAUSE: Need to persist refresh timer or use a different approach
+```
+
+```bash
+codex "Help me apply the 5 Whys to this bug: [describe bug]
+Keep asking why until we find the root cause."
 ```
 
 ### Fault Tree Analysis
 
-**Build a tree of potential causes**:
+For complex bugs, map all possible causes:
+
 ```
 Login Failure
-├─ Invalid credentials
-│  ├─ User error
-│  └─ Database issue
-├─ Token problem
-│  ├─ Expired
-│  ├─ Invalid signature
-│  └─ Wrong secret
-└─ Network issue
-   ├─ Timeout
-   └─ Connection refused
+├── Authentication Issue
+│   ├── Invalid credentials
+│   │   ├── Wrong password
+│   │   └── Account doesn't exist
+│   ├── Account locked
+│   └── 2FA failure
+├── Token Issue
+│   ├── Token expired
+│   ├── Token malformed
+│   └── Wrong signing key
+├── Infrastructure Issue
+│   ├── Database unreachable
+│   ├── Redis cache miss
+│   └── Network timeout
+└── Client Issue
+    ├── CORS blocked
+    ├── Cookie not sent
+    └── JavaScript error
 ```
 
-Test each branch to isolate.
-
-### Instrumentation Strategy
-
-**When to Add Instrumentation**:
-- Execution path unclear
-- Data transformation complex
-- Timing-dependent bugs
-- Integration points
-
-**What to Log**:
-- Input values
-- Intermediate states
-- Decision points
-- Output values
-- Timing information
-
-**Pattern**:
+```bash
+codex "Create a fault tree for this error: [error message]
+List all possible causes organized by category."
 ```
-1. Identify unclear section
-2. Add strategic logging
-3. Reproduce issue
-4. Analyze logs
-5. Identify problem
-6. Remove logging (or keep if useful)
+
+### Strategic Instrumentation
+
+When the bug is mysterious, add logging strategically:
+
+```bash
+codex "I need to debug why orders sometimes have wrong totals.
+Where should I add logging to trace the calculation?"
+```
+
+Response:
+```typescript
+// Add logging at these decision points:
+
+function calculateOrderTotal(order: Order): number {
+  console.log('[CALC] Starting calculation for order:', order.id);
+
+  let subtotal = 0;
+  for (const item of order.items) {
+    const itemTotal = item.price * item.quantity;
+    console.log(`[CALC] Item ${item.id}: ${item.price} × ${item.quantity} = ${itemTotal}`);
+    subtotal += itemTotal;
+  }
+  console.log('[CALC] Subtotal:', subtotal);
+
+  const discount = calculateDiscount(order);
+  console.log('[CALC] Discount applied:', discount);
+
+  const tax = calculateTax(subtotal - discount);
+  console.log('[CALC] Tax:', tax);
+
+  const total = subtotal - discount + tax;
+  console.log('[CALC] Final total:', total);
+
+  return total;
+}
+
+// After finding the bug, remove or convert to debug-level logging
 ```
 
 ---
@@ -444,71 +610,71 @@ Test each branch to isolate.
 
 ### Pattern: Defense in Depth
 
-**Concept**: Validate at every layer
+Validate at multiple layers—never trust data from the previous layer:
 
 ```typescript
-// Layer 1: API input validation
-function createUser(input: unknown) {
-  const validated = UserInputSchema.parse(input);
+// Layer 1: API Input (don't trust the client)
+app.post('/users', async (req, res) => {
+  const input = UserCreateSchema.parse(req.body); // Zod validation
 
-  // Layer 2: Business logic validation
-  if (await userExists(validated.email)) {
-    throw new Error('User exists');
+  // Layer 2: Business Logic (don't trust the API layer)
+  const user = await userService.create({
+    email: input.email.toLowerCase().trim(),
+    name: sanitizeHtml(input.name),
+  });
+
+  // Layer 3: Database (don't trust the service layer)
+  // DB has constraints: unique email, NOT NULL, max lengths
+});
+```
+
+### Pattern: Fail Fast with Context
+
+Errors should scream useful information:
+
+```typescript
+// ❌ BAD: Silent or vague failure
+function getUser(id) {
+  const user = db.users.find(id);
+  return user || null;  // Caller has no idea why it failed
+}
+
+// ✅ GOOD: Fail fast with context
+function getUser(id: string): User {
+  if (!id) {
+    throw new Error('getUser requires an id');
   }
 
-  // Layer 3: Database constraints
-  return db.users.create(validated); // DB has unique constraint
+  const user = db.users.find(id);
+
+  if (!user) {
+    throw new NotFoundError(`User not found: ${id}`);
+  }
+
+  return user;
 }
 ```
 
-### Pattern: Fail Fast
+### Pattern: Invariant Assertions
 
-**Concept**: Detect and report errors early
+Assert things that "should never happen"—they will:
 
 ```typescript
-❌ Silent failure:
-function process(data) {
-  try {
-    return transform(data);
-  } catch (e) {
-    return null; // Silently fails!
-  }
+function processPayment(order: Order): Receipt {
+  // These should never fail if upstream code is correct
+  // But if they do, we want to know immediately
+  invariant(order.total > 0, `Order total must be positive: ${order.total}`);
+  invariant(order.items.length > 0, 'Order must have items');
+  invariant(order.userId, 'Order must have a user');
+
+  // Now process with confidence
+  return paymentGateway.charge(order);
 }
 
-✅ Fail fast:
-function process(data) {
-  if (!isValid(data)) {
-    throw new Error(`Invalid data: ${reason}`);
+function invariant(condition: boolean, message: string): asserts condition {
+  if (!condition) {
+    throw new Error(`Invariant violation: ${message}`);
   }
-  return transform(data);
-}
-```
-
-### Pattern: Comprehensive Error Context
-
-**Concept**: Errors should include debugging context
-
-```typescript
-❌ Poor error:
-throw new Error('Failed');
-
-✅ Good error:
-throw new Error(
-  `Failed to process order ${orderId} for user ${userId}: ${reason}`
-);
-```
-
-### Pattern: Assertion-Driven Development
-
-**Concept**: Use assertions to catch invalid states
-
-```typescript
-function processPayment(amount: number, userId: string) {
-  assert(amount > 0, 'Amount must be positive');
-  assert(userId, 'User ID required');
-  assert(await userExists(userId), 'User must exist');
-
-  // Process with confidence
 }
 ```
 
@@ -516,48 +682,44 @@ function processPayment(amount: number, userId: string) {
 
 ## Key Takeaways
 
-1. **Multi-Layer Reviews**: Automated checks + AI-assisted + Human
-2. **TDD**: Write tests first, implement minimal, refactor
-3. **Systematic Debugging**: Stop guessing after 3 attempts
-4. **Quality Gates**: Checkpoints throughout development
-5. **Root Cause Analysis**: Find source, not symptom
+| Concept | Remember |
+|---------|----------|
+| **Multi-Layer Reviews** | Automated → AI → Human. Each catches different issues. |
+| **TDD** | Red → Green → Refactor. Tests are design, not just verification. |
+| **3-Attempt Rule** | Stop guessing after 3 tries. Go systematic. |
+| **Quality Gates** | Each gate must pass before proceeding. No exceptions. |
+| **Root Cause Analysis** | Fix causes, not symptoms. Ask "why" 5 times. |
 
 ---
 
-## Next Steps
+## Try This Now
 
-1. Complete [Module 4 Exercises](../exercises/04-quality/)
-2. Practice TDD workflow with Codex
-3. Use systematic debugging on real bug
-4. Implement quality gates in your project
+1. **Set up Layer 1**: Add formatting and linting hooks to your project
+2. **Practice TDD**: Build a simple function (string formatter, validator) using Red-Green-Refactor
+3. **Create your pre-PR script**: Write a `pre-pr-check.sh` that runs your quality checks
+4. **Debug systematically**: Next bug you hit, use the 5 Whys before guessing
 
 ---
 
 ## Quick Reference
 
-### Review Layers
-1. Automated (hooks): Format, lint
-2. AI-assisted: Focused review prompts
-3. Manual: Architecture, UX, business logic
+```bash
+# AI Code Review
+codex "Review my changes for: logic errors, edge cases, security issues"
 
-### TDD Cycle
-1. RED: Write failing test
-2. GREEN: Minimal implementation
-3. REFACTOR: Improve while tests pass
+# TDD Cycle
+codex "Write a failing test for [feature]"  # RED
+codex "Implement minimal code to pass"       # GREEN
+codex "Refactor for clarity"                 # REFACTOR
 
-### Systematic Debugging
-1. Root cause investigation
-2. Pattern analysis
-3. Hypothesis testing
-4. Implementation with tests
+# Systematic Debugging
+codex "Help me trace backwards from this error: [stack trace]"
+codex "Create a fault tree for: [symptom]"
 
-### Quality Gates
-- Pre-implementation: Design, requirements
-- During: TDD, formatting, incremental
-- Post: Tests, reviews, validation
-- Pre-commit: All checks pass
-- Pre-PR: Complete, ready for review
+# Pre-PR Check
+codex "Review my PR for issues before I submit"
+```
 
 ---
 
-**Build quality in!** Head to [Exercise 1](../exercises/04-quality/exercise-1.md)
+**Build quality in from the start!** → [Module 4 Exercises](../exercises/04-quality/)
