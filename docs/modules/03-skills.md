@@ -396,7 +396,7 @@ triggers:
 
 ### Example: Pre-PR Skill
 
-```markdown
+````markdown
 ---
 name: team-pre-pr-checklist
 description: Run before creating any PR to ensure quality standards
@@ -415,9 +415,8 @@ Before creating ANY pull request, regardless of size.
 
 ### Step 1: Verify Tests
 Run the full test suite and fix any failures.
-```bash
-npm test
-```
+
+    npm test
 
 **Checklist:**
 - [ ] All tests pass
@@ -425,10 +424,9 @@ npm test
 - [ ] Edge cases are covered
 
 ### Step 2: Code Quality
-```bash
-npm run lint
-npm run typecheck
-```
+
+    npm run lint
+    npm run typecheck
 
 **Checklist:**
 - [ ] No linting errors
@@ -451,7 +449,7 @@ npm run typecheck
 - Don't skip for "small" PRs
 - Don't rely on CI to catch what you should catch locally
 - Don't mark items complete without actually checking
-```
+````
 
 ---
 
