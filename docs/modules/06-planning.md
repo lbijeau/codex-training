@@ -40,8 +40,8 @@ flowchart LR
         P6["Done on time"]
     end
 
-    style no_plan fill:#ffebee,stroke:#c62828
-    style with_plan fill:#e8f5e9,stroke:#2e7d32
+    style no_plan fill:none,stroke:#c62828,stroke-width:2px
+    style with_plan fill:none,stroke:#2e7d32,stroke-width:2px
 ```
 
 **Without a plan, you:**
