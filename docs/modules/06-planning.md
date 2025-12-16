@@ -21,6 +21,7 @@ Complex features fail not because the code is hard, but because the approach is 
 ### The Cost of Not Planning
 
 ```mermaid
+%%{init:{'themeCSS':'.cluster-label { background: none !important; }'}}%%
 flowchart LR
     subgraph no_plan["❌ WITHOUT PLAN"]
         N1["Start coding"]
@@ -40,8 +41,8 @@ flowchart LR
         P6["Done on time"]
     end
 
-    style no_plan fill:none,stroke:#c62828,stroke-width:2px
-    style with_plan fill:none,stroke:#2e7d32,stroke-width:2px
+    style no_plan fill:#ffebee,stroke:#c62828
+    style with_plan fill:#e8f5e9,stroke:#2e7d32
 ```
 
 **Without a plan, you:**
