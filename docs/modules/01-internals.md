@@ -28,9 +28,40 @@ A Codex session is a conversation with the OpenAI Chat Completion API. Every req
 Think of it as a structured turn-taking system where Codex only knows what you feed it in those messages.</n
 ### Message flow
 
-<p align="center">
-  <img src="assets/message-flow.png" alt="Codex API Message Flow" width="600">
-</p>
+```mermaid
+flowchart TD
+    subgraph init["🔧 INITIALIZATION"]
+        S[/"SYSTEM MESSAGE<br/>(tone, constraints, context)"/]
+    end
+
+    subgraph conversation["💬 CONVERSATION LOOP"]
+        U[/"USER PROMPT<br/>(your request)"/]
+        A{"ASSISTANT<br/>(text or function_call)"}
+        U --> A
+    end
+
+    subgraph function["⚡ FUNCTION EXECUTION"]
+        F["YOUR CODE RUNS<br/>(execute the function)"]
+        R[/"FUNCTION RESULT<br/>(JSON response)"/]
+        F --> R
+    end
+
+    subgraph response["✅ FINAL OUTPUT"]
+        FINAL["ASSISTANT RESPONSE<br/>(uses result to respond)"]
+    end
+
+    S --> U
+    A -->|"function_call"| F
+    R --> A
+    A -->|"text response"| FINAL
+
+    style S fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    style U fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    style A fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style F fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style R fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style FINAL fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px
+```
 This means there is no persistent agent memory outside the conversation history — context resets when you start a new sequence.
 
 ### Designing the system message
