@@ -4,10 +4,10 @@ Practice integrating Codex into complete workflows.
 
 ## Exercises
 
-1. **Exercise 1**: Design Multi-Tool Workflow
-2. **Exercise 2**: CI/CD Integration Setup
-3. **Exercise 3**: Build Custom Skill or Agent
-4. **Exercise 4**: Full Feature Development Workflow
+1. **[Exercise 1: GitHub CLI Workflow Practice](exercise-1.md)**
+2. **[Exercise 2: Multi-Tool Orchestration](exercise-2.md)**
+3. **[Exercise 3: CI/CD Pipeline Integration](exercise-3.md)**
+4. **[Exercise 4: Knowledge Transfer Patterns](exercise-4.md)**
 
 Each exercise: 30-40 minutes | Total: ~2.5 hours
 
