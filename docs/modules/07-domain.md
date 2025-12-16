@@ -495,40 +495,210 @@ Context files help future Codex sessions understand the codebase faster.
 
 ### Architecture Mapping Patterns
 
-**Pattern: Feature Tracing**
-```
-Task: Understand how authentication works
+#### Pattern: Feature Tracing
 
-Process:
-1. Grep for "auth", "login", "authenticate"
-2. Identify entry point (route/handler)
-3. Trace execution flow
-4. Map dependencies
-5. Document the flow
+Pick a feature and trace it end-to-end to understand how the system works.
+
+```
+You: "I need to understand how authentication works in this app.
+      Trace the login flow from API to database."
+
+Codex: I'll trace the authentication flow...
+
+Searching for auth-related code:
+  grep -r "login\|authenticate\|auth" src/
+
+## Login Flow Trace
+
+1. **Entry Point**: POST /api/auth/login
+   File: src/api/routes/auth.ts:24
+
+    router.post('/login', authController.login);
+
+2. **Controller**: Validates input, calls service
+   File: src/controllers/AuthController.ts:45
+
+    async login(req, res) {
+      const { email, password } = req.body;
+      const result = await this.authService.authenticate(email, password);
+      res.json({ token: result.token });
+    }
+
+3. **Service**: Business logic
+   File: src/services/AuthService.ts:67
+
+    async authenticate(email: string, password: string) {
+      const user = await this.userRepo.findByEmail(email);
+      if (!user) throw new UnauthorizedError('Invalid credentials');
+
+      const valid = await bcrypt.compare(password, user.passwordHash);
+      if (!valid) throw new UnauthorizedError('Invalid credentials');
+
+      return { token: this.jwtService.sign({ userId: user.id }) };
+    }
+
+4. **Repository**: Database access
+   File: src/repositories/UserRepository.ts:23
+
+    async findByEmail(email: string): Promise<User | null> {
+      return this.db.query('SELECT * FROM users WHERE email = $1', [email]);
+    }
+
+## Dependencies Identified
+- bcrypt (password hashing)
+- jsonwebtoken (JWT generation)
+- PostgreSQL (user storage)
+
+## Security Notes
+- Passwords hashed with bcrypt (good)
+- JWT expiry: 24 hours (check if acceptable)
+- No rate limiting on login endpoint (potential issue)
 ```
 
-**Pattern: Dependency Mapping**
-```
-Task: Understand module relationships
+#### Pattern: Dependency Mapping
 
-Process:
-1. Glob for all source files
-2. Grep for import statements
-3. Build dependency graph
-4. Identify core modules
-5. Identify leaf modules
-6. Document architecture
+Understand how modules relate to identify core vs. peripheral code.
+
+```
+You: "Map the dependencies in this codebase. Which modules
+      are core and which are leaf nodes?"
+
+Codex: I'll analyze import statements to build a dependency graph...
+
+Scanning 147 source files...
+
+## Dependency Analysis
+
+### Core Modules (most depended upon)
+These are imported by many other modules - changes here have wide impact:
+
+    src/db/connection.ts        → imported by 23 modules
+    src/utils/logger.ts         → imported by 19 modules
+    src/config/index.ts         → imported by 18 modules
+    src/models/User.ts          → imported by 12 modules
+    src/services/AuthService.ts → imported by 8 modules
+
+### Leaf Modules (no dependents)
+These import others but nothing imports them - safe to modify:
+
+    src/api/routes/health.ts
+    src/jobs/cleanup.ts
+    src/scripts/migrate.ts
+    src/cli/commands/seed.ts
+
+### Circular Dependencies Found ⚠️
+    src/services/OrderService.ts ←→ src/services/InventoryService.ts
+
+    OrderService imports InventoryService (to check stock)
+    InventoryService imports OrderService (to get pending orders)
+
+    Recommendation: Extract shared logic to a new module or use events.
+
+### Dependency Graph (simplified)
+
+    ┌─────────────┐
+    │   config    │
+    └──────┬──────┘
+           │
+    ┌──────▼──────┐
+    │     db      │
+    └──────┬──────┘
+           │
+    ┌──────▼──────┐     ┌─────────────┐
+    │   models    │◄────│   repos     │
+    └──────┬──────┘     └──────┬──────┘
+           │                   │
+    ┌──────▼───────────────────▼──────┐
+    │           services              │
+    └──────────────┬──────────────────┘
+                   │
+    ┌──────────────▼──────────────────┐
+    │        controllers              │
+    └──────────────┬──────────────────┘
+                   │
+    ┌──────────────▼──────────────────┐
+    │           routes                │
+    └─────────────────────────────────┘
 ```
 
-**Pattern: Data Flow Analysis**
-```
-Task: Understand how data transforms
+#### Pattern: Data Flow Analysis
 
-Process:
-1. Identify data sources (DB, API, files)
-2. Find where data is consumed (UI, reports)
-3. Trace transformation steps
-4. Document data pipeline
+Trace how data moves and transforms through the system.
+
+```
+You: "I need to understand how product data flows from
+      the admin dashboard to the customer-facing storefront."
+
+Codex: I'll trace the product data flow...
+
+## Product Data Flow
+
+### 1. Data Entry (Admin Dashboard)
+
+    Admin UI (React)
+        │
+        ▼ POST /api/admin/products
+    AdminProductController.create()
+        │
+        ▼ Validates & transforms
+    ProductService.createProduct()
+        │
+        ▼ INSERT INTO products
+    PostgreSQL (products table)
+
+### 2. Data Processing (Background)
+
+    ProductCreatedEvent
+        │
+        ├──▶ SearchIndexer.indexProduct()
+        │        │
+        │        ▼
+        │    Elasticsearch (products index)
+        │
+        ├──▶ ImageProcessor.generateThumbnails()
+        │        │
+        │        ▼
+        │    S3 (product-images bucket)
+        │
+        └──▶ CacheWarmer.warmProductCache()
+                 │
+                 ▼
+             Redis (product:{id})
+
+### 3. Data Retrieval (Storefront)
+
+    Customer UI (React)
+        │
+        ▼ GET /api/products/:id
+    ProductController.getProduct()
+        │
+        ▼ Check cache first
+    Redis.get('product:123')
+        │
+        ├── Cache HIT → Return cached data
+        │
+        └── Cache MISS
+                │
+                ▼
+            ProductRepository.findById()
+                │
+                ▼
+            PostgreSQL → Cache → Return
+
+### Data Transformations
+
+| Stage | Format | Fields Added/Removed |
+|-------|--------|---------------------|
+| Admin Input | FormData | Raw upload |
+| Database | ProductRow | id, timestamps, slugified name |
+| Cache | ProductCache | Pre-computed pricing, image URLs |
+| API Response | ProductDTO | Filtered by user permissions |
+| Storefront | ProductView | Formatted prices, availability |
+
+### Key Files
+- src/services/ProductService.ts (business logic)
+- src/events/productHandlers.ts (async processing)
+- src/transformers/ProductTransformer.ts (DTO mapping)
 ```
 
 ---
