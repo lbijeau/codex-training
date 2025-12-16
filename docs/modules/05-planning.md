@@ -354,12 +354,19 @@ By Dependency:
 **When**: Complex features, architectural impact
 
 **Process**:
-```
-1. Use brainstorming skill to refine requirements
-2. Use Plan agent to design architecture
-3. Write detailed IMPLEMENTATION_PLAN.md
-4. Review with team/user
-5. Execute plan
+```bash
+# 1. Refine requirements through exploration
+codex "Explore the codebase and help me understand what's needed for [feature]"
+
+# 2. Design architecture
+codex "Based on what we learned, design the architecture for [feature]"
+
+# 3. Write detailed plan
+codex "Create an IMPLEMENTATION_PLAN.md with stages, success criteria, and tests"
+
+# 4. Review with team/user before executing
+
+# 5. Execute plan following the stages
 ```
 
 ### Pattern: Spike-Then-Plan

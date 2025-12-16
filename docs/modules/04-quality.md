@@ -1,5 +1,7 @@
 # Module 4: Quality & Verification
 
+> **Note on Tooling**: This module references some advanced tooling patterns (specialized review prompts, skills) that vary by environment. The core patterns—multi-layer reviews, TDD, systematic debugging, quality gates—apply universally. Adapt the tooling examples to what's available in your setup.
+
 ## Overview
 
 Build systematic approaches to ensure code quality, catch issues early, and maintain high standards.
@@ -23,7 +25,7 @@ Build systematic approaches to ensure code quality, catch issues early, and main
 ┌─────────────────────────────┐
 │   Manual Review (Top)       │  Human judgment
 ├─────────────────────────────┤
-│   Specialized Agents        │  code-reviewer, test-analyzer
+│   AI-Assisted Review        │  Focused review prompts
 ├─────────────────────────────┤
 │   Automated Checks          │  Linters, formatters (hooks)
 └─────────────────────────────┘
@@ -55,27 +57,29 @@ Build systematic approaches to ensure code quality, catch issues early, and main
 }
 ```
 
-### Layer 2: Specialized Agents
+### Layer 2: AI-Assisted Review
 
-**code-reviewer Agent**:
-```
-After implementing feature:
-"Spawn a code-reviewer agent to review my changes.
-Focus on:
+**Code Review Prompt**:
+```bash
+# After implementing feature, ask for a focused review
+codex "Review my changes for:
 - Logic errors
 - Edge cases
 - Error handling
-- Code quality"
+- Code quality
+
+Show git diff first, then provide specific feedback."
 ```
 
-**pr-test-analyzer Agent**:
-```
-Before creating PR:
-"Spawn a pr-test-analyzer to review test coverage.
-Identify:
-- Missing test cases
-- Edge cases not covered
-- Integration test gaps"
+**Test Coverage Review Prompt**:
+```bash
+# Before creating PR, check test coverage
+codex "Review test coverage for the recent changes:
+- What test cases are missing?
+- What edge cases aren't covered?
+- Are there integration test gaps?
+
+Compare src/ changes against tests/ and report gaps."
 ```
 
 ### Layer 3: Manual Review
@@ -88,15 +92,26 @@ Identify:
 
 ### Review Workflow Pattern
 
-```
-1. Implement feature
-2. Run automated checks (hooks)
-3. Spawn code-reviewer agent
-4. Address findings
-5. Spawn test-analyzer
-6. Add missing tests
-7. Self-review changes
-8. Create PR
+```bash
+# 1. Implement feature
+codex "Implement the user authentication feature"
+
+# 2. Automated checks run via hooks (formatting, linting)
+
+# 3. Request code review
+codex "Review my changes for logic errors, edge cases, and quality issues"
+
+# 4. Address findings
+codex "Fix the issues identified in the review"
+
+# 5. Check test coverage
+codex "What tests are missing for the changes I made?"
+
+# 6. Add missing tests
+codex "Add the missing test cases you identified"
+
+# 7. Self-review and create PR
+codex "Show me a summary of all changes ready for PR"
 ```
 
 ---
@@ -152,12 +167,18 @@ Codex: [Refactors while keeping tests green]
 ```
 
 **Pattern 3: Test Coverage Analysis**
-```
-1. Implement feature with tests
-2. Run coverage report
-3. Spawn pr-test-analyzer
-4. Identify gaps
-5. Add tests for uncovered paths
+```bash
+# 1-2. Implement feature and run coverage
+codex "Implement the feature with tests, then run coverage report"
+
+# 3-4. Analyze gaps
+codex "Look at the coverage report and identify:
+- Uncovered code paths
+- Missing edge case tests
+- Integration test gaps"
+
+# 5. Add missing tests
+codex "Add tests for the uncovered paths you identified"
 ```
 
 ### TDD with Superpowers Skill
@@ -332,11 +353,15 @@ Complex system failing:
 }
 ```
 
-**With Agents**:
-```
-Before committing:
-"Run code-reviewer and pr-test-analyzer in parallel.
-Report any issues before I commit."
+**With Parallel Review Prompts**:
+```bash
+# Run reviews concurrently before committing
+codex exec "Review my changes for bugs, logic errors, and quality issues" > code-review.txt &
+codex exec "Analyze test coverage gaps for my changes" > test-review.txt &
+wait
+
+# Check results before committing
+cat code-review.txt test-review.txt
 ```
 
 **With Skills**:
@@ -491,7 +516,7 @@ function processPayment(amount: number, userId: string) {
 
 ## Key Takeaways
 
-1. **Multi-Layer Reviews**: Automated checks + Agents + Human
+1. **Multi-Layer Reviews**: Automated checks + AI-assisted + Human
 2. **TDD**: Write tests first, implement minimal, refactor
 3. **Systematic Debugging**: Stop guessing after 3 attempts
 4. **Quality Gates**: Checkpoints throughout development
@@ -512,7 +537,7 @@ function processPayment(amount: number, userId: string) {
 
 ### Review Layers
 1. Automated (hooks): Format, lint
-2. Agents: code-reviewer, pr-test-analyzer
+2. AI-assisted: Focused review prompts
 3. Manual: Architecture, UX, business logic
 
 ### TDD Cycle
