@@ -28,7 +28,7 @@ A Codex session is a conversation with the OpenAI Chat Completion API. Every req
 Think of it as a structured turn-taking system where Codex only knows what you feed it in those messages.</n
 ### Message flow
 
-![Codex API Message Flow](assets/message-flow.svg)
+![Codex API Message Flow](assets/message-flow.png)
 This means there is no persistent agent memory outside the conversation history — context resets when you start a new sequence.
 
 ### Designing the system message
