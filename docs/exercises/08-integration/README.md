@@ -1,6 +1,6 @@
-# Module 9 Exercises: Advanced Integration
+# Module 8 Exercises: Advanced Integration
 
-Practice integrating Codex Code into complete workflows.
+Practice integrating Codex into complete workflows.
 
 ## Exercises
 
@@ -15,7 +15,7 @@ Each exercise: 30-40 minutes | Total: ~2.5 hours
 
 ---
 
-## 🎉 Final Module!
+## Final Module!
 
 This is the last module of your training program. After completing these exercises:
 
@@ -23,11 +23,11 @@ This is the last module of your training program. After completing these exercis
 2. You'll have built end-to-end workflows
 3. You'll be ready to apply everything to real work
 
-**What's Next After Module 9**:
+**What's Next After Module 8**:
 1. Complete remaining exercises across all modules
-2. Build out your pattern library
+2. Build out your skill library
 3. Populate your personal playbook
 4. Apply to your actual projects
 5. Share your learnings!
 
-**Congratulations on reaching this point!** 🚀
+**Congratulations on reaching this point!**

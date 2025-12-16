@@ -1,4 +1,4 @@
-# Module 9: Advanced Integration
+# Module 8: Advanced Integration
 
 ## Overview
 

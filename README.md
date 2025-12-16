@@ -1,11 +1,11 @@
-# Codex Code Mastery Program
+# Codex CLI Mastery Program
 
 A comprehensive learning journey from experienced user to expert practitioner, covering technical depth, workflow optimization, pattern development, and teaching capability.
 
 ## Philosophy
 
 This program builds mastery across four dimensions:
-- **Technical Depth**: Understanding how Codex Code works under the hood
+- **Technical Depth**: Understanding how Codex works under the hood
 - **Workflow Optimization**: Refining daily patterns for speed and efficiency
 - **Pattern Library**: Cataloging proven approaches for every scenario
 - **Teaching Capability**: Internalizing knowledge well enough to share it
@@ -22,19 +22,18 @@ Each module follows a consistent rhythm:
 
 ```mermaid
 graph LR
-    start([Start here]) --> M1["Module 1\nCodex Code Internals\n3-4h"]
+    start([Start here]) --> M1["Module 1\nCodex Internals\n3-4h"]
     M1 --> M3["Module 3\nSkills & Workflows\n2-3h"]
     M3 --> HUB{"Modules 2,4,5\nchoose order"}
-    HUB --> M2["Module 2\nAdvanced Customization\n3-4h"]
+    HUB --> M2["Module 2\nCustomization & Extensions\n2-3h"]
     HUB --> M4["Module 4\nSpeed & Efficiency\n2-3h"]
     HUB --> M5["Module 5\nQuality & Verification\n3-4h"]
     M2 --> M6["Module 6\nPlanning & Execution\n2-3h"]
     M4 --> M6
     M5 --> M6
     M6 --> M7["Module 7\nDomain-Specific Patterns\n3-4h"]
-    M7 --> M8["Module 8\nCollaboration & Communication\n2-3h"]
-    M8 --> M9["Module 9\nAdvanced Integration\n3-4h"]
-    M9 --> Z([Advanced workflows])
+    M7 --> M8["Module 8\nAdvanced Integration\n3-4h"]
+    M8 --> Z([Advanced workflows])
 ```
 
 ```mermaid
@@ -64,27 +63,27 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 
 ## Modules
 
-### Module 1: Codex Code Internals
+### Module 1: Codex Internals
 **Status**: In Progress
 **Time**: 3-4 hours
 **Topics**:
-- How Codex session messaging works (system/user/function)
-- Function calling workflows and helper orchestration
-- Context management, summaries, and token budgets
-- Guard rails: validation scripts and logging hooks
+- How Codex session messaging works
+- Tool calling and execution model
+- Context management and token budgets
+- Session persistence and recovery
 
 📁 [Module Content](docs/modules/01-internals.md) | 🏋️ [Exercises](docs/exercises/01-internals/)
 
 ---
 
-### Module 2: Advanced Customization
+### Module 2: Customization & Extensions
 **Status**: Not Started
-**Time**: 3-4 hours
+**Time**: 2-3 hours
 **Topics**:
-- Creating prompt templates and reusable instructions
-- Registering helper functions and wrapper scripts
-- Validation scripts and guard rails
-- Documenting configuration and context files
+- AGENTS.md for project-specific instructions
+- Settings and permission management
+- Hooks for automation (pre/post tool use)
+- MCP servers for external tool integration
 
 📁 [Module Content](docs/modules/02-customization.md) | 🏋️ [Exercises](docs/exercises/02-customization/)
 
@@ -160,31 +159,17 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 
 ---
 
-### Module 8: Collaboration & Communication
-**Status**: Not Started
-**Time**: 2-3 hours
-**Topics**:
-- Effective prompting techniques
-- Providing context efficiently
-- Asking better questions
-- Iterating on solutions
-- Teaching Codex your patterns
-
-📁 [Module Content](docs/modules/08-collaboration.md) | 🏋️ [Exercises](docs/exercises/08-collaboration/)
-
----
-
-### Module 9: Advanced Integration
+### Module 8: Advanced Integration
 **Status**: Not Started
 **Time**: 3-4 hours
 **Topics**:
+- GitHub CLI (`gh`) integration
 - Multi-tool workflows
 - CI/CD integration patterns
 - Cross-project knowledge transfer
-- Custom agent development
 - Contributing to the ecosystem
 
-📁 [Module Content](docs/modules/09-integration.md) | 🏋️ [Exercises](docs/exercises/09-integration/)
+📁 [Module Content](docs/modules/08-integration.md) | 🏋️ [Exercises](docs/exercises/08-integration/)
 
 ---
 
@@ -195,9 +180,9 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 2. Continue to Module 3 (skills are used throughout later modules)
 3. Modules 2, 4, 5 can be done in any order based on interest
 4. Module 6 builds on skills and quality patterns
-5. Modules 7-9 are advanced topics
+5. Modules 7-8 are advanced topics
 
-**Total Time**: 22-33 hours spread over weeks/months at your own pace
+**Total Time**: 20-30 hours spread over weeks/months at your own pace
 
 ## Your Resources
 
@@ -208,19 +193,18 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 ## Progress Tracking
 
 Update module status as you complete them:
-- [ ] Module 1: Codex Code Internals
-- [ ] Module 2: Advanced Customization
+- [ ] Module 1: Codex Internals
+- [ ] Module 2: Customization & Extensions
 - [ ] Module 3: Skills & Reusable Workflows
 - [ ] Module 4: Speed & Efficiency Patterns
 - [ ] Module 5: Quality & Verification
 - [ ] Module 6: Planning & Execution
 - [ ] Module 7: Domain-Specific Patterns
-- [ ] Module 8: Collaboration & Communication
-- [ ] Module 9: Advanced Integration
+- [ ] Module 8: Advanced Integration
 
 ## Getting Started
 
-1. Read [Module 1: Codex Code Internals](docs/modules/01-internals.md)
+1. Read [Module 1: Codex Internals](docs/modules/01-internals.md)
 2. Work through [Module 1 Exercises](docs/exercises/01-internals/)
 3. Continue to [Module 3: Skills & Workflows](docs/modules/03-skills.md) for the foundation
 4. Document patterns you discover
