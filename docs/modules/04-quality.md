@@ -28,9 +28,32 @@ Different review methods catch different problems:
 
 No single layer catches everything. Stack them.
 
-<p align="center">
-  <img src="assets/review-pyramid.png" alt="Review Pyramid" width="700">
-</p>
+```mermaid
+flowchart LR
+    subgraph layer1["⚡ LAYER 1: AUTOMATED"]
+        L1["Formatters"]
+        L2["Linters"]
+        L3["Type Check"]
+    end
+
+    subgraph layer2["🤖 LAYER 2: AI-ASSISTED"]
+        A1["Code Review"]
+        A2["Edge Cases"]
+        A3["Coverage"]
+    end
+
+    subgraph layer3["🧠 LAYER 3: HUMAN"]
+        M1["Architecture"]
+        M2["Business Logic"]
+        M3["UX / Security"]
+    end
+
+    CODE["📝 Code"] --> layer1 --> layer2 --> layer3 --> MERGE["✅ Merge"]
+
+    style layer1 fill:#e8f5e9,stroke:#2e7d32
+    style layer2 fill:#e3f2fd,stroke:#1565c0
+    style layer3 fill:#fce4ec,stroke:#c2185b
+```
 
 ### Layer 1: Automated Checks (Instant Feedback)
 
@@ -154,9 +177,18 @@ codex "Summarize all changes for my PR description"
 
 TDD isn't about testing—it's about design. Writing tests first forces you to think about the interface before the implementation.
 
-<p align="center">
-  <img src="assets/tdd-cycle.png" alt="TDD Cycle: Red-Green-Refactor" width="600">
-</p>
+```mermaid
+flowchart LR
+    RED["🔴 RED\nWrite failing test"]
+    GREEN["🟢 GREEN\nMinimal code to pass"]
+    REFACTOR["🔵 REFACTOR\nImprove quality"]
+
+    RED --> GREEN --> REFACTOR --> RED
+
+    style RED fill:#ffebee,stroke:#c62828,stroke-width:2px
+    style GREEN fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    style REFACTOR fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+```
 
 ### TDD with Codex: A Complete Example
 
@@ -286,9 +318,24 @@ Shall I add tests for these?
 
 Guessing wastes time and often introduces new bugs. Here's the pattern:
 
-<p align="center">
-  <img src="assets/debugging-flow.png" alt="Debugging Flow" width="700">
-</p>
+```mermaid
+flowchart TD
+    BUG["🐛 Bug Found"] --> A1["Try Fix #1"]
+    A1 --> C1{Works?}
+    C1 -->|Yes| DONE["✅ Fixed!"]
+    C1 -->|No| A2["Try Fix #2"]
+    A2 --> C2{Works?}
+    C2 -->|Yes| DONE
+    C2 -->|No| A3["Try Fix #3"]
+    A3 --> C3{Works?}
+    C3 -->|Yes| DONE
+    C3 -->|No| STOP["🛑 STOP GUESSING"]
+    STOP --> SYS["📋 Systematic Debug"]
+
+    style STOP fill:#ffcdd2,stroke:#c62828
+    style SYS fill:#e3f2fd,stroke:#1565c0
+    style DONE fill:#c8e6c9,stroke:#2e7d32
+```
 
 ### Systematic Debugging Framework
 
@@ -398,9 +445,39 @@ Help me test each layer in isolation."
 
 Quality gates prevent bad code from progressing. Each gate must pass before moving forward.
 
-<p align="center">
-  <img src="assets/quality-gates.png" alt="Quality Gates Pipeline" width="700">
-</p>
+```mermaid
+flowchart LR
+    subgraph gate1["📋 GATE 1"]
+        G1["Pre-Implementation"]
+        G1a["Requirements clear?"]
+        G1b["Edge cases identified?"]
+    end
+
+    subgraph gate2["🔨 GATE 2"]
+        G2["During Implementation"]
+        G2a["Tests with code?"]
+        G2b["Small commits?"]
+    end
+
+    subgraph gate3["✅ GATE 3"]
+        G3["Pre-Commit"]
+        G3a["All tests pass?"]
+        G3b["Lint clean?"]
+    end
+
+    subgraph gate4["🚀 GATE 4"]
+        G4["Pre-PR"]
+        G4a["Coverage adequate?"]
+        G4b["Docs updated?"]
+    end
+
+    START["💡 Idea"] --> gate1 --> gate2 --> gate3 --> gate4 --> MERGE["🎉 Merged!"]
+
+    style gate1 fill:#fff3e0,stroke:#e65100
+    style gate2 fill:#e8f5e9,stroke:#2e7d32
+    style gate3 fill:#e3f2fd,stroke:#1565c0
+    style gate4 fill:#f3e5f5,stroke:#7b1fa2
+```
 
 ### Gate 1: Pre-Implementation
 
