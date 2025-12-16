@@ -85,7 +85,80 @@ A skill typically includes:
 
 ---
 
-## 2. The Superpowers Skill Library
+## 2. Installing Superpowers
+
+Before using skills, you need to install the superpowers plugin. This is a one-time setup.
+
+### Prerequisites
+
+- Claude Code version 2.0.13 or later
+- Active Claude Code session
+
+### Installation Steps
+
+**Step 1: Add the superpowers marketplace**
+
+In Claude Code, run:
+```
+/plugin marketplace add obra/superpowers-marketplace
+```
+
+**Step 2: Install the superpowers plugin**
+```
+/plugin install superpowers@superpowers-marketplace
+```
+
+**Step 3: Restart Claude Code**
+
+Quit and restart Claude Code for the plugin to load.
+
+### Verifying Installation
+
+After restart, you should see a message in your session indicating **"You have Superpowers."** This confirms the plugin is active and skills are available.
+
+You can also verify by running:
+```
+/superpowers:brainstorm
+```
+
+If the command is recognized, you're ready to go.
+
+### What Gets Installed
+
+The superpowers plugin provides:
+- **20+ battle-tested skills** for planning, debugging, TDD, and code review
+- **Slash commands**: `/superpowers:brainstorm`, `/superpowers:write-plan`, `/superpowers:execute-plan`
+- **Skills search tool** for discovering available skills
+- **SessionStart context injection** that loads skills automatically
+
+### Optional: Additional Plugins
+
+The superpowers-marketplace includes related plugins you may want:
+
+| Plugin | Purpose |
+|--------|---------|
+| `superpowers-chrome` | Browser control for testing web apps |
+| `superpowers-lab` | Experimental/beta skills |
+| `episodic-memory` | Memory across sessions |
+
+Install additional plugins with:
+```
+/plugin install <plugin-name>@superpowers-marketplace
+```
+
+### Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Command not recognized | Restart Claude Code after installation |
+| "Plugin not found" | Check you added the marketplace first |
+| Skills not loading | Verify with `/plugin list` that superpowers is installed |
+
+> **Source**: [obra/superpowers on GitHub](https://github.com/obra/superpowers)
+
+---
+
+## 3. The Superpowers Skill Library
 
 ### What is Superpowers?
 
@@ -131,7 +204,7 @@ flowchart TD
 
 ---
 
-## 3. Using Skills in Practice
+## 4. Using Skills in Practice
 
 ### How to Invoke a Skill
 
@@ -251,7 +324,7 @@ Well-configured environments trigger skills based on context:
 
 ---
 
-## 4. The 3-Attempt Rule
+## 5. The 3-Attempt Rule
 
 One of the most important skill-based patterns is the **3-Attempt Rule**:
 
@@ -295,7 +368,7 @@ After 3 failures, you're guessing randomly. **Stop and go systematic.**
 
 ---
 
-## 5. Skill Anti-Patterns
+## 6. Skill Anti-Patterns
 
 ### Common Mistakes
 
@@ -344,7 +417,7 @@ If you catch yourself thinking these thoughts, you're about to skip a skill:
 
 ---
 
-## 6. Building Custom Skills
+## 7. Building Custom Skills
 
 ### When to Create a Skill
 
@@ -453,7 +526,7 @@ Run the full test suite and fix any failures.
 
 ---
 
-## 7. Skills Integration
+## 8. Skills Integration
 
 ### With Quality (Module 5)
 
