@@ -156,6 +156,8 @@ Never expose the validation logic to Codex; keep it in the helper implementation
 
 ## 4. Configuration & Context Files
 
+> **Works for both API and CLI/TUI**: These patterns apply whether you're calling the API programmatically or using Codex CLI interactively. For CLI users, you can prepend context files to your prompts (`codex "$(cat context.md) Your request here"`) or use the CLI's built-in config at `~/.codex/config.toml`.
+
 Keep a lightweight configuration for your Codex sessions:
 ```
 .codex/
