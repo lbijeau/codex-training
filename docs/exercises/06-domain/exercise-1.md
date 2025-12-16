@@ -28,6 +28,7 @@ Before making changes to any codebase, you need to understand its architecture. 
    ```
 
 **Output format**:
+
 ```markdown
 ## Architecture Overview
 
@@ -37,14 +38,12 @@ Before making changes to any codebase, you need to understand its architecture. 
 - Build: [Tool]
 
 ### Directory Structure
-```
 src/
 ├── api/        # HTTP endpoints
 ├── services/   # Business logic
 ├── models/     # Data models
 ├── utils/      # Shared utilities
 └── config/     # Configuration
-```
 
 ### External Dependencies
 - Database: [Type]
