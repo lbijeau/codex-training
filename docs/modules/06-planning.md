@@ -374,30 +374,11 @@ Executing everything at once is risky:
 
 ### Batch Size Guidelines
 
-```mermaid
-flowchart LR
-    subgraph small["🔹 SMALL BATCH<br/>2-3 tasks"]
-        S1["Create model"]
-        S2["Write tests"]
-        S3["Review"]
-    end
-
-    subgraph medium["🔸 MEDIUM BATCH<br/>1 stage"]
-        M1["Full endpoint"]
-        M2["Routes + Tests"]
-        M3["Review"]
-    end
-
-    subgraph large["🔴 TOO LARGE"]
-        L1["Entire feature"]
-        L2["Multiple stages"]
-        L3["Hard to review"]
-    end
-
-    style small fill:#e8f5e9,stroke:#2e7d32
-    style medium fill:#fff3e0,stroke:#e65100
-    style large fill:#ffebee,stroke:#c62828
-```
+| Batch Size | Contains | Recommended |
+|------------|----------|-------------|
+| 🔹 **Small** (2-3 tasks) | Create model, write tests, review | ✅ Ideal |
+| 🔸 **Medium** (1 stage) | Full endpoint with routes + tests | ✅ Good |
+| 🔴 **Too Large** (multiple stages) | Entire feature at once | ❌ Avoid |
 
 ### Batch Review Pattern
 
