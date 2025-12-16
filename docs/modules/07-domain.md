@@ -1,15 +1,18 @@
 # Module 7: Domain-Specific Patterns
 
+> **Prerequisite**: This module builds on Module 3 (Skills). You'll use existing skills and learn to create domain-specific skills for your team's recurring workflows.
+
 ## Overview
 
-Master patterns for common software development scenarios: refactoring, architecture exploration, legacy code, performance, and security.
+Master patterns for common software development scenarios: refactoring, architecture exploration, legacy code, performance, and security. More importantly, learn to recognize when a pattern should become a reusable skill.
 
 **Learning Objectives**:
-- Navigate and refactor large codebases
-- Explore and understand architecture
+- Navigate and refactor large codebases safely
+- Explore and understand unfamiliar architecture
 - Work effectively with legacy code
 - Optimize performance systematically
 - Review security comprehensively
+- Create domain-specific skills for recurring patterns
 
 **Time**: 3-4 hours
 
@@ -26,33 +29,126 @@ Master patterns for common software development scenarios: refactoring, architec
 
 ### Refactoring Workflow
 
+```mermaid
+flowchart LR
+    UNDERSTAND["🔍 Understand"]
+    PLAN["📋 Plan"]
+    EXECUTE["🔨 Execute"]
+    VERIFY["✅ Verify"]
+
+    UNDERSTAND --> PLAN
+    PLAN --> EXECUTE
+    EXECUTE --> VERIFY
+    VERIFY -->|More changes| EXECUTE
+    VERIFY -->|Done| COMPLETE["🎉 Complete"]
+
+    style UNDERSTAND fill:#e3f2fd,stroke:#1565c0
+    style PLAN fill:#fff3e0,stroke:#e65100
+    style EXECUTE fill:#e8f5e9,stroke:#2e7d32
+    style VERIFY fill:#f3e5f5,stroke:#7b1fa2
+```
+
 **Phase 1: Understanding**
-```bash
-codex "Explore this codebase and document:
-1. Map current structure
-2. Identify patterns and anti-patterns
-3. Find similar code (duplication)
-4. Understand dependencies
-5. Document current architecture"
+
+Before touching any code, understand what you're dealing with:
+
+```
+You: "I need to refactor the payment processing module.
+      It's grown to 2000 lines and is hard to maintain.
+      Help me understand the current structure first."
+
+Codex: I'll analyze the payment module. Let me explore...
+
+Found in src/payments/processor.ts:
+- PaymentProcessor class (1847 lines)
+- 23 public methods
+- 45 private methods
+- Direct dependencies: Stripe, PayPal, database, logger, emailer
+
+Key issues identified:
+1. Single class handles all payment providers (violates SRP)
+2. Database queries mixed with business logic
+3. Duplicate validation code in 8 methods
+4. No interface - hard to test or swap providers
+
+Current flow:
+  processPayment() → validateCard() → chargeProvider() →
+  saveTransaction() → sendReceipt() → updateInventory()
+
+Recommendation: Extract provider-specific logic into separate
+classes behind a PaymentProvider interface.
 ```
 
 **Phase 2: Planning**
+
+Use `superpowers:writing-plans` to create a safe refactoring plan:
+
 ```
-1. Define refactoring goals
-2. Identify breaking points
-3. Plan incremental steps
-4. Define validation strategy
-5. Write IMPLEMENTATION_PLAN.md
+You: "Use superpowers:writing-plans to create a refactoring plan
+      for extracting payment providers into separate classes."
+
+Codex: Using superpowers:writing-plans.
+
+# IMPLEMENTATION_PLAN.md
+
+## Goal
+Extract payment provider logic into separate classes behind
+a common interface, reducing PaymentProcessor from 1847 to ~400 lines.
+
+## Stage 1: Create Interface & Tests
+**Goal**: Define PaymentProvider interface and add characterization tests
+**Success Criteria**:
+- [ ] PaymentProvider interface defined
+- [ ] Existing tests still pass
+- [ ] Characterization tests cover current behavior
+
+## Stage 2: Extract Stripe Provider
+**Goal**: Move Stripe-specific code to StripeProvider class
+**Success Criteria**:
+- [ ] StripeProvider implements PaymentProvider
+- [ ] All Stripe tests pass
+- [ ] PaymentProcessor uses StripeProvider
+
+## Stage 3: Extract PayPal Provider
+**Goal**: Move PayPal-specific code to PayPalProvider class
+**Success Criteria**:
+- [ ] PayPalProvider implements PaymentProvider
+- [ ] All PayPal tests pass
+- [ ] PaymentProcessor uses PayPalProvider
+
+## Stage 4: Clean Up
+**Goal**: Remove duplication, improve PaymentProcessor
+**Success Criteria**:
+- [ ] No duplicate validation code
+- [ ] PaymentProcessor under 500 lines
+- [ ] All tests pass
 ```
 
 **Phase 3: Execution**
+
+Execute incrementally with verification at each step:
+
 ```
-For each step:
-1. Run tests (baseline)
-2. Make focused change
-3. Run tests (verify)
-4. Commit
-5. Move to next step
+You: "Execute Stage 1. Create the PaymentProvider interface
+      and add characterization tests for current behavior."
+
+Codex: Starting Stage 1...
+
+Creating interface:
+// src/payments/PaymentProvider.ts
+export interface PaymentProvider {
+  name: string;
+  charge(amount: number, token: string): Promise<ChargeResult>;
+  refund(transactionId: string): Promise<RefundResult>;
+  validatePaymentMethod(token: string): Promise<ValidationResult>;
+}
+
+Adding characterization tests to capture current behavior...
+
+Running tests: npm test -- --grep "payment"
+✓ 47 tests passing
+
+Stage 1 complete. Ready for review before Stage 2.
 ```
 
 ### Refactoring Patterns
@@ -104,38 +200,113 @@ Process:
 
 ### Exploring Unfamiliar Codebases
 
-**Strategy: Breadth-First Exploration**
+When you join a new project or need to understand unfamiliar code, use a systematic breadth-first approach:
+
+```mermaid
+flowchart TD
+    START["📂 New Codebase"]
+    L1["1. High-level structure"]
+    L2["2. Entry points"]
+    L3["3. Core abstractions"]
+    L4["4. Data flow"]
+    L5["5. Testing patterns"]
+    DONE["📋 Architecture Doc"]
+
+    START --> L1
+    L1 --> L2
+    L2 --> L3
+    L3 --> L4
+    L4 --> L5
+    L5 --> DONE
+
+    style START fill:#e3f2fd,stroke:#1565c0
+    style DONE fill:#e8f5e9,stroke:#2e7d32
 ```
-1. High-level structure
-   - README, package.json, directory layout
 
-2. Entry points
-   - Main files, routes, CLI commands
+### Example: Exploring an E-commerce Backend
 
-3. Core abstractions
-   - Key classes, modules, interfaces
+```
+You: "I just joined this project. Help me understand
+      the architecture. Start with the high-level structure."
 
-4. Data flow
-   - How data moves through the system
+Codex: Exploring the codebase...
 
-5. Testing approach
-   - Test structure, coverage, patterns
+## High-Level Structure
+```
+src/
+├── api/           # REST endpoints (Express routes)
+├── services/      # Business logic layer
+├── models/        # Database models (Sequelize)
+├── middleware/    # Auth, logging, error handling
+├── jobs/          # Background workers (Bull queues)
+├── utils/         # Shared utilities
+└── config/        # Environment configuration
 ```
 
-### Using Codex for Exploration
+## Entry Points
+- `src/index.ts` - Main server startup
+- `src/api/routes.ts` - All API routes registered here
+- `src/jobs/worker.ts` - Background job processor
+
+## Key Patterns
+- Repository pattern for data access
+- Service layer for business logic
+- Dependency injection via constructor params
+- Event-driven for async operations (orders → inventory → shipping)
+
+Want me to trace a specific feature, like order processing?
+```
+
+```
+You: "Yes, trace how an order flows through the system."
+
+Codex: Tracing order flow...
+
+## Order Processing Flow
+
+1. **API Layer** (`src/api/orders.ts:45`)
+   POST /orders → OrderController.create()
+
+2. **Validation** (`src/middleware/validation.ts:23`)
+   validateOrderSchema() checks items, payment, shipping
+
+3. **Service Layer** (`src/services/OrderService.ts:78`)
+   OrderService.createOrder():
+   - Validates inventory availability
+   - Calculates totals and tax
+   - Creates order record
+   - Emits 'order.created' event
+
+4. **Event Handlers** (`src/events/orderHandlers.ts`)
+   On 'order.created':
+   - InventoryService.reserve() - reserves items
+   - PaymentService.charge() - processes payment
+   - NotificationService.sendConfirmation()
+
+5. **Background Jobs** (`src/jobs/shipping.ts`)
+   ShippingJob processes fulfillment async
+
+Key files to understand order logic:
+- src/services/OrderService.ts (main business logic)
+- src/models/Order.ts (data structure)
+- src/events/orderHandlers.ts (side effects)
+```
+
+### Saving Architecture Knowledge
+
+Save your findings so you don't lose context:
 
 ```bash
-# Map the directory structure and understand architecture
-codex "Explore this codebase:
-- Map the directory structure
-- Identify main entry points
-- Find core abstractions
-- Understand data flow patterns
-- Summarize the architecture"
+# Create architecture documentation
+codex exec "Document the architecture of this codebase
+in a format suitable for onboarding new developers" > docs/ARCHITECTURE.md
 
-# Save findings for later use
-codex exec "Summarize the codebase architecture in bullet points" > contexts/architecture.md
+# Create a context file for future sessions
+codex exec "Summarize the key abstractions and patterns
+in bullet points" > contexts/architecture.md
 ```
+
+Context files help future Codex sessions understand the codebase faster.
 
 ### Architecture Mapping Patterns
 
@@ -181,10 +352,124 @@ Process:
 
 ### Legacy Code Principles
 
+Legacy code isn't just old code—it's code without tests, unclear intent, or tribal knowledge. The goal isn't to rewrite it, but to make it safe to change.
+
 1. **Characterization Tests**: Understand behavior before changing
 2. **Seams**: Find safe points to make changes
 3. **Incremental Improvement**: Leave code better than you found it
 4. **Document As You Learn**: Future you will thank you
+
+### Example: Adding a Feature to Legacy Code
+
+```
+You: "I need to add discount codes to the checkout process.
+      The checkout code is 8 years old with no tests.
+      How do I approach this safely?"
+
+Codex: This is a classic legacy code situation. Let's work through
+it safely using characterization tests and seams.
+
+First, let me analyze the current checkout code...
+
+Found: src/checkout.js (1,247 lines, 0 tests)
+
+Key function: processCheckout(cart, user, paymentInfo)
+- Lines 45-312 (267 lines in one function!)
+- Mixes validation, pricing, payment, and email
+- Global state: window.cartState, window.userSession
+- No dependency injection - hard to test
+
+**Step 1: Characterization Tests**
+
+Before changing anything, let's capture current behavior.
+I'll create tests that document what the code DOES, not what
+it SHOULD do:
+
+// tests/checkout.characterization.test.js
+describe('checkout - characterization', () => {
+  it('calculates subtotal as sum of item prices', () => {
+    const cart = { items: [{price: 10}, {price: 20}] };
+    const result = calculateSubtotal(cart);
+    expect(result).toBe(30); // Documents current behavior
+  });
+
+  it('applies 8% tax for CA addresses', () => {
+    // Even if this rate is wrong, test what it DOES
+    const result = calculateTax(100, 'CA');
+    expect(result).toBe(8);
+  });
+});
+
+**Step 2: Find a Seam**
+
+A seam is a place where you can alter behavior without editing code.
+I found one: the pricing calculation is called from line 89.
+
+Current code:
+  const total = calculatePricing(cart, user);
+
+This function can be extracted and tested independently.
+
+**Step 3: Extract and Add Your Feature**
+
+I'll use the Sprout Method pattern:
+1. Create new function: applyDiscountCode(cart, code)
+2. Add tests for the new function
+3. Call it from the seam point
+4. Leave the rest of processCheckout untouched
+
+Want me to implement this approach?
+```
+
+```
+You: "Yes, implement the discount code feature using that approach."
+
+Codex: Using superpowers:test-driven-development for the new code.
+
+**Red**: Writing test first...
+// tests/discount.test.js
+describe('applyDiscountCode', () => {
+  it('applies percentage discount', () => {
+    const cart = { subtotal: 100 };
+    const result = applyDiscountCode(cart, 'SAVE20');
+    expect(result.discount).toBe(20);
+  });
+
+  it('rejects expired codes', () => {
+    const cart = { subtotal: 100 };
+    expect(() => applyDiscountCode(cart, 'EXPIRED'))
+      .toThrow('Discount code expired');
+  });
+});
+
+Running: npm test -- discount
+✗ 2 tests failing (function doesn't exist)
+
+**Green**: Implementing...
+// src/discount.js (new file - isolated from legacy code)
+export function applyDiscountCode(cart, code) {
+  const discount = await lookupDiscount(code);
+  if (discount.expired) throw new Error('Discount code expired');
+  return {
+    ...cart,
+    discount: cart.subtotal * (discount.percent / 100)
+  };
+}
+
+Running: npm test -- discount
+✓ 2 tests passing
+
+**Integration**: Adding to checkout seam...
+// In processCheckout, at line 89:
+if (discountCode) {
+  cart = applyDiscountCode(cart, discountCode);
+}
+const total = calculatePricing(cart, user);
+
+Characterization tests still pass: ✓
+New feature works: ✓
+Legacy code unchanged: ✓
+```
 
 ### Legacy Code Workflow
 
@@ -193,7 +478,7 @@ Process:
 1. Identify the code you need to change
 2. Write tests that describe current behavior
 3. Even if behavior is wrong, test it as-is
-4. Now you have safety net
+4. Now you have a safety net
 ```
 
 **Step 2: Make Change Safe**
@@ -485,6 +770,181 @@ codex exec "List all security findings from the auth review as a markdown checkl
 
 ---
 
+## 7. Creating Domain-Specific Skills
+
+### When to Create a Domain Skill
+
+If you find yourself repeating the same domain pattern more than twice, it's time to create a skill. Signs you need a custom skill:
+
+| Signal | Example | Skill Candidate |
+|--------|---------|-----------------|
+| Same prompts repeated | "Review this PR for security issues" | `team:security-review` |
+| Multi-step workflow | Architecture exploration steps | `team:architecture-exploration` |
+| Team-specific patterns | Your deployment checklist | `team:pre-deploy-checklist` |
+| Onboarding friction | New devs ask the same questions | `team:codebase-intro` |
+
+### Example: Creating a Security Review Skill
+
+Instead of remembering the OWASP checklist every time, encode it:
+
+````markdown
+---
+name: team-security-review
+description: Comprehensive security review for PRs touching auth, payments, or user data
+triggers:
+  - "security review"
+  - "review for vulnerabilities"
+  - "check for security issues"
+---
+
+# Security Review Skill
+
+## When to Use
+Before merging any PR that touches:
+- Authentication or authorization
+- Payment processing
+- User data handling
+- External API integrations
+
+## Steps
+
+### Step 1: Input Validation Audit
+Check all user input points:
+- [ ] Request parameters validated
+- [ ] Request body schema validated
+- [ ] File uploads restricted by type/size
+- [ ] No direct SQL/NoSQL query construction
+
+### Step 2: Authentication Check
+- [ ] Passwords hashed with bcrypt/argon2 (not MD5/SHA1)
+- [ ] Session tokens are cryptographically random
+- [ ] JWT secrets not hardcoded
+- [ ] Token expiry is reasonable (< 24h for access tokens)
+
+### Step 3: Authorization Check
+- [ ] Every endpoint checks user permissions
+- [ ] No direct object references without ownership check
+- [ ] Admin endpoints protected
+- [ ] Rate limiting on sensitive operations
+
+### Step 4: Data Protection
+- [ ] Sensitive data not logged
+- [ ] PII encrypted at rest
+- [ ] HTTPS enforced
+- [ ] No secrets in code or config files
+
+### Step 5: Dependency Check
+```bash
+npm audit
+# or
+pip-audit
+```
+
+## Output Format
+For each finding:
+1. **Severity**: Critical/High/Medium/Low
+2. **Location**: file:line
+3. **Issue**: What's wrong
+4. **Fix**: How to resolve
+````
+
+### Example: Creating an Architecture Exploration Skill
+
+````markdown
+---
+name: team-architecture-exploration
+description: Systematic approach to understanding unfamiliar codebases
+triggers:
+  - "explore this codebase"
+  - "help me understand the architecture"
+  - "I'm new to this project"
+---
+
+# Architecture Exploration Skill
+
+## When to Use
+- Joining a new project
+- Investigating unfamiliar module
+- Onboarding new team members
+
+## Steps
+
+### Step 1: High-Level Survey (5 min)
+Examine without diving deep:
+- [ ] README.md - project purpose and setup
+- [ ] package.json / requirements.txt - dependencies
+- [ ] Directory structure - organization pattern
+
+### Step 2: Entry Points (10 min)
+Find where execution starts:
+- [ ] Main entry file (index.ts, main.py, etc.)
+- [ ] Route definitions (API endpoints)
+- [ ] CLI commands if applicable
+
+### Step 3: Core Abstractions (15 min)
+Identify the building blocks:
+- [ ] Key interfaces/types
+- [ ] Service classes
+- [ ] Data models
+- [ ] Shared utilities
+
+### Step 4: Data Flow (15 min)
+Trace one feature end-to-end:
+- [ ] Pick a representative feature (e.g., user login)
+- [ ] Trace from API to database
+- [ ] Document the layers touched
+
+### Step 5: Document Findings
+Create `contexts/architecture.md` with:
+- Directory overview
+- Key patterns used
+- Important files to know
+- Gotchas and quirks
+
+## Anti-Patterns
+- Don't try to understand everything at once
+- Don't start with tests (they often lag reality)
+- Don't trust comments blindly (verify with code)
+````
+
+### Skill Organization for Teams
+
+```
+~/.codex/
+├── superpowers/           # Community skills (read-only)
+└── skills/                # Your team's custom skills
+    ├── security-review.md
+    ├── architecture-exploration.md
+    ├── pre-deploy-checklist.md
+    ├── database-migration.md
+    └── incident-response.md
+```
+
+### When Patterns Become Skills
+
+```mermaid
+flowchart LR
+    AD_HOC["Ad-hoc prompt"]
+    REPEAT["Repeated 2-3x"]
+    PATTERN["Documented pattern"]
+    SKILL["Reusable skill"]
+
+    AD_HOC -->|Works well| REPEAT
+    REPEAT -->|Same steps each time| PATTERN
+    PATTERN -->|Team uses it| SKILL
+
+    style AD_HOC fill:#fff3e0,stroke:#e65100
+    style SKILL fill:#e8f5e9,stroke:#2e7d32
+```
+
+**Progression:**
+1. **Ad-hoc**: You figure it out each time
+2. **Pattern**: You remember the steps
+3. **Documented**: Written in a doc somewhere
+4. **Skill**: Codex knows it and follows it automatically
+
+---
+
 ## Key Takeaways
 
 1. **Refactoring**: Understand, plan, execute incrementally
@@ -492,6 +952,7 @@ codex exec "List all security findings from the auth review as a markdown checkl
 3. **Legacy Code**: Characterize, make safe, improve incrementally
 4. **Performance**: Measure, analyze, optimize, validate
 5. **Security**: Systematic review, OWASP Top 10, automated tools
+6. **Skills**: Turn recurring patterns into reusable team skills
 
 ---
 
@@ -501,6 +962,7 @@ codex exec "List all security findings from the auth review as a markdown checkl
 2. Practice architecture exploration on unfamiliar code
 3. Refactor a piece of legacy code safely
 4. Conduct security review on a module
+5. Create one domain-specific skill for your team
 
 ---
 
@@ -535,6 +997,12 @@ codex exec "List all security findings from the auth review as a markdown checkl
 - Input validation
 - Authentication review
 - Dependency scanning
+
+### Domain Skills
+- Repeated pattern? Make it a skill
+- Include triggers, steps, checklists
+- Store in `~/.codex/skills/`
+- Share with your team
 
 ---
 
