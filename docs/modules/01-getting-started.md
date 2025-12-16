@@ -2,115 +2,186 @@
 
 ## Overview
 
-Start here if you're new to Codex or using the Codex CLI. This module orients you to the CLI workflow, built-in tools, and the hands-on training path so you can deliver changes without writing custom API wrappers.
+This module gets you productive with Codex CLI in under an hour. You'll install the CLI, run your first real task, understand the safety model, and be ready to learn skills in Module 2.
 
 **Learning Objectives**:
-- Install and configure Codex CLI
-- Understand built-in tools (file read, apply_patch, shell)
-- Run the hands-on training labs for confidence with the TUI/exec flows
-- Know where to find helper catalogs and prompt templates in this repo
+- Install Codex CLI and verify it works
+- Complete a real task using the interactive TUI
+- Understand the approval and sandbox model
+- Know the essential commands and options
+- See why skills matter (preview of Module 2)
 
 **Time**: 45-60 minutes
 
+**Prerequisites**: Terminal access, Git installed
+
 ---
 
-## 1. Install & Configure
-- Follow `GETTING_STARTED.md` to install Codex CLI and authenticate.
-- Verify access: `codex --version`, then run a hello-world prompt in a safe directory.
+## What is Codex CLI?
 
-## 2. Core CLI Workflow
-- Practice the Codex TUI: run `codex --cd /path/to/repo` and ask for a small change; approve/reject commands.
-- Try `codex exec "prompt"` for non-interactive runs (good for scripted summaries).
-- Learn built-in tools: file reads, apply_patch, shell commands, and image viewing.
+Codex CLI is a terminal-based AI assistant that can read your code, make changes, and run commands—with your approval. Unlike chat interfaces, Codex works directly in your codebase.
 
-## 2.1 CLI Options Reference
-
-### Starting a Session
-
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--cd <path>` | Set working directory (required) | `codex --cd ~/myproject` |
-| `--add-dir <path>` | Include additional directory | `codex --cd ~/api --add-dir ~/shared` |
-| `--resume` | Continue previous session | `codex --resume` |
-| `--continue <id>` | Continue specific session | `codex --continue abc123` |
-| `--model <name>` | Select model | `codex --model gpt-5.1-codex-max` |
-| `--profile <name>` | Load config profile | `codex --profile safe` |
-
-### Approval & Safety
-
-| Flag | Description | When to Use |
-|------|-------------|-------------|
-| `-a` / `--ask-for-approval` | Approve every command | Learning, sensitive repos |
-| `--full-auto` | No approvals needed | Trusted scripts only |
-| `--sandbox read-only` | Can't write files | Exploration, code review |
-| `--sandbox workspace-write` | Write to workdir + /tmp | Default, recommended |
-| `--sandbox danger-full-access` | Full system access | Avoid unless necessary |
-
-### Non-Interactive Mode (`codex exec`)
-
-```bash
-# Basic execution
-codex exec "Summarize the README"
-
-# Output to file
-codex exec "List all TODO comments" > todos.txt
-
-# JSON output for scripting
-codex exec --json "Analyze the codebase structure"
-
-# Extract just the final response
-codex exec --output-last-message "What's the main entry point?"
-
-# Parallel execution
-codex exec "Check auth code" > auth.txt &
-codex exec "Check api code" > api.txt &
-wait
+```
+┌─────────────────────────────────────────────────────────────┐
+│  You: "Add input validation to the login form"              │
+├─────────────────────────────────────────────────────────────┤
+│  Codex reads your code                                       │
+│  Codex proposes changes                                      │
+│  You approve or reject                                       │
+│  Changes applied to your files                               │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Skills & Extensions
+**Key difference from ChatGPT/Claude web**: Codex has direct access to your filesystem and can execute commands. That's powerful—and why it has a safety model.
 
-| Flag | Description |
-|------|-------------|
-| `--enable skills` | Enable skills catalog |
-| `--disable-mcp` | Disable MCP servers |
-| `--mcp-server <name>` | Enable specific MCP server |
+---
 
-### Session Management
+## Installing Codex CLI
+
+### Step 1: Install
 
 ```bash
-# List recent sessions
-codex sessions list
+# macOS/Linux
+curl -fsSL https://codex.openai.com/install.sh | bash
 
-# Resume most recent
-codex --resume
-
-# Resume specific session
-codex --continue <session-id>
+# Or via npm
+npm install -g @openai/codex
 ```
 
-### TUI Slash Commands
+### Step 2: Authenticate
 
-| Command | Description |
-|---------|-------------|
-| `/status` | Show workdir, sandbox, approval policy, session ID |
-| `/diff` | Show pending file changes |
-| `/undo` | Undo last change |
-| `/compact` | Summarize and trim context |
-| `/clear` | Clear chat history |
-| `/model` | Switch model mid-session |
-| `/skills` | List enabled skills |
-| `/help` | Show all commands |
+```bash
+codex auth login
+# Follow the browser prompts
+```
 
-### Configuration File
+### Step 3: Verify
 
-Store defaults in `~/.codex/config.toml`:
+```bash
+codex --version
+# Should show: OpenAI Codex v0.7x.x
+```
+
+---
+
+## Your First Task
+
+Don't just run "hello world"—let's do something real.
+
+### Start a Session
+
+Navigate to any project with code:
+
+```bash
+cd ~/your-project
+codex
+```
+
+You'll see the TUI (text user interface) with a prompt.
+
+### Ask for Something Concrete
+
+Try one of these:
+
+```
+> Summarize what this project does based on the README and package.json
+
+> Find all TODO comments in the codebase
+
+> What's the main entry point and how does it work?
+```
+
+Codex will read files, analyze them, and respond. **You haven't changed anything yet**—this is safe exploration.
+
+### Make a Small Change
+
+Now try something that modifies code:
+
+```
+> Add a comment at the top of README.md with today's date
+```
+
+Codex will:
+1. Show you the proposed change
+2. Ask for approval
+3. Apply it only after you approve
+
+**This is the core loop**: Codex proposes → You review → You approve/reject.
+
+---
+
+## The Safety Model
+
+Codex can read files and run commands, so it has guardrails.
+
+### Approval Modes
+
+| Mode | What Happens | When to Use |
+|------|--------------|-------------|
+| `suggest` (default) | Asks before writes/commands | Normal work |
+| `always` | Asks before everything | Learning, sensitive repos |
+| `never` | No approvals | Trusted automation only |
+
+Start with `suggest` or `always`. Avoid `never` until you trust your setup.
+
+### Sandbox Modes
+
+| Mode | File Access | Use Case |
+|------|-------------|----------|
+| `read-only` | Can only read | Exploration, code review |
+| `workspace-write` | Writes to project + /tmp | Default, recommended |
+| `danger-full-access` | Full system | Avoid unless necessary |
+
+### Example: Safe Exploration
+
+```bash
+codex --sandbox read-only
+# Now Codex can analyze but not modify anything
+```
+
+---
+
+## Essential Commands
+
+### Starting Sessions
+
+```bash
+codex                           # Interactive TUI in current directory
+codex --cd ~/other-project      # Start in different directory
+codex --resume                  # Continue last session
+codex exec "prompt"             # Non-interactive, single response
+```
+
+### Inside the TUI
+
+| Command | What it Does |
+|---------|--------------|
+| `/status` | Show current settings |
+| `/diff` | See pending changes |
+| `/undo` | Revert last change |
+| `/compact` | Summarize context (saves tokens) |
+| `/clear` | Clear conversation |
+| `/help` | List all commands |
+
+### Useful Flags
+
+```bash
+codex -a                        # Ask approval for everything
+codex --sandbox read-only       # Read-only mode
+codex --model gpt-5.1-codex-max # Specific model
+codex --profile safe            # Use a saved profile
+```
+
+---
+
+## Configuration
+
+Save your preferences in `~/.codex/config.toml`:
 
 ```toml
-# Default settings
 model = "gpt-5.1-codex-max"
 approval = "suggest"
 
-# Named profiles
 [profiles.safe]
 approval = "always"
 sandbox = "read-only"
@@ -120,25 +191,19 @@ approval = "never"
 sandbox = "workspace-write"
 ```
 
-Use profiles: `codex --profile safe`
+Then use: `codex --profile safe`
 
-## 3. Hands-on Training Path
-- Walk through `docs/training/codex-cli-hands-on/README.md`.
-- Complete the labs in `docs/training/codex-cli-hands-on/` (e.g., Jupyter lab helpers, prompt templates).
+---
 
-## 4. Helper Catalog & Templates
-- Browse `codex_helpers/` and `docs/prompt_templates/` to see reusable helpers and prompts.
-- Skim `docs/examples/session-drive.md` for an end-to-end session using helpers.
+## From Commands to Mastery
 
-## 5. From Commands to Workflows
+You now know how to run Codex and make changes safely. But there's a difference between *using* Codex and *mastering* it.
 
-You now know how to run Codex, approve commands, and manage sessions. But there's a big difference between *using* Codex and *mastering* it.
+**The leap**: Instead of improvising prompts, experts use **skills**—packaged workflows that encode proven techniques.
 
-**The leap**: Instead of writing prompts from scratch every time, experts use **skills**—packaged workflows that encode proven techniques.
+### Quick Example
 
-### Quick Example: Debugging
-
-**Without skills** (ad-hoc prompting):
+**Without skills** (ad-hoc):
 ```
 You: "Tests are failing, help me fix them"
 Codex: [guesses at a fix]
@@ -147,33 +212,56 @@ Codex: [guesses again]
 # 30 minutes of trial and error
 ```
 
-**With skills** (systematic approach):
+**With skills** (systematic):
 ```
 You: "Tests are failing. Use superpowers:systematic-debugging"
 Codex: [follows proven 4-phase framework]
-1. Reproduce → isolate the failure
-2. Trace → find root cause
-3. Hypothesize → form and test theory
-4. Fix → solve and prevent regression
 # Problem solved methodically
 ```
 
-Skills turn "hoping it works" into "knowing the process."
+Skills turn guessing into process.
 
-### What You'll Learn Next
+### What's Ahead
 
-| Module | What It Unlocks |
-|--------|-----------------|
-| **Skills** | Reusable workflows for debugging, planning, quality |
-| **Speed** | Parallel execution, context optimization |
-| **Planning** | Breaking down complex work systematically |
-| **Quality** | Verification, testing, code review patterns |
-| **Domain** | Refactoring, legacy code, security, performance |
-| **Integration** | GitHub CLI, CI/CD, multi-tool workflows |
+| Module | What You'll Learn |
+|--------|-------------------|
+| **2. Skills** | Install and use skill libraries |
+| **3. Speed** | Parallel execution, efficiency patterns |
+| **4. Planning** | Break down complex work |
+| **5. Quality** | Verification and testing patterns |
+| **6. Domain** | Refactoring, legacy code, security |
+| **7. Integration** | GitHub CLI, CI/CD workflows |
 
 ---
 
 ## Next Steps
 
-1. **[Module 2: Skills & Reusable Workflows](02-skills.md)** — Learn to use and create skills
-2. Return to API modules (8–9) later if you need custom integrations
+1. **Try it**: Spend 15 minutes using Codex on a real task
+2. **Explore**: Run `/help` to see all TUI commands
+3. **Continue**: [Module 2: Skills & Reusable Workflows](02-skills.md)
+
+API-focused content (internals, custom integrations) is in Modules 8-9 for when you need it.
+
+---
+
+## Quick Reference
+
+### Commands
+```bash
+codex                    # Start interactive session
+codex exec "prompt"      # Non-interactive
+codex --resume           # Continue last session
+codex sessions list      # List recent sessions
+```
+
+### Safety Flags
+```bash
+-a, --ask-for-approval   # Approve everything
+--sandbox read-only      # Can't write files
+--sandbox workspace-write # Write to project (default)
+```
+
+### TUI Commands
+```
+/status  /diff  /undo  /compact  /clear  /help
+```
