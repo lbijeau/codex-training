@@ -826,29 +826,137 @@ Legacy code unchanged: ✓
 
 ### Legacy Code Workflow
 
-**Step 1: Characterization**
-```
-1. Identify the code you need to change
-2. Write tests that describe current behavior
-3. Even if behavior is wrong, test it as-is
-4. Now you have a safety net
+The key insight: don't try to understand or fix everything. Focus only on what you need to change, and leave the rest alone.
+
+```mermaid
+flowchart LR
+    CHAR["1️⃣ Characterize"]
+    SAFE["2️⃣ Make Safe"]
+    CHANGE["3️⃣ Change"]
+    VERIFY["4️⃣ Verify"]
+
+    CHAR --> SAFE
+    SAFE --> CHANGE
+    CHANGE --> VERIFY
+    VERIFY -->|More changes| CHANGE
+    VERIFY -->|Done| DONE["✅ Done"]
+
+    style CHAR fill:#e3f2fd,stroke:#1565c0
+    style DONE fill:#e8f5e9,stroke:#2e7d32
 ```
 
-**Step 2: Make Change Safe**
 ```
-1. Find seam (boundary where you can test)
-2. Extract dependencies
-3. Add tests at seam
-4. Now you can change internal implementation
+You: "I need to add a 'priority shipping' option to the checkout.
+      The checkout code is 12 years old, written by someone who left,
+      and has zero tests. Where do I even start?"
+
+Codex: This is classic legacy code territory. Let's work through
+the safe modification workflow.
+
+## Step 1: Characterization (Understand Current Behavior)
+
+First, I need to understand what the checkout currently does,
+without trying to understand ALL of it.
+
+Analyzing src/checkout.php...
+
+I found the shipping calculation at lines 234-298.
+Current behavior:
+- Standard shipping: $5.99 flat rate
+- Free shipping: orders over $50
+- Express shipping: $12.99 (2-day)
+
+Let me write characterization tests that capture THIS behavior:
+
+// tests/checkout/shipping.characterization.test.js
+describe('shipping calculation - characterization', () => {
+  // These tests document CURRENT behavior, not desired behavior
+
+  it('charges $5.99 for standard shipping under $50', () => {
+    const result = calculateShipping({ total: 49.99, method: 'standard' });
+    expect(result).toBe(5.99);
+  });
+
+  it('gives free standard shipping over $50', () => {
+    const result = calculateShipping({ total: 50.01, method: 'standard' });
+    expect(result).toBe(0);
+  });
+
+  it('charges $12.99 for express regardless of total', () => {
+    const result = calculateShipping({ total: 100, method: 'express' });
+    expect(result).toBe(12.99);
+  });
+});
+
+Running tests... ✓ 3 passing
+
+Now I have a safety net for the shipping logic.
+
+## Step 2: Make Change Safe (Find a Seam)
+
+A "seam" is a place where I can insert new behavior without
+modifying existing code. Looking for one...
+
+Found seam at line 267:
+
+    // Current code
+    if ($method === 'express') {
+        return 12.99;
+    }
+    // I can add new shipping method here ← SEAM
+
+This is where I can add priority shipping without touching
+the existing standard/express logic.
+
+## Step 3: Make the Change
+
+Adding priority shipping using the Sprout Method:
+
+// New function - fully tested, isolated from legacy
+function calculatePriorityShipping(order) {
+  const baseRate = 19.99;
+  const weightSurcharge = order.weight > 5 ? 5.00 : 0;
+  return baseRate + weightSurcharge;
+}
+
+// tests/checkout/priority-shipping.test.js
+describe('priority shipping', () => {
+  it('charges $19.99 base rate', () => {
+    expect(calculatePriorityShipping({ weight: 2 })).toBe(19.99);
+  });
+
+  it('adds $5 surcharge for heavy packages', () => {
+    expect(calculatePriorityShipping({ weight: 6 })).toBe(24.99);
+  });
+});
+
+Integration point (minimal change to legacy):
+
+    // In checkout.php, at the seam (line 267)
+    if ($method === 'priority') {
+        return calculatePriorityShipping($order);  // ← One line added
+    }
+
+## Step 4: Verify
+
+Running all tests:
+✓ Characterization tests still pass (didn't break existing)
+✓ New priority shipping tests pass (new feature works)
+
+The legacy checkout code is almost untouched. We added ONE line
+to the legacy file and put all new logic in tested, isolated code.
+
+Want me to commit this change?
 ```
 
-**Step 3: Refactor**
-```
-1. Make change with tests passing
-2. Incrementally improve structure
-3. Tests catch regressions
-4. Stop when good enough (don't perfect legacy code)
-```
+**Key Principles**:
+
+| Principle | Why |
+|-----------|-----|
+| Test current behavior first | You can't safely change what you don't understand |
+| Find seams, don't rewrite | Minimize changes to untested code |
+| New code goes in new files | Keep new code isolated and tested |
+| Stop when done | Don't try to "fix" the legacy code - just make your change |
 
 ### Legacy Code Patterns
 
