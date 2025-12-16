@@ -276,6 +276,7 @@ Want me to add priority labels to these issues?
 ---
 
 ## 2. Multi-Tool Workflows
+> Need concrete syntax for registering/calling helpers? See Module 1 “Function Calling & Tool Wrappers” and the `functions.json` example in Module 4 for full code snippets.
 
 ### Workflow ingredients
 A Codex-driven workflow typically coordinates:
@@ -367,7 +368,10 @@ Store prompts that worked well in `docs/prompt_templates/` with metadata:
   helpers: [read_file, run_tests]
   constraints: must mention security considerations
 ```
-When starting a new repository, copy the prompts, tweak the `system` message, and reuse the helper manifest.
+When starting a new repository, copy the prompts, tweak the `system` message, and reuse the helper manifest. Bundle them into a small “starter kit” with:
+- `docs/prompt_templates/` export + a `README.md` that maps prompts → helpers → guardrails
+- `codex_helpers/functions.json` plus a short `codex_helpers/README.md` that explains return schemas and timeouts
+- A one-page “first run” script (e.g., `scripts/session_start.sh`) that prints git status, TODO counts, and helper availability so every session begins with the same context
 
 ### Helper reuse
 Structure `codex_helpers/` so functions are agnostic to the repo:
@@ -383,6 +387,8 @@ For every new project:
 2. Import prompt templates for common workflows (bug triage, release notes)
 3. Document the helper names and their expected roles in `docs/playbook/scenarios.md`
 4. Run `scripts/session_start.sh` to emit a quick status summary so each Codex session begins with baseline context
+5. Add a freshness signal: stamp `docs/prompt_templates/README.md` with “Last validated on: YYYY-MM-DD” and note the model version used for validation
+6. Capture portability gaps: if a helper assumes repo-specific paths or env vars, document the shim needed in `codex_helpers/README.md` so it is obvious what to swap out
 
 ---
 
@@ -393,6 +399,7 @@ Publish your helper catalog on GitHub:
 - Include usage examples, input/output schemas, and sample logs
 - Tag contributions as `codex-helper` or `codex-prompt`
 - Encourage others to fork the manifest and adapt it
+ - Provide a `scripts/demo.sh` that runs a realistic helper call end-to-end so consumers can verify setup quickly
 
 ### Pattern sharing
 Write about integration patterns in `docs/patterns/` or blog posts:
@@ -402,6 +409,17 @@ Write about integration patterns in `docs/patterns/` or blog posts:
 
 ### Open-source strategy
 If you publish `codex_helpers`, include tests, docs, and license. Ask: Does it help other teams integrate Codex with their pipelines?
+Minimum viable release checklist:
+- `README` with install/setup (env vars, Python/Rust versions), safety notes, and expected outputs
+- `functions.json` with accurate parameter types and examples
+- Tests or a smoke script that exercises each helper and exits non-zero on failure
+- `LICENSE` + `CONTRIBUTING.md` describing how to add helpers, schemas, and validation
+- Changelog that records schema changes so downstream users can pin versions
+
+Contribution intake tips:
+- Add issue templates for “new helper proposal” and “schema change” that require sample payloads and security considerations
+- Maintain a small “compatibility matrix” in the README (model version × helper version × known caveats)
+- Publish sample logs of helper invocations (redacted) so others see expected shapes and error cases
 
 ---
 
