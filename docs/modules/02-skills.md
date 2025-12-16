@@ -619,4 +619,4 @@ Planning relies heavily on skills:
 
 ---
 
-**Skills turn ad-hoc prompting into systematic workflows!** → [Module 4: Quality & Verification](04-quality.md)
+**Skills turn ad-hoc prompting into systematic workflows!** → [Module 5: Quality & Verification](05-quality.md)

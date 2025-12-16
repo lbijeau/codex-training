@@ -115,21 +115,7 @@ Go faster with structured prompts:
 
 ---
 
-### Module 4: Quality & Verification
-**Time**: 3-4 hours | **Exercises**: 5 (outlines ready)
-
-Systematic quality assurance:
-- Multi-layer review patterns
-- Test-driven development with Codex
-- Systematic debugging (3-attempt rule)
-- Proactive quality gates
-- Root cause analysis
-
-**Best For**: Quality-focused developers
-
----
-
-### Module 5: Planning & Execution
+### Module 4: Planning & Execution
 **Time**: 2-3 hours | **Exercises**: 4 (outlines ready)
 
 Break down complex work:
@@ -140,6 +126,20 @@ Break down complex work:
 - Feature decomposition
 
 **Best For**: Complex feature development
+
+---
+
+### Module 5: Quality & Verification
+**Time**: 3-4 hours | **Exercises**: 5 (outlines ready)
+
+Systematic quality assurance:
+- Multi-layer review patterns
+- Test-driven development with Codex
+- Systematic debugging (3-attempt rule)
+- Proactive quality gates
+- Root cause analysis
+
+**Best For**: Quality-focused developers
 
 ---
 
@@ -170,32 +170,6 @@ Complete workflows:
 
 ---
 
-### Module 8: Codex API Internals (Advanced)
-**Time**: 3-4 hours | **Exercises**: 5
-
-Deep dive into how OpenAI Codex works:
-- Session architecture (system/user/function messages)
-- Function calling workflows and helper orchestration
-- Context management, summarization, and token budgets
-- Guard rails: validation scripts, logging hooks, automation
-
-**Best For**: API integrators
-
----
-
-### Module 9: API Customization & Extensions (Advanced)
-**Time**: 2-3 hours | **Exercises**: 5
-
-Customize Codex with prompts, helpers, and guard rails:
-- Prompt templates and instruction fragments
-- Helper function catalogs (parameters + output schema)
-- Validation scripts and logging hooks for automation
-- Documenting configuration/context for consistent sessions
-
-**Best For**: Teams building repeatable Codex integrations
-
----
-
 ## 🛠️ Your Workspace
 
 ### Directory Structure
@@ -210,8 +184,8 @@ codex-training/
 │   │   ├── 01-getting-started.md   # ✅ Ready
 │   │   ├── 02-skills.md            # ✅ Ready
 │   │   ├── 03-speed.md             # ✅ Ready
-│   │   ├── 04-quality.md           # ✅ Ready
-│   │   ├── 05-planning.md          # ✅ Ready
+│   │   ├── 04-planning.md          # ✅ Ready
+│   │   ├── 05-quality.md           # ✅ Ready
 │   │   ├── 06-domain.md            # ✅ Ready
 │   │   ├── 07-integration.md       # ✅ Ready
 │   │   ├── 08-api-internals.md     # ✅ Ready
@@ -289,8 +263,9 @@ codex-training/
 **Suggested Pace**:
 - **Week 1**: Module 1 (CLI foundation)
 - **Week 2**: Module 2 (skills)
-- **Week 3-4**: Modules 3-4 (speed, quality)
-- **Week 5**: Module 5 (planning)
+- **Week 3**: Module 3 (speed)
+- **Week 4**: Module 4 (planning)
+- **Week 5**: Module 5 (quality)
 - **Week 6**: Module 6-7 (domain, integration)
 - **Week 7**: Modules 8-9 (API internals/customization as needed)
 
@@ -326,8 +301,8 @@ Update the checklist as you complete modules:
 - [ ] Module 1: Getting Started (CLI)
 - [ ] Module 2: Skills & Reusable Workflows
 - [ ] Module 3: Speed & Efficiency Patterns
-- [ ] Module 4: Quality & Verification
-- [ ] Module 5: Planning & Execution
+- [ ] Module 4: Planning & Execution
+- [ ] Module 5: Quality & Verification
 - [ ] Module 6: Domain-Specific Patterns
 - [ ] Module 7: Advanced Integration
 - [ ] Module 8: Codex API Internals

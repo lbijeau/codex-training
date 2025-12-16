@@ -25,8 +25,8 @@ graph LR
     start([Start here]) --> M1["Module 1\nGetting Started\n~1h"]
     M1 --> M2["Module 2\nSkills & Workflows\n2-3h"]
     M2 --> M3["Module 3\nSpeed & Efficiency\n2-3h"]
-    M3 --> M4["Module 4\nQuality & Verification\n3-4h"]
-    M4 --> M5["Module 5\nPlanning & Execution\n2-3h"]
+    M3 --> M4["Module 4\nPlanning & Execution\n2-3h"]
+    M4 --> M5["Module 5\nQuality & Verification\n3-4h"]
     M5 --> M6["Module 6\nDomain Patterns\n3-4h"]
     M6 --> M7["Module 7\nAdvanced Integration\n3-4h"]
     M7 --> M8["Module 8\nAPI Internals\n3-4h"]
@@ -101,7 +101,21 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 
 ---
 
-### Module 4: Quality & Verification
+### Module 4: Planning & Execution
+**Status**: Not Started  
+**Time**: 3-4 hours  
+**Topics**:
+- Writing effective implementation plans
+- Plan-execute workflows with batch reviews
+- Breaking down complex features
+- Progress tracking with TodoWrite
+- Handling ambiguity and pivots
+
+📁 [Module Content](docs/modules/04-planning.md) | 🏋️ [Exercises](docs/exercises/05-planning/)
+
+---
+
+### Module 5: Quality & Verification
 **Status**: Not Started  
 **Time**: 3-4 hours  
 **Topics**:
@@ -111,21 +125,7 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 - Systematic debugging
 - Root cause analysis
 
-📁 [Module Content](docs/modules/04-quality.md) | 🏋️ [Exercises](docs/exercises/04-quality/)
-
----
-
-### Module 5: Planning & Execution
-**Status**: Not Started  
-**Time**: 2-3 hours  
-**Topics**:
-- Writing effective implementation plans
-- Plan-execute workflows with batch reviews
-- Breaking down complex features
-- Progress tracking with TodoWrite
-- Handling ambiguity and pivots
-
-📁 [Module Content](docs/modules/05-planning.md) | 🏋️ [Exercises](docs/exercises/05-planning/)
+📁 [Module Content](docs/modules/05-quality.md) | 🏋️ [Exercises](docs/exercises/05-quality/)
 
 ---
 
@@ -144,7 +144,7 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 ---
 
 ### Module 7: Advanced Integration
-**Status**: Not Started  
+**Status**: In Progress  
 **Time**: 3-4 hours  
 **Topics**:
 - GitHub CLI (`gh`) integration
@@ -158,7 +158,7 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 ---
 
 ### Module 8: Codex API Internals (Advanced)
-**Status**: In Progress  
+**Status**: Not Started  
 **Time**: 3-4 hours  
 **Topics**:
 - How Codex session messaging works
@@ -182,13 +182,12 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 📁 [Module Content](docs/modules/09-api-customization.md) | 🏋️ [Exercises](docs/exercises/09-api-customization/)
 
 ---
-
 ## Learning Path
 
 **Recommended Progression**:
 1. Start with Module 1 (CLI setup + hands-on labs)
 2. Continue to Module 2 (skills are used throughout later modules)
-3. Work through Modules 3–7 in order (speed → quality → planning → domain → integration)
+3. Work through Modules 3–7 in order (speed → planning → quality → domain → integration)
 4. Tackle Modules 8–9 (API internals/customization) when you need to build custom integrations
 
 **Total Time**: 20-30 hours spread over weeks/months at your own pace
@@ -205,8 +204,8 @@ Update module status as you complete them:
 - [ ] Module 1: Getting Started (CLI)
 - [ ] Module 2: Skills & Reusable Workflows
 - [ ] Module 3: Speed & Efficiency Patterns
-- [ ] Module 4: Quality & Verification
-- [ ] Module 5: Planning & Execution
+- [ ] Module 4: Planning & Execution
+- [ ] Module 5: Quality & Verification
 - [ ] Module 6: Domain-Specific Patterns
 - [ ] Module 7: Advanced Integration
 - [ ] Module 8: Codex API Internals

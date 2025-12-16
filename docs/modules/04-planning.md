@@ -1,4 +1,4 @@
-# Module 5: Planning & Execution
+# Module 4: Planning & Execution
 
 > **Prerequisite**: This module uses skills from Module 2. Make sure you understand how to invoke skills like `superpowers:brainstorming`, `superpowers:writing-plans`, and `superpowers:executing-plans` before proceeding.
 
