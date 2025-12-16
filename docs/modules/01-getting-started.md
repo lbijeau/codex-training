@@ -236,10 +236,9 @@ Skills turn guessing into process.
 
 ## Next Steps
 
-1. **Try it interactively**: Open [practice/getting-started.ipynb](../../practice/getting-started.ipynb) in Jupyter and click through the exercises
-2. **Or try the TUI**: Run `codex` in your terminal for the full interactive experience
-3. **Explore**: Run `/help` inside the TUI to see all commands
-4. **Continue**: [Module 2: Skills & Reusable Workflows](02-skills.md)
+1. **Try it**: Spend 15 minutes using Codex on a real task
+2. **Explore**: Run `/help` to see all TUI commands
+3. **Continue**: [Module 2: Skills & Reusable Workflows](02-skills.md)
 
 API-focused content (internals, custom integrations) is in Modules 8-9 for when you need it.
 
