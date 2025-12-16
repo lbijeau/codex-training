@@ -36,11 +36,59 @@ The renderer replaces `{{task}}` with the provided value, so sessions stay consi
 - Lets you version prompts alongside code changes
 - Makes it easy to rerun older sessions by reusing the template
 
+**Without templates** (inconsistent, error-prone):
+```
+# Monday: "You're a helpful coder. Fix the bug in auth.py"
+# Tuesday: "As an expert Python dev, please look at the login issue"
+# Wednesday: "Debug authentication" (forgot safety constraints!)
+```
+
+**With templates** (consistent, versioned):
+```bash
+# Everyone uses the same template
+python render_prompt.py --template bug_fix.md --file="auth.py" --issue="login fails"
+# Template includes safety constraints, expected output format, available helpers
+```
+
 ### Template best practices
-1. Keep the system message short and precise
-2. Highlight the expected artifacts (summary, plan, tests)
-3. Include constraints (time limit, safety boundaries)
-4. Document which helper functions are available for the template
+
+**1. Keep the system message short and precise**
+```markdown
+# ❌ Too verbose
+System: You are an incredibly helpful AI assistant that specializes in Python
+programming and will help the user with any coding task they have...
+
+# ✅ Concise
+System: You are a Python debugging assistant. Be direct. Show diffs.
+```
+
+**2. Highlight expected artifacts**
+```markdown
+User: Fix {{issue}} in {{file}}.
+
+Output format:
+1. Root cause (1-2 sentences)
+2. Fix as a diff
+3. Test to verify the fix
+```
+
+**3. Include constraints**
+```markdown
+Constraints:
+- Do NOT refactor unrelated code
+- Do NOT modify files outside src/
+- Maximum 50 lines changed
+```
+
+**4. Document available helpers**
+```markdown
+Available functions:
+- read_file(path): Read file contents
+- run_tests(target): Run pytest on target
+- git_diff(): Show uncommitted changes
+
+Use these instead of asking me to paste code.
+```
 
 ---
 
