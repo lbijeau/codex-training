@@ -1,5 +1,7 @@
 # Module 2: Advanced Customization
 
+> **⚠️ Advanced / API Focus**: This module covers customizing the OpenAI Codex **API**—prompt templates, function wrappers, and configuration for programmatic integrations. **If you're using Codex CLI**, most of this is handled automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead. The template patterns (Section 1) are useful for CLI users; Sections 2-4 are API-specific.
+
 ## Overview
 
 OpenAI Codex is programmable through the way you build prompts, register helper functions, and operate outside the model. This module teaches you how to craft reusable prompt templates, wrap helper scripts as functions, and build a configuration that keeps your sessions consistent.
