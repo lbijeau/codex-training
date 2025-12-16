@@ -68,16 +68,39 @@ This means there is no persistent agent memory outside the conversation history 
 
 > **What is a system prompt?** The system prompt (or "system message") is the first message in every conversation that defines the AI's behavior, capabilities, and constraints. Think of it as a job description you give before work begins. The AI reads this first and follows its instructions throughout the session.
 
-**Best practices:**
-- State the role clearly (e.g., "You are Codex, an assistant that edits Python code") and keep it short
-- Declare the functions you expose (name, description, parameters) so Codex can reference them
-- Mention safety constraints (don’t expose secrets, log everything, prefer explanations)
-- Refresh the system prompt for each new session or when you need to pivot behavior
+> **What is a `function_call`?** When Codex needs to perform an action it can't do directly (read a file, run tests, query a database), it returns a `function_call` object instead of plain text. This object contains the function name and arguments—your code executes it and sends the result back. This is how Codex "uses tools."
+
+**Best practices with examples:**
+
+| Practice | Why | Example |
+|----------|-----|---------|
+| **State the role clearly** | Focuses responses on your use case | `"You are Codex, a Python debugging assistant. Be direct. Show diffs."` |
+| **Keep it short** | Long prompts waste tokens and dilute focus | ❌ 500-word backstory → ✅ 2-3 sentence role definition |
+| **Declare available functions** | Codex can only call what you register | List `read_file`, `run_tests`, `search_code` with descriptions |
+| **Include safety constraints** | Prevents dangerous operations | `"Never modify files outside src/. Always explain before editing."` |
+| **Refresh per session** | Context resets between sessions | Re-send system prompt + any critical context when starting fresh |
+
+**Example system message:**
+```
+You are Codex, a backend debugging assistant for a Python Flask app.
+
+Available functions: read_file, run_tests, search_code, git_diff
+Constraints:
+- Never modify production config files
+- Always run tests after changes
+- Explain your reasoning before making edits
+
+Project context: Flask 2.0, PostgreSQL, pytest for testing
+```
 
 ### What Codex retains
-- Everything in the current message array (system + history + functions)
-- Function results you provide after a `function_call`
-- Recent pieces of context you keep near the end of the history
+
+| Retained | Not Retained |
+|----------|--------------|
+| System message | Previous sessions |
+| Conversation history (user + assistant messages) | Files you didn't explicitly share |
+| Registered functions and their schemas | External state (databases, APIs) |
+| Function results you send back after a `function_call` | Anything outside the message array |
 
 Anything outside that sequence is invisible until you mention it again, so plan to summarize or re-send as needed.
 
