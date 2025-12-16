@@ -273,28 +273,31 @@ MCP servers give Codex new tools:
 
 ### Installing MCP Servers
 
-MCP servers are configured in `~/.codex/mcp_servers.json`:
+MCP servers are configured in `~/.codex/config.toml`:
 
-```json
-{
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
-      }
-    },
-    "postgres": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "DATABASE_URL": "${DATABASE_URL}"
-      }
-    }
-  }
-}
+```toml
+[mcp_servers.github]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-github"]
+env_vars = ["GITHUB_TOKEN"]
+startup_timeout_sec = 20
+
+[mcp_servers.postgres]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-postgres"]
+env_vars = ["DATABASE_URL"]
+startup_timeout_sec = 20
 ```
+
+**Configuration options:**
+
+| Field | Description |
+|-------|-------------|
+| `command` | Executable to run |
+| `args` | Command-line arguments |
+| `cwd` | Working directory (optional) |
+| `env_vars` | Environment variables to pass through |
+| `startup_timeout_sec` | Timeout for server startup |
 
 ### Common MCP Servers
 
@@ -386,17 +389,14 @@ const transport = new StdioServerTransport();
 await server.connect(transport);
 ```
 
-Then register it:
+Then register it in `~/.codex/config.toml`:
 
-```json
-{
-  "mcpServers": {
-    "my-company": {
-      "command": "node",
-      "args": ["./my-company-mcp/index.js"]
-    }
-  }
-}
+```toml
+[mcp_servers.my-company]
+command = "node"
+args = ["dist/index.js"]
+cwd = "/path/to/my-company-mcp"
+startup_timeout_sec = 20
 ```
 
 ### MCP Security Considerations
