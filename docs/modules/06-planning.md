@@ -9,7 +9,7 @@ Complex features fail not because the code is hard, but because the approach is 
 **Learning Objectives**:
 - Write implementation plans that prevent scope creep and missed requirements
 - Execute plans in controlled batches with review checkpoints
-- Track progress with TodoWrite for visibility and accountability
+- Track progress with to-do lists for visibility and accountability
 - Handle ambiguity through structured clarification
 - Choose the right decomposition framework for each situation
 
@@ -411,49 +411,57 @@ git add . && git commit -m "Stage 1: Add notification model and tests"
 
 ---
 
-## 5. Progress Tracking with TodoWrite
+## 5. Progress Tracking with To-Do Lists
 
-### Why TodoWrite?
+### Why Track Progress?
 
-TodoWrite provides:
-- **Visibility**: You and others see progress
-- **Accountability**: Can't forget tasks
-- **Focus**: One in_progress at a time
-- **History**: Track what's done
+Codex's built-in to-do tracking provides:
+- **Visibility**: You and Codex both see what's done and what's remaining
+- **Accountability**: Tasks don't get forgotten mid-session
+- **Focus**: Work on one task at a time
+- **History**: Clear record of completed work
 
-### TodoWrite Structure
+### To-Do Structure
 
-```javascript
-{
-  "content": "Implement user authentication",     // What to do (imperative)
-  "activeForm": "Implementing user authentication", // What's happening (continuous)
-  "status": "in_progress"                          // pending | in_progress | completed
-}
+Each to-do item has:
+
+| Field | Purpose | Example |
+|-------|---------|---------|
+| **Task** | What needs to be done | "Implement user authentication" |
+| **Status** | Current state | `pending`, `in_progress`, `completed` |
+| **Context** | What's happening now | "Implementing user authentication" |
+
+```
+[ ] Implement user authentication (pending)
+[→] Create API endpoints (in progress)
+[✓] Set up database schema (completed)
 ```
 
 ### Real-World Example
 
 **Starting a feature:**
-```javascript
-[
-  { "content": "Create notification model", "activeForm": "Creating notification model", "status": "in_progress" },
-  { "content": "Write model tests", "activeForm": "Writing model tests", "status": "pending" },
-  { "content": "Create API endpoints", "activeForm": "Creating API endpoints", "status": "pending" },
-  { "content": "Write API tests", "activeForm": "Writing API tests", "status": "pending" },
-  { "content": "Build frontend components", "activeForm": "Building frontend components", "status": "pending" }
-]
+```
+To-Do List: User Notifications
+
+[→] Create notification model
+[ ] Write model tests
+[ ] Create API endpoints
+[ ] Write API tests
+[ ] Build frontend components
 ```
 
 **Mid-execution:**
-```javascript
-[
-  { "content": "Create notification model", "activeForm": "Creating notification model", "status": "completed" },
-  { "content": "Write model tests", "activeForm": "Writing model tests", "status": "completed" },
-  { "content": "Create API endpoints", "activeForm": "Creating API endpoints", "status": "in_progress" },
-  { "content": "Write API tests", "activeForm": "Writing API tests", "status": "pending" },
-  { "content": "Build frontend components", "activeForm": "Building frontend components", "status": "pending" }
-]
 ```
+To-Do List: User Notifications
+
+[✓] Create notification model
+[✓] Write model tests
+[→] Create API endpoints
+[ ] Write API tests
+[ ] Build frontend components
+```
+
+Codex updates the list automatically as you work, giving you real-time visibility into progress.
 
 ### Todo Patterns
 
@@ -571,7 +579,7 @@ codex "Update IMPLEMENTATION_PLAN.md:
 - Adjust file list"
 
 # 3. Update todos
-codex "Update TodoWrite to reflect the plan changes"
+codex "Update the to-do list to reflect the plan changes"
 
 # 4. Resume from updated plan
 codex "Continue execution from the updated plan"
@@ -841,7 +849,7 @@ What contracts need to be agreed upfront?"
 | **3-5 Stages** | Not too granular, not too coarse |
 | **Success Criteria** | Every stage has testable checkboxes |
 | **Batch Execution** | Review after each stage, not at the end |
-| **TodoWrite Always** | One in_progress, mark complete immediately |
+| **Track Progress** | One task in_progress, mark complete immediately |
 | **Clarify Ambiguity** | Ask before assuming |
 | **Pivot When Needed** | Plans are living documents |
 
@@ -884,7 +892,7 @@ and clean up IMPLEMENTATION_PLAN.md"
 1. **Create a plan**: Pick a feature you've been thinking about. Use `writing-plans` to create IMPLEMENTATION_PLAN.md
 2. **Execute one stage**: Use `executing-plans` to complete Stage 1 with review checkpoint
 3. **Practice a pivot**: Intentionally discover something that requires a plan adjustment
-4. **Track with TodoWrite**: Use todos throughout to maintain visibility
+4. **Track with to-dos**: Use the to-do list throughout to maintain visibility
 
 ---
 
