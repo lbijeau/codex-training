@@ -420,21 +420,20 @@ You: "I just joined this project. Help me understand
 Codex: Exploring the codebase...
 
 ## High-Level Structure
-```
-src/
-├── api/           # REST endpoints (Express routes)
-├── services/      # Business logic layer
-├── models/        # Database models (Sequelize)
-├── middleware/    # Auth, logging, error handling
-├── jobs/          # Background workers (Bull queues)
-├── utils/         # Shared utilities
-└── config/        # Environment configuration
-```
+
+    src/
+    ├── api/           # REST endpoints (Express routes)
+    ├── services/      # Business logic layer
+    ├── models/        # Database models (Sequelize)
+    ├── middleware/    # Auth, logging, error handling
+    ├── jobs/          # Background workers (Bull queues)
+    ├── utils/         # Shared utilities
+    └── config/        # Environment configuration
 
 ## Entry Points
-- `src/index.ts` - Main server startup
-- `src/api/routes.ts` - All API routes registered here
-- `src/jobs/worker.ts` - Background job processor
+- src/index.ts - Main server startup
+- src/api/routes.ts - All API routes registered here
+- src/jobs/worker.ts - Background job processor
 
 ## Key Patterns
 - Repository pattern for data access
