@@ -2,35 +2,35 @@
 
 ## Overview
 
-Claude Code is highly customizable. This module teaches you how to configure Claude Code for your workflow, set project-specific instructions, use hooks for automation, and extend capabilities with MCP servers.
+Codex is highly customizable. This module teaches you how to configure Codex for your workflow, set project-specific instructions, use hooks for automation, and extend capabilities with MCP servers.
 
 **Learning Objectives**:
-- Configure Claude Code with CLAUDE.md for project-specific behavior
+- Configure Codex with AGENTS.md for project-specific behavior
 - Manage settings and permissions
 - Use hooks to automate pre/post actions
-- Extend Claude Code with MCP servers for external tools
+- Extend Codex with MCP servers for external tools
 
 **Time**: 2-3 hours
 
 ---
 
-## 1. CLAUDE.md - Project Instructions
+## 1. AGENTS.md - Project Instructions
 
-CLAUDE.md is a markdown file that Claude Code reads at the start of every conversation. Use it to give Claude context about your project, coding standards, and team conventions.
+AGENTS.md is a markdown file that Codex reads at the start of every conversation. Use it to give Codex context about your project, coding standards, and team conventions.
 
 ### Where to Put It
 
 | Location | Scope | Use Case |
 |----------|-------|----------|
-| `./CLAUDE.md` | Current project | Project-specific instructions |
-| `~/.claude/CLAUDE.md` | All projects | Personal preferences, global conventions |
+| `./AGENTS.md` | Current project | Project-specific instructions |
+| `~/.codex/AGENTS.md` | All projects | Personal preferences, global conventions |
 
-Project-level CLAUDE.md takes precedence and is combined with your global one.
+Project-level AGENTS.md takes precedence and is combined with your global one.
 
 ### What to Include
 
 ```markdown
-# CLAUDE.md
+# AGENTS.md
 
 ## Project Overview
 Brief description of what this project does.
@@ -61,10 +61,10 @@ Brief description of what this project does.
 - Don't use `any` type in TypeScript
 ```
 
-### Example: Team CLAUDE.md
+### Example: Team AGENTS.md
 
 ```markdown
-# CLAUDE.md - Acme Corp Standards
+# AGENTS.md - Acme Corp Standards
 
 ## Git Workflow
 - Branch naming: `feature/TICKET-123-description`
@@ -87,10 +87,10 @@ Brief description of what this project does.
 - Validation: zod
 ```
 
-### Tips for Effective CLAUDE.md
+### Tips for Effective AGENTS.md
 
-1. **Keep it focused** - Include what Claude needs to know, not everything about the project
-2. **Update it** - As conventions change, update CLAUDE.md
+1. **Keep it focused** - Include what Codex needs to know, not everything about the project
+2. **Update it** - As conventions change, update AGENTS.md
 3. **Be specific** - "Use camelCase" is better than "follow best practices"
 4. **Include examples** - Show the pattern you want, not just describe it
 
@@ -98,14 +98,14 @@ Brief description of what this project does.
 
 ## 2. Settings & Configuration
 
-Claude Code settings control behavior, permissions, and defaults.
+Codex settings control behavior, permissions, and defaults.
 
 ### Settings Location
 
 ```
-~/.claude/
+~/.codex/
 ├── settings.json      # User settings
-├── CLAUDE.md          # Global instructions
+├── AGENTS.md          # Global instructions
 └── skills/            # Custom skills
 ```
 
@@ -127,16 +127,16 @@ Claude Code settings control behavior, permissions, and defaults.
 
 ### Permission Management
 
-Claude Code asks for permission before potentially destructive actions. You can pre-approve certain operations:
+Codex asks for permission before potentially destructive actions. You can pre-approve certain operations:
 
 ```
 You: "I trust you to edit files in src/ without asking"
 
-Claude: I'll remember that. For this session, I won't ask before
+Codex: I'll remember that. For this session, I won't ask before
 editing files in the src/ directory.
 ```
 
-Or set it in your CLAUDE.md:
+Or set it in your AGENTS.md:
 
 ```markdown
 ## Permissions
@@ -147,7 +147,7 @@ Or set it in your CLAUDE.md:
 
 ### Project-Level Settings
 
-Create `.claude/settings.json` in your project root:
+Create `.codex/settings.json` in your project root:
 
 ```json
 {
@@ -167,7 +167,7 @@ Create `.claude/settings.json` in your project root:
 
 ## 3. Hooks
 
-Hooks are scripts that run automatically at specific points in Claude Code's workflow. They let you inject context, validate actions, or log activity.
+Hooks are scripts that run automatically at specific points in Codex's workflow. They let you inject context, validate actions, or log activity.
 
 ### Available Hooks
 
@@ -179,10 +179,10 @@ Hooks are scripts that run automatically at specific points in Claude Code's wor
 
 ### Hook Configuration
 
-Create hooks in `.claude/hooks/`:
+Create hooks in `.codex/hooks/`:
 
 ```
-.claude/
+.codex/
 └── hooks/
     ├── pre-tool-use.sh
     └── post-tool-use.sh
@@ -192,20 +192,20 @@ Create hooks in `.claude/hooks/`:
 
 ```bash
 #!/bin/bash
-# .claude/hooks/pre-tool-use.sh
+# .codex/hooks/pre-tool-use.sh
 # Logs all tool usage to a file
 
 TOOL_NAME="$1"
 TOOL_ARGS="$2"
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') | Tool: $TOOL_NAME | Args: $TOOL_ARGS" >> .claude/tool-log.txt
+echo "$(date '+%Y-%m-%d %H:%M:%S') | Tool: $TOOL_NAME | Args: $TOOL_ARGS" >> .codex/tool-log.txt
 ```
 
 ### Example: Block Dangerous Commands
 
 ```bash
 #!/bin/bash
-# .claude/hooks/pre-tool-use.sh
+# .codex/hooks/pre-tool-use.sh
 # Block dangerous bash commands
 
 TOOL_NAME="$1"
@@ -224,7 +224,7 @@ fi
 
 ```bash
 #!/bin/bash
-# .claude/hooks/post-tool-use.sh
+# .codex/hooks/post-tool-use.sh
 # Run prettier after file edits
 
 TOOL_NAME="$1"
@@ -241,13 +241,13 @@ fi
 
 ## 4. MCP Servers
 
-MCP (Model Context Protocol) servers extend Claude Code with new capabilities by connecting to external tools and services.
+MCP (Model Context Protocol) servers extend Codex with new capabilities by connecting to external tools and services.
 
 ### What MCP Servers Do
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                     Claude Code                          │
+│                     Codex                          │
 └─────────────────────────┬───────────────────────────────┘
                           │
           ┌───────────────┼───────────────┐
@@ -264,7 +264,7 @@ MCP (Model Context Protocol) servers extend Claude Code with new capabilities by
     └──────────┘    └──────────┘    └──────────┘
 ```
 
-MCP servers give Claude Code new tools:
+MCP servers give Codex new tools:
 - **Database MCP**: Query databases directly
 - **GitHub MCP**: Create issues, PRs, review code
 - **Slack MCP**: Send messages, read channels
@@ -273,7 +273,7 @@ MCP servers give Claude Code new tools:
 
 ### Installing MCP Servers
 
-MCP servers are configured in `~/.claude/mcp_servers.json`:
+MCP servers are configured in `~/.codex/mcp_servers.json`:
 
 ```json
 {
@@ -313,7 +313,7 @@ Once configured, MCP tools appear as regular tools:
 ```
 You: "Query the database for all users created this week"
 
-Claude: I'll use the postgres MCP to query your database.
+Codex: I'll use the postgres MCP to query your database.
 
 Running: SELECT * FROM users WHERE created_at > NOW() - INTERVAL '7 days'
 
@@ -330,7 +330,7 @@ Found 23 users created this week:
 ```
 You: "Create a GitHub issue for the bug we just found in authentication"
 
-Claude: I'll create a GitHub issue using the GitHub MCP.
+Codex: I'll create a GitHub issue using the GitHub MCP.
 
 Creating issue in owner/repo:
 - Title: "Authentication fails for users with special characters in email"
@@ -412,16 +412,16 @@ Then register it:
 
 ## Key Takeaways
 
-1. **CLAUDE.md**: Project-specific instructions that shape every conversation
+1. **AGENTS.md**: Project-specific instructions that shape every conversation
 2. **Settings**: Control permissions and behavior at user and project level
 3. **Hooks**: Automate pre/post actions for consistency and safety
-4. **MCP Servers**: Extend Claude Code with external tools and services
+4. **MCP Servers**: Extend Codex with external tools and services
 
 ---
 
 ## Next Steps
 
-1. Create a CLAUDE.md for your current project
+1. Create an AGENTS.md for your current project
 2. Set up a hook to auto-format code after edits
 3. Install one MCP server (GitHub is a good start)
 4. Proceed to [Module 3: Skills](03-skills.md)
