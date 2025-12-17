@@ -57,20 +57,26 @@ flowchart LR
 
 ### Layer 1: Automated Checks (Instant Feedback)
 
-These run automatically via hooks—you don't even think about them.
+These run automatically via Git hooks—you don't even think about them.
 
-**Setup once, benefit forever:**
+**Setup once, benefit forever with Git hooks + lint-staged:**
+```bash
+# Install husky and lint-staged
+npm install --save-dev husky lint-staged
+
+# Initialize husky
+npx husky init
+
+# Create pre-commit hook
+echo 'npx lint-staged' > .husky/pre-commit
+```
+
+Example `package.json` snippet:
 ```json
 {
-  "hooks": {
-    "Write:Callback": {
-      "command": "prettier",
-      "args": ["--write", "$FILE_PATH"]
-    },
-    "Write:Validate": {
-      "command": "eslint",
-      "args": ["--quiet", "$FILE_PATH"]
-    }
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": ["prettier --write", "eslint --fix"],
+    "*.{json,md}": ["prettier --write"]
   }
 }
 ```
@@ -647,16 +653,26 @@ cat review.txt coverage.txt
 git commit -m "Add user notifications"
 ```
 
-**Automated gate with hooks:**
-```json
-{
-  "hooks": {
-    "Bash:Validate": {
-      "command": "sh",
-      "args": ["-c", "npm test && npm run lint && npm run typecheck"]
-    }
-  }
-}
+**Automated gate with Git pre-commit hook:**
+```bash
+# .husky/pre-commit
+#!/bin/sh
+npm test && npm run lint && npm run typecheck
+```
+
+Or use a CI check that runs on every push:
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+      - run: npm test && npm run lint && npm run typecheck
 ```
 
 ### Gate 4: Pre-PR

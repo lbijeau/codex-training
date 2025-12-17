@@ -1,254 +1,252 @@
-# Exercise 2: Build Hooks for Automation
+# Exercise 2: Set Up Git Hooks & CI Automation
 
 ## Objective
 
-Learn to create hooks that automate pre and post actions in your Codex workflow.
+Learn to automate quality checks using Git hooks and CI pipelines to complement your Codex workflows.
 
 ## Background
 
-Hooks are scripts that run automatically at specific points in Codex's workflow. They let you inject context, validate actions, log activity, and automate follow-up tasks.
+While Codex helps you write and review code, Git hooks and CI pipelines ensure consistent quality by automatically running checks before commits and on every push. This exercise teaches you to set up these automation tools.
 
-## Part A: Create a Pre-Tool Hook
+## Part A: Set Up Husky and lint-staged
 
-**Task**: Build a hook that runs before tool execution.
+**Task**: Configure automatic formatting and linting on commit.
 
-1. Create the hooks directory:
+1. Install the required packages:
    ```bash
-   mkdir -p .codex/hooks
+   npm install --save-dev husky lint-staged prettier eslint
    ```
 
-2. Create a logging hook:
+2. Initialize husky:
+   ```bash
+   npx husky init
+   ```
+
+3. Configure lint-staged in `package.json`:
+   ```json
+   {
+     "lint-staged": {
+       "*.{ts,tsx,js,jsx}": [
+         "prettier --write",
+         "eslint --fix"
+       ],
+       "*.{json,md,yml,yaml}": [
+         "prettier --write"
+       ]
+     }
+   }
+   ```
+
+4. Update the pre-commit hook:
+   ```bash
+   echo 'npx lint-staged' > .husky/pre-commit
+   ```
+
+5. Test it:
+   - Make a small change to a TypeScript file
+   - Stage and commit
+   - Verify the file was auto-formatted
+
+## Part B: Create a Pre-Commit Quality Gate
+
+**Task**: Add comprehensive checks before each commit.
+
+1. Create a more thorough pre-commit hook:
    ```bash
    #!/bin/bash
-   # .codex/hooks/pre-tool-use.sh
-   # Logs all tool usage to a file
+   # .husky/pre-commit
 
-   TOOL_NAME="$1"
-   TOOL_ARGS="$2"
-   TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+   echo "🔍 Running pre-commit checks..."
 
-   # Create log directory if needed
-   mkdir -p .codex/logs
+   # Run lint-staged for formatting
+   npx lint-staged || exit 1
 
-   # Log the tool usage
-   echo "$TIMESTAMP | PRE  | $TOOL_NAME | $TOOL_ARGS" >> .codex/logs/tool-usage.log
+   # Run type check on staged files
+   echo "📝 Type checking..."
+   npm run typecheck || exit 1
 
-   # Exit 0 to allow the tool to proceed
-   exit 0
+   # Run tests related to changed files (if using jest)
+   echo "🧪 Running related tests..."
+   # diff-filter=ACMR limits to added/copied/modified/renamed files
+   STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx|js|jsx)$' | tr '\n' ' ')
+   if [ -n "$STAGED_JS_FILES" ]; then
+     npx jest --bail --findRelatedTests $STAGED_JS_FILES --passWithNoTests || exit 1
+   else
+     echo "   No JS/TS files staged, skipping related tests"
+   fi
+
+   echo "✅ All checks passed!"
    ```
 
-3. Make it executable:
+2. Make it executable:
    ```bash
-   chmod +x .codex/hooks/pre-tool-use.sh
+   chmod +x .husky/pre-commit
    ```
 
-4. Test the hook:
-   - Ask Codex to read a file
-   - Check `.codex/logs/tool-usage.log`
-   - Verify the log entry was created
+3. Test by making a change that would fail type check or tests
 
-## Part B: Create a Blocking Hook
+## Part C: Set Up GitHub Actions CI
 
-**Task**: Build a hook that blocks dangerous operations.
+**Task**: Create a CI pipeline that runs on every push.
 
-1. Create a safety hook:
+1. Create the workflow directory:
    ```bash
-   #!/bin/bash
-   # .codex/hooks/pre-tool-use.sh
-   # Block dangerous bash commands
-
-   TOOL_NAME="$1"
-   TOOL_ARGS="$2"
-
-   # Only check Bash tool
-   if [[ "$TOOL_NAME" != "Bash" ]]; then
-       exit 0
-   fi
-
-   # Dangerous patterns to block
-   DANGEROUS_PATTERNS=(
-       "rm -rf /"
-       "rm -rf ~"
-       "rm -rf /home"
-       "> /dev/sda"
-       "mkfs"
-       "dd if="
-       ":(){:|:&};:"
-   )
-
-   for pattern in "${DANGEROUS_PATTERNS[@]}"; do
-       if echo "$TOOL_ARGS" | grep -qF "$pattern"; then
-           echo "BLOCKED: Refusing to run dangerous command: $pattern"
-           exit 1
-       fi
-   done
-
-   # Check for rm on protected directories
-   if echo "$TOOL_ARGS" | grep -qE "rm\s+(-[rf]+\s+)?(node_modules|\.git|dist)/?\s*$"; then
-       echo "WARNING: Removing important directory. Proceeding with caution."
-   fi
-
-   exit 0
+   mkdir -p .github/workflows
    ```
 
-2. Add file protection:
+2. Create the CI workflow:
+   ```yaml
+   # .github/workflows/ci.yml
+   name: CI
+
+   on:
+     push:
+       branches: [main, develop]
+     pull_request:
+       branches: [main]
+
+   jobs:
+     lint:
+       name: Lint & Format
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-node@v4
+           with:
+             node-version: '20'
+             cache: 'npm'
+         - run: npm ci
+         - run: npm run lint
+         - run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,md}"
+
+     typecheck:
+       name: Type Check
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-node@v4
+           with:
+             node-version: '20'
+             cache: 'npm'
+         - run: npm ci
+         - run: npm run typecheck
+
+     test:
+       name: Test
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v4
+         - uses: actions/setup-node@v4
+           with:
+             node-version: '20'
+             cache: 'npm'
+         - run: npm ci
+         - run: npm test -- --coverage
+         # Optional: Upload coverage (requires Codecov account setup)
+         # - uses: codecov/codecov-action@v3
+         #   if: always()
+   ```
+
+3. Create required npm scripts in `package.json`:
+   ```json
+   {
+     "scripts": {
+       "lint": "eslint src/",
+       "typecheck": "tsc --noEmit",
+       "test": "jest"
+     }
+   }
+   ```
+
+4. Commit and push to see the workflow run
+
+## Part D: Create Helper Scripts for Codex Workflows
+
+**Task**: Build shell scripts that combine Codex with automated checks.
+
+1. Create a scripts directory:
    ```bash
-   # Add to pre-tool-use.sh
-
-   # Protected files that shouldn't be modified
-   PROTECTED_FILES=(
-       ".env"
-       ".env.production"
-       "package-lock.json"
-       "yarn.lock"
-   )
-
-   if [[ "$TOOL_NAME" == "Write" || "$TOOL_NAME" == "Edit" ]]; then
-       for protected in "${PROTECTED_FILES[@]}"; do
-           if echo "$TOOL_ARGS" | grep -qF "$protected"; then
-               echo "BLOCKED: Cannot modify protected file: $protected"
-               exit 1
-           fi
-       done
-   fi
+   mkdir -p scripts
    ```
 
-## Part C: Create a Post-Tool Hook
-
-**Task**: Build a hook that runs after tool execution.
-
-1. Create an auto-format hook:
-   ```bash
-   #!/bin/bash
-   # .codex/hooks/post-tool-use.sh
-   # Run prettier after file edits
-
-   TOOL_NAME="$1"
-   FILE_PATH="$2"
-   EXIT_CODE="$3"
-
-   # Only act on successful Edit/Write operations
-   if [[ "$EXIT_CODE" != "0" ]]; then
-       exit 0
-   fi
-
-   if [[ "$TOOL_NAME" != "Edit" && "$TOOL_NAME" != "Write" ]]; then
-       exit 0
-   fi
-
-   # Only format supported file types
-   case "$FILE_PATH" in
-       *.ts|*.tsx|*.js|*.jsx|*.json|*.css|*.scss|*.md)
-           echo "Auto-formatting: $FILE_PATH"
-           npx prettier --write "$FILE_PATH" 2>/dev/null
-           ;;
-   esac
-
-   exit 0
-   ```
-
-2. Create a test-runner hook:
+2. Create a review script:
    ```bash
    #!/bin/bash
-   # .codex/hooks/post-tool-use.sh
-   # Run related tests after file changes
+   # scripts/review-changes.sh
+   # Review staged changes with Codex and run checks
 
-   TOOL_NAME="$1"
-   FILE_PATH="$2"
+   set -e
 
-   if [[ "$TOOL_NAME" != "Edit" && "$TOOL_NAME" != "Write" ]]; then
-       exit 0
-   fi
+   echo "📋 Staged changes:"
+   git diff --cached --stat
 
-   # Only run tests for source files
-   if [[ "$FILE_PATH" != src/* ]]; then
-       exit 0
-   fi
+   echo ""
+   echo "🔍 Running Codex review..."
+   codex "Review my staged changes. Focus on:
+   1. Logic errors and bugs
+   2. Security vulnerabilities
+   3. Missing error handling
+   4. Test coverage gaps
 
-   # Find related test file
-   TEST_FILE="${FILE_PATH%.ts}.test.ts"
-   TEST_FILE="${TEST_FILE/src\//tests\/}"
+   Show the diff first, then provide specific feedback."
 
-   if [[ -f "$TEST_FILE" ]]; then
-       echo "Running related tests: $TEST_FILE"
-       npm test -- "$TEST_FILE" --silent 2>/dev/null
-       if [[ $? -ne 0 ]]; then
-           echo "⚠️  Tests failed after editing $FILE_PATH"
-       fi
-   fi
+   echo ""
+   echo "🧪 Running automated checks..."
+   npm run lint
+   npm run typecheck
+   npm test -- --bail
 
-   exit 0
+   echo ""
+   echo "✅ Review complete!"
    ```
 
-## Part D: Create a Session Hook
-
-**Task**: Build hooks for session start and end.
-
-1. Create a session start script:
+3. Create a pre-PR script:
    ```bash
    #!/bin/bash
-   # .codex/hooks/session-start.sh
-   # Gather context at session start
+   # scripts/pre-pr.sh
+   # Run before creating a pull request
 
-   echo "=== Session Context ==="
-   echo ""
+   set -e
 
-   # Git status
-   echo "## Git Status"
-   echo "Branch: $(git branch --show-current)"
-   echo "Status:"
-   git status --short
+   echo "🚀 Pre-PR Checklist"
+   echo "==================="
 
    echo ""
-   echo "## Recent Changes"
-   git log --oneline -5
+   echo "1️⃣ Running tests..."
+   npm test || { echo "❌ Tests failed"; exit 1; }
 
    echo ""
-   echo "## Open TODOs"
-   grep -r "TODO" --include="*.ts" --include="*.js" src/ 2>/dev/null | wc -l | xargs echo "Found TODOs:"
+   echo "2️⃣ Running linter..."
+   npm run lint || { echo "❌ Lint failed"; exit 1; }
 
    echo ""
-   echo "## Test Status"
-   npm test --silent 2>&1 | tail -3
+   echo "3️⃣ Running type check..."
+   npm run typecheck || { echo "❌ Type check failed"; exit 1; }
 
    echo ""
-   echo "=== Ready to work ==="
-   ```
-
-2. Create a session end script:
-   ```bash
-   #!/bin/bash
-   # .codex/hooks/session-end.sh
-   # Clean up and summarize after session
-
-   echo "=== Session Summary ==="
-   echo ""
-
-   # Show what changed
-   echo "## Changes Made"
-   git diff --stat
-
-   echo ""
-   echo "## Files Modified"
-   git status --short
-
-   echo ""
-   echo "## Tool Usage Summary"
-   if [[ -f .codex/logs/tool-usage.log ]]; then
-       echo "Tools used this session:"
-       tail -20 .codex/logs/tool-usage.log | awk -F'|' '{print $3}' | sort | uniq -c | sort -rn
+   echo "4️⃣ Checking for debug code..."
+   if grep -rn "console.log\|debugger" src/ --include="*.ts" --include="*.tsx"; then
+     echo "⚠️  Found debug code - consider removing before PR"
+   else
+     echo "✅ No debug code found"
    fi
 
    echo ""
-   echo "## Next Steps"
-   echo "- [ ] Review changes: git diff"
-   echo "- [ ] Run tests: npm test"
-   echo "- [ ] Commit if ready: git add . && git commit -m '...'"
+   echo "5️⃣ Checking for TODOs without tickets..."
+   if grep -rn "TODO:" src/ --include="*.ts" --include="*.tsx" | grep -v "TODO(#"; then
+     echo "⚠️  Found TODOs without ticket numbers"
+   else
+     echo "✅ All TODOs have ticket numbers"
+   fi
+
+   echo ""
+   echo "==================="
+   echo "✅ All checks passed! Ready for PR."
    ```
 
-3. Make scripts executable:
+4. Make scripts executable:
    ```bash
-   chmod +x .codex/hooks/session-*.sh
+   chmod +x scripts/*.sh
    ```
 
 ---
@@ -256,44 +254,54 @@ Hooks are scripts that run automatically at specific points in Codex's workflow.
 ## Hints
 
 <details>
-<summary>Hint 1: Hook execution</summary>
+<summary>Hint 1: Debugging hook failures</summary>
 
-Hooks receive arguments:
-- `$1` - Tool name (Read, Write, Edit, Bash, etc.)
-- `$2` - Tool arguments (file path, command, etc.)
-- `$3` - Exit code (for post-tool hooks)
+If your pre-commit hook fails unexpectedly:
 
-Exit codes:
-- `exit 0` - Allow operation to proceed
-- `exit 1` - Block the operation
-</details>
-
-<details>
-<summary>Hint 2: Testing hooks</summary>
-
-Test hooks without Codex:
 ```bash
-# Test pre-tool hook
-./codex/hooks/pre-tool-use.sh "Bash" "rm -rf /"
-echo "Exit code: $?"
+# Run the hook manually to see output
+./.husky/pre-commit
 
-# Test post-tool hook
-./.codex/hooks/post-tool-use.sh "Edit" "src/index.ts" "0"
+# Check husky is installed correctly
+cat .husky/pre-commit
+
+# Bypass hook temporarily (use sparingly!)
+git commit --no-verify -m "emergency fix"
 ```
 </details>
 
 <details>
-<summary>Hint 3: Debugging hooks</summary>
+<summary>Hint 2: Testing CI locally</summary>
 
-Add debug output:
+Use `act` to test GitHub Actions locally:
+
 ```bash
-# At the top of your hook
-exec 2>> .codex/logs/hook-debug.log
-set -x  # Enable debug mode
+# Install act
+brew install act
 
-# Your hook code...
+# Run the CI workflow
+act push
 
-set +x  # Disable debug mode
+# Run a specific job
+act push -j test
+```
+</details>
+
+<details>
+<summary>Hint 3: Parallel checks in CI</summary>
+
+Jobs in GitHub Actions run in parallel by default. To make one job depend on another:
+
+```yaml
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    # ...
+
+  test:
+    needs: lint  # Wait for lint to pass first
+    runs-on: ubuntu-latest
+    # ...
 ```
 </details>
 
@@ -304,141 +312,47 @@ set +x  # Disable debug mode
 <details>
 <summary>Click to reveal solution discussion</summary>
 
-### Complete Hook Setup
+### Complete Setup Structure
 
 ```
-.codex/
-├── hooks/
-│   ├── pre-tool-use.sh      # Validate and log before execution
-│   ├── post-tool-use.sh     # Format and test after execution
-│   ├── session-start.sh     # Gather context at session start
-│   └── session-end.sh       # Summarize at session end
-└── logs/
-    ├── tool-usage.log       # All tool usage
-    └── hook-debug.log       # Debug output
-```
-
-### Complete Pre-Tool Hook
-
-```bash
-#!/bin/bash
-# .codex/hooks/pre-tool-use.sh
-
-TOOL_NAME="$1"
-TOOL_ARGS="$2"
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
-
-# Logging
-mkdir -p .codex/logs
-echo "$TIMESTAMP | PRE  | $TOOL_NAME | $TOOL_ARGS" >> .codex/logs/tool-usage.log
-
-# Safety checks for Bash
-if [[ "$TOOL_NAME" == "Bash" ]]; then
-    # Block dangerous commands
-    if echo "$TOOL_ARGS" | grep -qE "rm\s+-rf\s+(/|~|/home)"; then
-        echo "BLOCKED: Dangerous rm command"
-        exit 1
-    fi
-
-    # Block fork bombs
-    if echo "$TOOL_ARGS" | grep -qF ":(){:|:&};:"; then
-        echo "BLOCKED: Fork bomb detected"
-        exit 1
-    fi
-fi
-
-# Protect sensitive files
-PROTECTED=(".env" ".env.local" ".env.production" "secrets.json")
-if [[ "$TOOL_NAME" == "Write" || "$TOOL_NAME" == "Edit" ]]; then
-    for file in "${PROTECTED[@]}"; do
-        if echo "$TOOL_ARGS" | grep -qF "$file"; then
-            echo "BLOCKED: Cannot modify $file"
-            exit 1
-        fi
-    done
-fi
-
-exit 0
-```
-
-### Complete Post-Tool Hook
-
-```bash
-#!/bin/bash
-# .codex/hooks/post-tool-use.sh
-
-TOOL_NAME="$1"
-FILE_PATH="$2"
-EXIT_CODE="${3:-0}"
-
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
-
-# Log completion
-echo "$TIMESTAMP | POST | $TOOL_NAME | $FILE_PATH | exit=$EXIT_CODE" >> .codex/logs/tool-usage.log
-
-# Skip if tool failed
-if [[ "$EXIT_CODE" != "0" ]]; then
-    exit 0
-fi
-
-# Only act on file modifications
-if [[ "$TOOL_NAME" != "Edit" && "$TOOL_NAME" != "Write" ]]; then
-    exit 0
-fi
-
-# Auto-format TypeScript/JavaScript files
-case "$FILE_PATH" in
-    *.ts|*.tsx|*.js|*.jsx)
-        if command -v npx &> /dev/null && [[ -f "package.json" ]]; then
-            npx prettier --write "$FILE_PATH" 2>/dev/null
-        fi
-        ;;
-esac
-
-# Run related tests
-if [[ "$FILE_PATH" == src/*.ts ]]; then
-    TEST_FILE="${FILE_PATH/src\//tests\/}"
-    TEST_FILE="${TEST_FILE%.ts}.test.ts"
-
-    if [[ -f "$TEST_FILE" ]]; then
-        npm test -- "$TEST_FILE" --silent 2>/dev/null
-        TEST_RESULT=$?
-
-        if [[ $TEST_RESULT -ne 0 ]]; then
-            echo "⚠️  Related tests failed: $TEST_FILE"
-        fi
-    fi
-fi
-
-exit 0
+project/
+├── .husky/
+│   └── pre-commit          # Runs lint-staged + checks
+├── .github/
+│   └── workflows/
+│       └── ci.yml          # CI pipeline
+├── scripts/
+│   ├── review-changes.sh   # Codex review helper
+│   └── pre-pr.sh          # Pre-PR checklist
+├── package.json            # lint-staged config + scripts
+└── .lintstagedrc.json     # (optional) separate lint-staged config
 ```
 
 ### Key Insight
 
-Hooks create a safety net around Codex operations:
-- **Pre-hooks**: Prevent dangerous operations before they happen
-- **Post-hooks**: Ensure quality after changes are made
-- **Session hooks**: Provide context and summarization
+Git hooks and CI pipelines serve different purposes:
 
-### Hook Pattern
+| Tool | When | Purpose |
+|------|------|---------|
+| **lint-staged** | On commit | Fast formatting fixes |
+| **Pre-commit hook** | On commit | Quick quality gate |
+| **CI pipeline** | On push/PR | Comprehensive validation |
+| **Helper scripts** | Manual | Combine Codex + automation |
+
+### Workflow Pattern
 
 ```
-Session Start
-     │
-     ▼
-┌─────────────────┐
-│  Pre-Tool Hook  │ ──→ Block if dangerous
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│  Tool Execution │
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Post-Tool Hook  │ ──→ Format, test, log
-└────────┬────────┘
-         ▼
-    Session End
+1. Write code with Codex
+   ↓
+2. Run ./scripts/review-changes.sh (Codex review + checks)
+   ↓
+3. git commit (pre-commit hook auto-formats)
+   ↓
+4. Run ./scripts/pre-pr.sh (comprehensive checks)
+   ↓
+5. git push (CI runs full pipeline)
+   ↓
+6. Create PR
 ```
 
 </details>
@@ -447,9 +361,9 @@ Session Start
 
 ## Reflection Questions
 
-1. What operations would you want to block in your workflow?
-2. How do hooks improve your confidence in Codex's actions?
-3. What automation would save you the most time?
+1. How do Git hooks complement Codex's capabilities?
+2. What checks should run locally vs. in CI?
+3. How can you balance thorough checks with fast feedback?
 
 ---
 

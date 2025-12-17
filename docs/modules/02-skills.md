@@ -15,6 +15,15 @@ Skills are packaged workflows that capture proven techniques for common tasks. I
 
 ---
 
+> **⚠️ Prerequisites**: Skills require explicit setup before use. They are an optional enhancement to Codex CLI, not a built-in feature. Before starting this module:
+> 1. Complete [Module 1: Getting Started](01-getting-started.md) to ensure Codex CLI is installed
+> 2. Follow the installation steps in Section 2 below to set up the superpowers library
+> 3. Verify installation by running the bootstrap command
+>
+> If skills don't work after following these steps, check the troubleshooting section or consult the [superpowers documentation](https://github.com/obra/superpowers).
+
+---
+
 ## 1. What Are Skills?
 
 ### The Problem Skills Solve
@@ -306,6 +315,9 @@ Codex: Using superpowers:writing-plans to create implementation plan.
 ```
 
 **Step 3: Execute (superpowers:executing-plans)**
+
+> **Note**: Execution is not fully automatic. Codex will ask for approval before modifying files and pause between stages for your review. Always verify tests pass before approving continuation.
+
 ```
 You: "Plan looks good. Execute it."
 
@@ -313,12 +325,15 @@ Codex: Using superpowers:executing-plans.
 
 Starting Stage 1: Database & Models
 
-[Creates migration, model, and tests]
+[Requests approval to create migration file]
+[You approve - migration created]
+[Requests approval to create model file]
+[You approve - model created with tests]
 [Runs tests - all pass]
 
 ✅ Stage 1 complete. Ready for review before Stage 2.
 
-Do you want to review Stage 1 before I continue?
+Do you want to review Stage 1 changes before I continue?
 ```
 
 **Step 4: Verify (superpowers:verification-before-completion)**

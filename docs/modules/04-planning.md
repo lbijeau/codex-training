@@ -326,6 +326,13 @@ Use the `executing-plans` skill for controlled execution:
 codex "Use superpowers:executing-plans to start executing IMPLEMENTATION_PLAN.md"
 ```
 
+> **⚠️ Important**: Plan execution is not fully automatic. Codex will:
+> - Ask for approval before making changes to files
+> - Pause between stages for your review
+> - Run tests and show results before proceeding
+>
+> Never skip these checkpoints. Review changes, verify tests pass, and approve each step explicitly.
+
 **What happens:**
 
 ```

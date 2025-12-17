@@ -1,14 +1,14 @@
 # Module 8: Codex API Internals
 
-> **⚠️ Advanced / API Focus**: This module covers the OpenAI Codex **API** internals—building custom integrations, function calling, and managing context programmatically. **If you're using Codex CLI**, you don't need this to get started. The CLI handles tools, context, and sessions automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead, and return here when you want to build custom API integrations.
+> **⚠️ Advanced / API Focus**: This module covers the OpenAI Codex **API** internals—building custom integrations, tool use, and managing context programmatically. **If you're using Codex CLI**, you don't need this to get started. The CLI handles tools, context, and sessions automatically. Start with the [CLI hands-on training](../training/codex-cli-hands-on/README.md) instead, and return here when you want to build custom API integrations.
 
 ## Overview
 
-Understanding how OpenAI Codex works under the hood is essential for building custom integrations. This module explores the chat-based architecture, function-calling workflow, and context strategies that determine how Codex behaves during an API session.
+Understanding how OpenAI Codex works under the hood is essential for building custom integrations. This module explores the Responses API architecture, tool-use workflow, and context strategies that determine how Codex behaves during an API session.
 
 **Learning Objectives**:
 - Understand the message types that make up a Codex session and how system/user/assistant instructions shape each interaction
-- Master function calling so Codex can reason about external data sources without hallucinating
+- Master tool use so Codex can reason about external data sources without hallucinating
 - Keep the context window healthy through summarization, chunking, and smart request sequencing
 - Break large problems into prompt chains, verifying each step and feeding results into the next
 
@@ -19,13 +19,14 @@ Understanding how OpenAI Codex works under the hood is essential for building cu
 ## 1. Codex Session Architecture
 
 ### What is a Codex session?
-A Codex session is a conversation with the OpenAI Chat Completion API. Every request includes a series of messages, typically:
-- **System**: Persistent instructions about tone, safety, and available functions
+A Codex session is a conversation with the OpenAI Responses API. Every request includes a series of messages, typically:
+- **System**: Persistent instructions about tone, safety, and available tools
 - **User**: The current request or question
-- **Assistant**: Codex's response (either text or a `function_call` payload)
-- **Function**: When Codex asks your code to run a helper, you call that function, then supply the result back as a `function` message
+- **Assistant**: Codex's response (either text or a tool call)
+- **Tool**: When Codex asks your code to run a tool, you execute it and supply the result back as a `tool` message
 
-Think of it as a structured turn-taking system where Codex only knows what you feed it in those messages.</n
+Think of it as a structured turn-taking system where Codex only knows what you feed it in those messages.
+
 ### Message flow
 
 ```mermaid
@@ -36,13 +37,13 @@ flowchart TD
 
     subgraph conversation["💬 CONVERSATION LOOP"]
         U[/"USER PROMPT<br/>(your request)"/]
-        A{"ASSISTANT<br/>(text or function_call)"}
+        A{"ASSISTANT<br/>(text or tool_call)"}
         U --> A
     end
 
-    subgraph function["⚡ FUNCTION EXECUTION"]
-        F["YOUR CODE RUNS<br/>(execute the function)"]
-        R[/"FUNCTION RESULT<br/>(JSON response)"/]
+    subgraph toolexec["⚡ TOOL EXECUTION"]
+        F["YOUR CODE RUNS<br/>(execute the tool)"]
+        R[/"TOOL RESULT<br/>(JSON response)"/]
         F --> R
     end
 
@@ -51,7 +52,7 @@ flowchart TD
     end
 
     S --> U
-    A -->|"function_call"| F
+    A -->|"tool_call"| F
     R --> A
     A -->|"text response"| FINAL
 
@@ -68,7 +69,7 @@ This means there is no persistent agent memory outside the conversation history 
 
 > **What is a system prompt?** The system prompt (or "system message") is the first message in every conversation that defines the AI's behavior, capabilities, and constraints. Think of it as a job description you give before work begins. The AI reads this first and follows its instructions throughout the session.
 
-> **What is a `function_call`?** When Codex needs to perform an action it can't do directly (read a file, run tests, query a database), it returns a `function_call` object instead of plain text. This object contains the function name and arguments—your code executes it and sends the result back. This is how Codex "uses tools."
+> **What is a tool call?** When Codex needs to perform an action it can't do directly (read a file, run tests, query a database), it returns a tool call instead of plain text. This object contains the tool name and arguments—your code executes it and sends the result back. This is how Codex uses external capabilities.
 
 **Best practices with examples:**
 
@@ -76,7 +77,7 @@ This means there is no persistent agent memory outside the conversation history 
 |----------|-----|---------|
 | **State the role clearly** | Focuses responses on your use case | `"You are Codex, a Python debugging assistant. Be direct. Show diffs."` |
 | **Keep it short** | Long prompts waste tokens and dilute focus | ❌ 500-word backstory → ✅ 2-3 sentence role definition |
-| **Declare available functions** | Codex can only call what you register | List `read_file`, `run_tests`, `search_code` with descriptions |
+| **Declare available tools** | Codex can only call what you register | List `read_file`, `run_tests`, `search_code` with descriptions |
 | **Include safety constraints** | Prevents dangerous operations | `"Never modify files outside src/. Always explain before editing."` |
 | **Refresh per session** | Context resets between sessions | Re-send system prompt + any critical context when starting fresh |
 
@@ -84,7 +85,7 @@ This means there is no persistent agent memory outside the conversation history 
 ```
 You are Codex, a backend debugging assistant for a Python Flask app.
 
-Available functions: read_file, run_tests, search_code, git_diff
+Available tools: read_file, run_tests, search_code, git_diff
 Constraints:
 - Never modify production config files
 - Always run tests after changes
@@ -99,92 +100,106 @@ Project context: Flask 2.0, PostgreSQL, pytest for testing
 |----------|--------------|
 | System message | Previous sessions |
 | Conversation history (user + assistant messages) | Files you didn't explicitly share |
-| Registered functions and their schemas | External state (databases, APIs) |
-| Function results you send back after a `function_call` | Anything outside the message array |
+| Registered tools and their schemas | External state (databases, APIs) |
+| Tool results you send back after a tool call | Anything outside the message array |
 
 Anything outside that sequence is invisible until you mention it again, so plan to summarize or re-send as needed.
 
 ---
 
-## 2. Function Calling & Tool Wrappers
+## 2. Tool Use & Tool Wrappers
 
-Function calling lets Codex delegate tasks to your own code. Instead of dreaming up how to make an API call, Codex returns a structured `function_call` object that you execute.
+Tool use lets Codex delegate tasks to your own code. Instead of dreaming up how to make an API call, Codex returns a structured tool call that you execute.
 
-### Declaring functions
-In the request you send to the OpenAI client, register each helper you want Codex to use:
+### Declaring tools
+In the request you send to the OpenAI client, register each tool you want Codex to use:
 ```python
 from openai import OpenAI
 client = OpenAI()  # Reads OPENAI_API_KEY from environment
 
-response = client.chat.completions.create(
+response = client.responses.create(
     model="codex-1",
-    messages=[
+    input=[
         # System message: sets AI behavior and context
         {"role": "system", "content": "You are a thoughtful coding assistant."},
         # User message: the actual request
         {"role": "user", "content": "Get the list of TODOs."},
     ],
-    # Functions: tools Codex can ask you to run
-    functions=[
+    # Tools: capabilities Codex can ask you to execute
+    tools=[
         {
-            "name": "list_todos",                           # Function identifier
-            "description": "Collect TODO comments from a repo",  # Helps Codex decide when to use it
-            "parameters": {                                 # JSON Schema for arguments
-                "type": "object",
-                "properties": {
-                    "paths": {
-                        "type": "array",
-                        "items": {"type": "string"}         # Array of file paths
-                    }
-                },
-                "required": ["paths"]                       # paths is mandatory
+            "type": "function",
+            "function": {
+                "name": "list_todos",                           # Tool identifier
+                "description": "Collect TODO comments from a repo",  # Helps Codex decide when to use it
+                "parameters": {                                 # JSON Schema for arguments
+                    "type": "object",
+                    "properties": {
+                        "paths": {
+                            "type": "array",
+                            "items": {"type": "string"}         # Array of file paths
+                        }
+                    },
+                    "required": ["paths"]                       # paths is mandatory
+                }
             }
         }
     ],
-    function_call="auto"  # Let Codex decide when to call functions
+    tool_choice="auto"  # Let Codex decide when to call tools
 )
 ```
 
-**`function_call` options:**
+**`tool_choice` options:**
 | Value | Behavior |
 |-------|----------|
-| `"auto"` | Codex decides whether to call a function or respond with text (recommended default) |
-| `"none"` | Codex will only respond with text, even if functions are available |
-| `{"name": "list_todos"}` | Force Codex to call a specific function |
+| `"auto"` | Codex decides whether to call a tool or respond with text (recommended default) |
+| `"none"` | Codex will only respond with text, even if tools are available |
+| `{"type": "function", "function": {"name": "list_todos"}}` | Force Codex to call a specific tool |
 
-Use `"auto"` for most cases. Use `{"name": "..."}` when you know a function must be called (e.g., first step of a workflow).
+Use `"auto"` for most cases. Use the explicit form when you know a tool must be called (e.g., first step of a workflow).
 
-Codex may respond with a `function_call` telling you which helper to invoke and what arguments to pass.
+Codex may respond with a tool call telling you which tool to invoke and what arguments to pass.
 
-### Running the helper
-After you see a `function_call`, run the matching helper and send the result back:
+### Running the tool
+After you see a tool call, run the matching tool and send the result back:
 ```python
-# Check if Codex wants to call a function
-if response.choices[0].message.get("function_call"):
-    call = response.choices[0].message.function_call  # Extract function name and args
+import json
 
-    # Run YOUR implementation of the function
-    result = list_todos(call.arguments)
+# Check if Codex wants to call a tool
+if response.output and response.output[0].type == "function_call":
+    tool_call = response.output[0]  # Extract tool call details
 
-    # Send the result back to Codex as a "function" message
-    follow_up = client.chat.completions.create(
+    # Parse arguments (they come as a JSON string)
+    args = json.loads(tool_call.arguments)
+
+    # Run YOUR implementation of the tool
+    result = list_todos(**args)  # Unpack parsed arguments
+
+    # Send the result back using the response ID for continuation
+    follow_up = client.responses.create(
         model="codex-1",
-        messages=response.messages + [
+        previous_response_id=response.id,  # Continue from previous response
+        input=[
             {
-                "role": "function",      # Special role for function results
-                "name": call.name,       # Must match the function that was called
-                "content": result        # Your function's output (usually JSON)
+                "type": "function_call_output",
+                "call_id": tool_call.call_id,  # Match the tool call ID
+                "output": json.dumps(result)   # Serialize result to JSON string
             }
         ]
     )
 ```
-Codex now sees the function result and can continue reasoning.
+
+> **Note**: The Responses API structure may evolve. Always verify the current request format in the [OpenAI API documentation](https://platform.openai.com/docs). Key fields to check: `previous_response_id`, `call_id`, and the tool output format.
+
+> **Note**: A response can include multiple tool calls. In production code, iterate over `response.output` and handle each `function_call` in order, sending a `function_call_output` for each `call_id` before continuing.
+
+Codex now sees the tool result and can continue reasoning.
 
 ### Tool wrappers instead of built-in tools
 
 > **Why wrappers?** The Codex API is a raw language model—it can only send and receive text. Unlike Codex CLI (which has built-in file/shell tools), the API cannot read files, run commands, or access the internet on its own. You must provide these capabilities by:
-> 1. Declaring functions that describe what operations are available
-> 2. Implementing those functions in your code
+> 1. Declaring tools that describe what operations are available
+> 2. Implementing those tools in your code
 > 3. Running them when Codex requests, and sending results back
 
 **Common wrappers to build:**
@@ -256,38 +271,41 @@ project/
 │   ├── read_file.py      # File reading wrapper
 │   ├── run_tests.py      # Test runner wrapper
 │   ├── git_status.py     # Git operations wrapper
-│   └── functions.json    # Schema manifest for all functions
+│   └── tools.json        # Schema manifest for all tools
 ├── scripts/
 │   └── codex_session.py  # Your main API integration script
 └── .env                  # API keys (gitignored)
 ```
 
-Store your wrappers in `./codex_helpers/` and keep a manifest (`functions.json`) describing their schemas. This way every session reuses the same catalog of trusted, validated operations.
+Store your wrappers in `./codex_helpers/` and keep a manifest (`tools.json`) describing their schemas. This way every session reuses the same catalog of trusted, validated operations.
 
-### Function-calling best practices
+### Tool use best practices
 
-**Keep each function focused**
+**Keep each tool focused**
 ```json
 {
-  "name": "read_file",
-  "description": "Read a file and return its contents",
-  "parameters": {
-    "type": "object",
-    "properties": {
-      "path": { "type": "string", "description": "Relative path to the file" }
-    },
-    "required": ["path"]
+  "type": "function",
+  "function": {
+    "name": "read_file",
+    "description": "Read a file and return its contents",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "path": { "type": "string", "description": "Relative path to the file" }
+      },
+      "required": ["path"]
+    }
   }
 }
 ```
 
 **Limit responses to avoid noisy results**
 ```python
-response = client.chat.completions.create(
+response = client.responses.create(
     model="codex-1",
-    messages=messages,
-    max_tokens=800,  # Cap output length
-    functions=functions
+    input=messages,
+    max_output_tokens=800,  # Cap output length
+    tools=tools
 )
 ```
 
@@ -322,11 +340,11 @@ client = OpenAI()  # Reads OPENAI_API_KEY from environment
 import logging
 logging.basicConfig(filename="codex_calls.log", level=logging.INFO)
 
-def log_function_call(name, args, result):
-    logging.info(f"Function: {name} | Args: {args} | Result: {result[:200]}")
+def log_tool_call(name, args, result):
+    logging.info(f"Tool: {name} | Args: {args} | Result: {result[:200]}")
 
-# After each function execution:
-log_function_call(func_name, func_args, json.dumps(result))
+# After each tool execution:
+log_tool_call(tool_name, tool_args, json.dumps(result))
 ```
 
 ---
@@ -348,8 +366,8 @@ The window includes both incoming message tokens and the tokens you expect the m
 ```python
 # After a long exchange, ask for a summary
 messages.append({"role": "user", "content": "Summarize our progress in 3 bullet points."})
-response = client.chat.completions.create(model="codex-1", messages=messages)
-summary = response.choices[0].message.content
+response = client.responses.create(model="codex-1", input=messages)
+summary = response.output_text
 
 # Start fresh with just the summary
 messages = [
@@ -395,23 +413,24 @@ codex "Show me only the validateUser function from src/auth.ts and review it"
 
 **3. Streaming** — Stop early if output diverges:
 
-```python
-stream = client.chat.completions.create(
-    model="codex-1",
-    messages=messages,
-    stream=True
-)
+Streaming lets you process response tokens as they arrive, enabling early termination if output goes off-track.
 
-output = ""
-for chunk in stream:
-    delta = chunk.choices[0].delta.content or ""
-    output += delta
-    print(delta, end="", flush=True)
+> **Why conceptual?** The OpenAI streaming API evolves frequently. Rather than provide code that may break, we show the pattern and link to authoritative docs.
 
-    # Stop if we detect repetition or off-topic content
-    if len(output) > 2000 and is_repetitive(output):
-        break
 ```
+Conceptual pattern:
+1. Start streaming request
+2. For each chunk received:
+   - Accumulate text
+   - Check for divergence (repetition, off-topic)
+   - Cancel stream early if needed
+3. Process final output
+```
+
+**Implementation**: For a runnable example, use the code snippet in the [OpenAI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming). Key patterns:
+- Enabling streaming (`stream=True` or dedicated streaming method)
+- Event/chunk structure for extracting text
+- Canceling a stream mid-response
 
 **4. Cache context** — Store state between sessions:
 
@@ -429,14 +448,14 @@ Continue with the next step."
 
 *API approach:*
 ```python
-response = client.chat.completions.create(model="codex-1", messages=messages)
+response = client.responses.create(model="codex-1", input=messages)
 
 # Check token usage
 usage = response.usage
-print(f"Prompt: {usage.prompt_tokens}, Completion: {usage.completion_tokens}, Total: {usage.total_tokens}")
+print(f"Input: {usage.input_tokens}, Output: {usage.output_tokens}, Total: {usage.input_tokens + usage.output_tokens}")
 
 # If approaching limit (e.g., 100K of 128K), summarize and reset
-if usage.total_tokens > 100000:
+if usage.input_tokens + usage.output_tokens > 100000:
     summary = summarize_conversation(messages)
     messages = [{"role": "system", "content": system_prompt},
                 {"role": "assistant", "content": summary}]
@@ -503,12 +522,9 @@ messages.append({"role": "user", "content": """
 # You write it to disk, then continue to step 2...
 
 # Stage 4: VERIFY - Run tests
-messages.append({
-    "role": "function",
-    "name": "run_tests",
-    "content": '{"passed": false, "stdout": "FAILED test_rate_limit.py::test_blocks_after_limit"}'
-})
-messages.append({"role": "user", "content": "Tests failed. Fix the issue."})
+# (Assuming Codex called run_tests tool and it returned a failure)
+test_result = '{"passed": false, "stdout": "FAILED test_rate_limit.py::test_blocks_after_limit"}'
+messages.append({"role": "user", "content": f"Tests failed with: {test_result}. Fix the issue."})
 # Codex analyzes failure and provides fix
 
 # Stage 5: DOCUMENT - Summarize for future context
@@ -579,7 +595,7 @@ After every Codex response, validate before proceeding:
 ```python
 def validate_response(response, context):
     """Check for common issues in Codex responses."""
-    content = response.choices[0].message.content or ""
+    content = response.output_text or ""
     issues = []
 
     # Check for hallucinated file paths
@@ -601,7 +617,7 @@ def validate_response(response, context):
     return issues
 
 # In your main loop:
-response = client.chat.completions.create(...)
+response = client.responses.create(...)
 issues = validate_response(response, context)
 
 if issues:
@@ -612,7 +628,7 @@ if issues:
                    f"{chr(10).join('- ' + i for i in issues)}\n\n"
                    f"Please revise your answer."
     })
-    response = client.chat.completions.create(model="codex-1", messages=messages)
+    response = client.responses.create(model="codex-1", input=messages)
 ```
 
 **Common corrections to send:**
@@ -825,7 +841,7 @@ def safe_read_file(args):
     return sanitize_output(result)
 ```
 
-**Audit logging for function calls:**
+**Audit logging for tool calls:**
 
 ```python
 import logging
@@ -838,19 +854,19 @@ handler = logging.FileHandler("codex_audit.log")
 handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 audit_logger.addHandler(handler)
 
-def audit_function_call(func_name, args, result, user_id=None):
-    """Log every function call for security review."""
+def audit_tool_call(tool_name, args, result, user_id=None):
+    """Log every tool call for security review."""
     audit_logger.info(json.dumps({
         "timestamp": datetime.utcnow().isoformat(),
         "user": user_id,
-        "function": func_name,
+        "tool": tool_name,
         "args": args,
         "result_length": len(result),
         # Flag suspicious patterns
-        "flags": detect_suspicious(func_name, args)
+        "flags": detect_suspicious(tool_name, args)
     }))
 
-def detect_suspicious(func_name, args):
+def detect_suspicious(tool_name, args):
     """Flag potentially dangerous operations."""
     flags = []
     args_str = json.dumps(args)
@@ -859,7 +875,7 @@ def detect_suspicious(func_name, args):
         flags.append("path_traversal_attempt")
     if "/etc/" in args_str or "/root/" in args_str:
         flags.append("system_path_access")
-    if func_name == "run_command" and any(d in args_str for d in ["rm ", "dd ", "mkfs"]):
+    if tool_name == "run_command" and any(d in args_str for d in ["rm ", "dd ", "mkfs"]):
         flags.append("destructive_command")
 
     return flags
@@ -868,7 +884,7 @@ def detect_suspicious(func_name, args):
 ---
 
 ## Next Steps
-1. Try the Module 8 exercises to practice designing prompts and function calls
-2. Build a helper that searches files and registers itself as a function
+1. Try the Module 8 exercises to practice designing prompts and tool definitions
+2. Build a helper that searches files and registers itself as a tool
 3. Experiment with chaining requests and summarizing long histories
 4. Document any useful prompts in `docs/prompts/`
