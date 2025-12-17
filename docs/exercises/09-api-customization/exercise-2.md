@@ -141,8 +141,9 @@ While Codex helps you write and review code, Git hooks and CI pipelines ensure c
              cache: 'npm'
          - run: npm ci
          - run: npm test -- --coverage
-         - uses: codecov/codecov-action@v3
-           if: always()
+         # Optional: Upload coverage (requires Codecov account setup)
+         # - uses: codecov/codecov-action@v3
+         #   if: always()
    ```
 
 3. Create required npm scripts in `package.json`:

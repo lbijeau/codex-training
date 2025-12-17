@@ -411,25 +411,24 @@ codex "Show me only the validateUser function from src/auth.ts and review it"
 
 **3. Streaming** — Stop early if output diverges:
 
-Streaming lets you process response tokens as they arrive, enabling early termination if output goes off-track:
+Streaming lets you process response tokens as they arrive, enabling early termination if output goes off-track.
 
-```python
-# Pseudocode - see OpenAI streaming docs for exact syntax
-output = ""
-for chunk in stream_response(model="codex-1", input=messages):
-    output += chunk.text
-    print(chunk.text, end="", flush=True)
+> **Why conceptual?** The OpenAI streaming API evolves frequently. Rather than provide code that may break, we show the pattern and link to authoritative docs.
 
-    # Stop early if output diverges
-    if len(output) > 2000 and is_repetitive(output):
-        cancel_stream()
-        break
+```
+Conceptual pattern:
+1. Start streaming request
+2. For each chunk received:
+   - Accumulate text
+   - Check for divergence (repetition, off-topic)
+   - Cancel stream early if needed
+3. Process final output
 ```
 
-For the exact streaming implementation, see the [OpenAI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming). Key patterns to look for:
-- How to enable streaming (`stream=True` or streaming method)
+**Implementation**: See the [OpenAI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming) for current SDK syntax. Key patterns:
+- Enabling streaming (`stream=True` or dedicated streaming method)
 - Event/chunk structure for extracting text
-- How to cancel a stream mid-response
+- Canceling a stream mid-response
 
 **4. Cache context** — Store state between sessions:
 
