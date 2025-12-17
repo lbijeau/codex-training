@@ -438,4 +438,4 @@ startup_timeout_sec = 20
 1. Create an AGENTS.md for your current project
 2. Set up Git hooks with husky/lint-staged to auto-format code
 3. Install one MCP server (GitHub is a good start)
-4. Proceed to [Module 2: Skills](02-skills.md)
+4. Proceed to the [Module 9 exercises](../exercises/09-api-customization/README.md)

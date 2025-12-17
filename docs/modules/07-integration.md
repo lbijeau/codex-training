@@ -424,7 +424,7 @@ Contribution intake tips:
 ---
 
 ## Next Steps
-1. Build a helper, register it via `functions.json`, and use it in a Codex session
+1. Build a helper, register it via `tools.json`, and use it in a Codex session
 2. Update your CI workflow to reflect the same helpers (e.g., call the helper after tests)
 3. Document the story in `docs/playbook/scenarios.md`
 4. Share the pattern with others (Docs, README, blog snippet)
