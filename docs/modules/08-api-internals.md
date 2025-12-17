@@ -163,12 +163,17 @@ Codex may respond with a tool call telling you which tool to invoke and what arg
 ### Running the tool
 After you see a tool call, run the matching tool and send the result back:
 ```python
+import json
+
 # Check if Codex wants to call a tool
 if response.output and response.output[0].type == "function_call":
     tool_call = response.output[0]  # Extract tool call details
 
+    # Parse arguments (they come as a JSON string)
+    args = json.loads(tool_call.arguments)
+
     # Run YOUR implementation of the tool
-    result = list_todos(tool_call.arguments)
+    result = list_todos(**args)  # Unpack parsed arguments
 
     # Send the result back using the response ID for continuation
     follow_up = client.responses.create(
@@ -407,26 +412,30 @@ codex "Show me only the validateUser function from src/auth.ts and review it"
 **3. Streaming** — Stop early if output diverges:
 
 ```python
-# Using the OpenAI SDK's streaming helper
+# Conceptual streaming pattern - verify exact syntax with OpenAI SDK docs
 from openai import OpenAI
 client = OpenAI()
 
 output = ""
-with client.responses.create(
+
+# Stream the response and process chunks as they arrive
+for event in client.responses.create(
     model="codex-1",
     input=messages,
     stream=True
-) as stream:
-    for text in stream.text_stream:
-        output += text
-        print(text, end="", flush=True)
+):
+    # Extract text from the event (exact structure varies by SDK version)
+    if hasattr(event, 'delta') and event.delta:
+        chunk = event.delta.get('text', '')
+        output += chunk
+        print(chunk, end="", flush=True)
 
-        # Stop if we detect repetition or off-topic content
-        if len(output) > 2000 and is_repetitive(output):
-            break
+    # Stop if we detect repetition or off-topic content
+    if len(output) > 2000 and is_repetitive(output):
+        break
 ```
 
-> **Note**: The exact streaming API may vary. Consult the [OpenAI API documentation](https://platform.openai.com/docs) for current streaming patterns.
+> **Important**: The streaming API evolves frequently. Always verify the exact method names and event structure in the [OpenAI API documentation](https://platform.openai.com/docs) before implementation.
 
 **4. Cache context** — Store state between sessions:
 

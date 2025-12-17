@@ -105,8 +105,7 @@ Codex configuration is primarily managed through AGENTS.md files and runtime set
 ```
 ~/.codex/
 ├── AGENTS.md          # Global instructions (primary configuration)
-├── commands/          # Custom slash commands
-└── skills/            # Custom skills (optional)
+└── skills/            # Custom skills (optional, see Module 2)
 ```
 
 ### Permission Management
@@ -129,7 +128,7 @@ Codex: I'll remember that. For this session, I won't ask before
 editing files in the src/ directory.
 ```
 
-> **Note**: For the most current configuration options, run `codex --help` or check the [official Codex CLI documentation](https://docs.anthropic.com/en/docs/claude-code).
+> **Note**: For the most current configuration options, run `codex --help` and check the repository documentation.
 
 ### Project-Level Configuration
 
@@ -138,8 +137,6 @@ You can create project-specific AGENTS.md files to customize Codex behavior per 
 ```
 project-root/
 ├── AGENTS.md           # Project-specific instructions (read by Codex)
-├── .codex/
-│   └── commands/       # Custom slash commands for this project
 └── src/
 ```
 
