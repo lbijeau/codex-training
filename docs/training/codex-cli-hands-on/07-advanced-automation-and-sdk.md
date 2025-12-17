@@ -5,7 +5,7 @@ Use this module as an add-on after the core labs. Focus: automation with `codex 
 ## Automation with `codex exec`
 - Modes: default read-only; `--full-auto` to enable writes; `--sandbox` to set sandbox explicitly.
 - Structured outputs: `--json` to stream events (`command_execution`, `file_change`, `mcp_tool_call`, `agent_message`) and `--output-schema` to enforce JSON schema for the final message.
-- Resume: `codex resume --last "follow-up prompt"` keeps context; re-specify flags if needed.
+- Resume: `codex exec resume --last "follow-up prompt"` keeps context; re-specify flags if needed.
 - Lab idea: pipe JSONL to `jq` to count file changes:
   ```bash
   codex exec --json "add a comment to hello.py" | jq -c 'select(.item.type=="file_change")'
