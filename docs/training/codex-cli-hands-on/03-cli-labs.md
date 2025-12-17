@@ -63,7 +63,7 @@ Steps:
    ```bash
    codex "Explore hello.py and explain what it does, how it handles errors, and what could be improved"
    ```
-2) Save the learnings to a file:
+2) Save the learnings to a file (note: shell redirection `>` doesn't require `--full-auto` since this captures stdout, not a Codex file write):
    ```bash
    codex exec "Summarize what we learned about hello.py in 3 bullet points" > context.txt
    ```
