@@ -25,26 +25,27 @@ Checks:
 - Diff is minimal and correct; file updates as expected.
 
 ## Lab 3: Resume Flow
-Goal: Show session continuity.  
-Steps:  
-1) Start a session and perform a quick command (e.g., `codex "summarize hello.py"`).  
-2) Exit with `Ctrl+C`.  
-3) Resume: `codex resume --last`.  
-4) Ask: `codex "continue the previous task by adding a CLI flag --name to hello.py"`  
-Checks:  
-- Session metadata shows the original workdir.  
-- Codex recalls prior context and proposes the flag change; approves edits as needed.
+Goal: Show session continuity.
+Steps:
+1) Start a session and perform a quick command (e.g., `codex "summarize hello.py"`).
+2) Exit with `Ctrl+C`.
+3) Resume with follow-up: `codex resume --last "continue the previous task by adding a CLI flag --name to hello.py"`
+Checks:
+- Session metadata shows the original workdir.
+- Codex recalls prior context and proposes the flag change.
 
 ## Lab 4: Automation with `codex exec`
-Goal: Use non-interactive mode for scripted tasks.  
-Steps:  
-1) Run: `codex exec "add a unit test for hello.py that asserts the greeting contains Hello"`  
-2) Approve any writes to `test_hello.py` (or equivalent) when prompted by the CLI.  
-3) If tests are runnable, ask Codex to include a `pytest` command; optionally run it yourself.  
-Checks:  
-- Output shows planned commands; writes are explicit.  
-- Test file appears and assertions match the behavior.  
+Goal: Use non-interactive mode for scripted tasks.
+Steps:
+1) Run: `codex exec --full-auto "add a unit test for hello.py that asserts the greeting contains Hello"`
+2) Review the output - `codex exec` is non-interactive and auto-completes without prompts.
+3) Check that `test_hello.py` (or equivalent) was created with appropriate assertions.
+Checks:
+- Output shows file changes made.
+- Test file appears and assertions match the behavior.
 - Optional: `pytest -q` passes.
+
+> **Note**: `codex exec` does not prompt for approval - use `--full-auto` for writes or configure sandbox permissions.
 
 ## Lab 5: Multi-directory exposure (optional)
 Goal: Demonstrate `--add-dir` for multi-repo work.
@@ -62,7 +63,7 @@ Steps:
    ```bash
    codex "Explore hello.py and explain what it does, how it handles errors, and what could be improved"
    ```
-2) Save the learnings to a file:
+2) Save the learnings to a file (note: shell redirection `>` doesn't require `--full-auto` since this captures stdout, not a Codex file write):
    ```bash
    codex exec "Summarize what we learned about hello.py in 3 bullet points" > context.txt
    ```
