@@ -139,9 +139,9 @@ Upon success, you'll see skill listings and bootstrap instructions, confirming t
 
 The superpowers library provides:
 - **20+ battle-tested skills** for planning, debugging, TDD, and code review
-- **Skill invocation patterns** that Codex recognizes automatically
+- **Skill invocation patterns** you can use explicitly or via prompt hints
 - **Custom skills directory** for your team's workflows
-- **Bootstrap system** that loads skills into your session
+- **Bootstrap system** that loads skills into your session (run manually)
 
 ### Directory Structure
 
@@ -226,7 +226,7 @@ flowchart TD
 
 ### Before You Start
 
-Ensure superpowers is installed (Section 2) and bootstrapped. The bootstrap runs automatically when your `AGENTS.md` configuration is loaded, or you can run it manually:
+Ensure superpowers is installed (Section 2) and bootstrapped. Run the bootstrap manually to load skills into your session:
 
 ```bash
 ~/.codex/superpowers/.codex/superpowers-codex bootstrap
@@ -241,17 +241,17 @@ Once bootstrapped, skills are available for the session. You'll see a list of av
 codex "I need to plan a new feature. Use superpowers:writing-plans"
 ```
 
-**Pattern 2: Natural trigger**
+**Pattern 2: Prompt hint (best-effort matching)**
 ```bash
-codex "I've tried 3 fixes and the bug is still there"
-# Codex recognizes this matches superpowers:systematic-debugging
+codex "I've tried 3 fixes and the bug is still there. Use systematic-debugging."
+# Hint helps Codex recognize which skill to use
 ```
 
-**Pattern 3: Proactive suggestion**
+**Pattern 3: Ask for suggestion**
 ```bash
-You: "Let's add user authentication"
-Codex: "This is a complex feature. I'll use superpowers:brainstorming
-        to refine the requirements before we start coding."
+You: "Let's add user authentication. What skill should I use?"
+Codex: "For complex features like this, I recommend using
+        superpowers:brainstorming to refine requirements first."
 ```
 
 ### Skill Workflow Example: Building a Feature
@@ -338,17 +338,17 @@ Verification Checklist:
 Recommendation: Add integration test before marking complete.
 ```
 
-### When Skills Kick In Automatically
+### Recommended Skill Patterns
 
-Well-configured environments trigger skills based on context:
+Use these prompt patterns to invoke the right skill for common situations:
 
-| Context | Skill Triggered |
-|---------|-----------------|
-| "I've tried 3 fixes and it's still broken" | `systematic-debugging` |
-| "Let's implement [complex feature]" | `brainstorming` first |
-| "Create a plan for..." | `writing-plans` |
-| "I think we're done" | `verification-before-completion` |
-| "Review my code" | `requesting-code-review` |
+| Situation | Recommended Skill | Prompt Pattern |
+|-----------|------------------|----------------|
+| Bug persists after multiple attempts | `systematic-debugging` | "Use systematic-debugging to trace this issue" |
+| Starting a complex feature | `brainstorming` | "Let's use brainstorming before coding" |
+| Need implementation plan | `writing-plans` | "Create a plan using writing-plans" |
+| Think work is complete | `verification-before-completion` | "Run verification-before-completion" |
+| Want code reviewed | `requesting-code-review` | "Use requesting-code-review on my changes" |
 
 ---
 
