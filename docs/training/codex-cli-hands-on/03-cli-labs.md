@@ -17,7 +17,7 @@ Checks:
 Goal: Let Codex make a small change with approvals.  
 Steps:  
 1) Choose a trivial file (e.g., `hello.py` or `README.md`).  
-2) Run `codex --ask-for-approval "update hello.py to print a greeting and add a short comment explaining the script"`  
+2) Run `codex -a on-request "update hello.py to print a greeting and add a short comment explaining the script"`  
 3) Approve the edit to the target file; review the diff Codex shows.  
 4) If satisfied, approve write; otherwise request a revision.  
 Checks:  

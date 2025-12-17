@@ -166,7 +166,7 @@ codex exec "prompt"             # Non-interactive, single response
 ### Useful Flags
 
 ```bash
-codex -a                        # Ask approval for everything
+codex -a untrusted              # Require approval for untrusted commands
 codex --sandbox read-only       # Read-only mode
 codex --model gpt-5.1-codex-max # Specific model
 codex --profile safe            # Use a saved profile
@@ -256,7 +256,8 @@ codex resume             # Pick from recent sessions
 
 ### Safety Flags
 ```bash
--a, --ask-for-approval   # Approve everything
+-a on-request            # Require approval before actions
+--full-auto              # Alias for -a on-request + --sandbox workspace-write
 --sandbox read-only      # Can't write files
 --sandbox workspace-write # Write to project (default)
 ```

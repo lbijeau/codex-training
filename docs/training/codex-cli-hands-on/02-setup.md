@@ -44,8 +44,8 @@ Readiness check:
 |------|-------------|
 | `--cd <path>` | Set working directory to a specific repo |
 | `--add-dir <path>` | Add additional directories for multi-repo work |
-| `-a`, `--ask-for-approval` | Require approval before executing commands |
-| `--full-auto` | Enable writes without approval (use with caution) |
+| `-a <policy>` | Set approval policy: `untrusted`, `on-failure`, `on-request`, `never` |
+| `--full-auto` | Alias for `-a on-request` + `--sandbox workspace-write` |
 | `--json` | Output structured JSON events (`codex exec` only) |
 | `--output-schema <file>` | Validate output against JSON schema |
 | `-o`, `--output-last-message` | Capture final response to file |
