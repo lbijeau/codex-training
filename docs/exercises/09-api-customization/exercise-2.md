@@ -67,6 +67,7 @@ While Codex helps you write and review code, Git hooks and CI pipelines ensure c
 
    # Run tests related to changed files (if using jest)
    echo "🧪 Running related tests..."
+   # diff-filter=ACMR limits to added/copied/modified/renamed files
    STAGED_JS_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx|js|jsx)$' | tr '\n' ' ')
    if [ -n "$STAGED_JS_FILES" ]; then
      npx jest --bail --findRelatedTests $STAGED_JS_FILES --passWithNoTests || exit 1

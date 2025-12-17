@@ -427,7 +427,7 @@ Conceptual pattern:
 3. Process final output
 ```
 
-**Implementation**: See the [OpenAI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming) for current SDK syntax. Key patterns:
+**Implementation**: For a runnable example, use the code snippet in the [OpenAI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming). Key patterns:
 - Enabling streaming (`stream=True` or dedicated streaming method)
 - Event/chunk structure for extracting text
 - Canceling a stream mid-response
