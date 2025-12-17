@@ -183,7 +183,7 @@ if response.output and response.output[0].type == "function_call":
             {
                 "type": "function_call_output",
                 "call_id": tool_call.call_id,  # Match the tool call ID
-                "output": result               # Your tool's output (JSON string)
+                "output": json.dumps(result)   # Serialize result to JSON string
             }
         ]
     )
@@ -411,31 +411,25 @@ codex "Show me only the validateUser function from src/auth.ts and review it"
 
 **3. Streaming** — Stop early if output diverges:
 
+Streaming lets you process response tokens as they arrive, enabling early termination if output goes off-track:
+
 ```python
-# Conceptual streaming pattern - verify exact syntax with OpenAI SDK docs
-from openai import OpenAI
-client = OpenAI()
-
+# Pseudocode - see OpenAI streaming docs for exact syntax
 output = ""
+for chunk in stream_response(model="codex-1", input=messages):
+    output += chunk.text
+    print(chunk.text, end="", flush=True)
 
-# Stream the response and process chunks as they arrive
-for event in client.responses.create(
-    model="codex-1",
-    input=messages,
-    stream=True
-):
-    # Extract text from the event (exact structure varies by SDK version)
-    if hasattr(event, 'delta') and event.delta:
-        chunk = event.delta.get('text', '')
-        output += chunk
-        print(chunk, end="", flush=True)
-
-    # Stop if we detect repetition or off-topic content
+    # Stop early if output diverges
     if len(output) > 2000 and is_repetitive(output):
+        cancel_stream()
         break
 ```
 
-> **Important**: The streaming API evolves frequently. Always verify the exact method names and event structure in the [OpenAI API documentation](https://platform.openai.com/docs) before implementation.
+For the exact streaming implementation, see the [OpenAI Streaming Guide](https://platform.openai.com/docs/api-reference/streaming). Key patterns to look for:
+- How to enable streaming (`stream=True` or streaming method)
+- Event/chunk structure for extracting text
+- How to cancel a stream mid-response
 
 **4. Cache context** — Store state between sessions:
 
