@@ -165,76 +165,111 @@ Create `.codex/settings.json` in your project root:
 
 ---
 
-## 3. Hooks
+## 3. Automation with Git Hooks & CI
 
-Hooks are scripts that run automatically at specific points in Codex's workflow. They let you inject context, validate actions, or log activity.
+While Codex CLI handles tool execution internally, you can automate quality checks and workflows using standard development tools: Git hooks, CI pipelines, and shell scripts.
 
-### Available Hooks
+### Git Hooks with Husky
 
-| Hook | When It Runs | Use Case |
-|------|--------------|----------|
-| `PreToolUse` | Before any tool executes | Validate, log, or modify tool calls |
-| `PostToolUse` | After any tool completes | Log results, trigger follow-up actions |
-| `Notification` | On specific events | Custom notifications |
+Use Git hooks to run checks before commits:
 
-### Hook Configuration
+```bash
+# Install husky and lint-staged
+npm install --save-dev husky lint-staged
 
-Create hooks in `.codex/hooks/`:
+# Initialize husky
+npx husky init
 
-```
-.codex/
-└── hooks/
-    ├── pre-tool-use.sh
-    └── post-tool-use.sh
+# Create pre-commit hook
+echo 'npx lint-staged' > .husky/pre-commit
 ```
 
-### Example: Pre-Tool Hook for Logging
+```json
+// package.json
+{
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": ["prettier --write", "eslint --fix"],
+    "*.{json,md}": ["prettier --write"]
+  }
+}
+```
+
+### CI/CD Pipelines
+
+Automate checks on every push with GitHub Actions:
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+```
+
+### Pre-Commit Checks
+
+Create a pre-commit hook to validate code before committing:
 
 ```bash
 #!/bin/bash
-# .codex/hooks/pre-tool-use.sh
-# Logs all tool usage to a file
+# .husky/pre-commit
 
-TOOL_NAME="$1"
-TOOL_ARGS="$2"
+# Run tests
+npm test || exit 1
 
-echo "$(date '+%Y-%m-%d %H:%M:%S') | Tool: $TOOL_NAME | Args: $TOOL_ARGS" >> .codex/tool-log.txt
+# Run linter
+npm run lint || exit 1
+
+# Run type check
+npm run typecheck || exit 1
+
+echo "✅ All checks passed"
 ```
 
-### Example: Block Dangerous Commands
+### Shell Scripts for Workflows
+
+Create reusable scripts for common Codex workflows:
 
 ```bash
 #!/bin/bash
-# .codex/hooks/pre-tool-use.sh
-# Block dangerous bash commands
+# scripts/codex-review.sh
+# Run Codex review and format output
 
-TOOL_NAME="$1"
-TOOL_ARGS="$2"
+echo "🔍 Running code review..."
+codex "Review my staged changes for bugs and security issues" \
+  | tee review-output.txt
 
-if [[ "$TOOL_NAME" == "Bash" ]]; then
-  # Block rm -rf on important directories
-  if echo "$TOOL_ARGS" | grep -qE "rm\s+-rf\s+(/|~|/home)"; then
-    echo "BLOCKED: Refusing to run dangerous rm command"
-    exit 1
-  fi
+echo ""
+echo "Review saved to review-output.txt"
+```
+
+```bash
+#!/bin/bash
+# scripts/pre-pr-check.sh
+# Run before creating a PR
+
+echo "🔍 Running pre-PR checks..."
+
+npm test || { echo "❌ Tests failed"; exit 1; }
+npm run lint || { echo "❌ Lint failed"; exit 1; }
+npm run typecheck || { echo "❌ Type check failed"; exit 1; }
+
+# Check for debug code
+if grep -r "console.log\|debugger" src/; then
+  echo "⚠️  Found debug code"
 fi
-```
 
-### Example: Auto-Format After Edits
-
-```bash
-#!/bin/bash
-# .codex/hooks/post-tool-use.sh
-# Run prettier after file edits
-
-TOOL_NAME="$1"
-FILE_PATH="$2"
-
-if [[ "$TOOL_NAME" == "Edit" || "$TOOL_NAME" == "Write" ]]; then
-  if [[ "$FILE_PATH" == *.ts || "$FILE_PATH" == *.tsx ]]; then
-    npx prettier --write "$FILE_PATH" 2>/dev/null
-  fi
-fi
+echo "✅ All checks passed - ready for PR"
 ```
 
 ---
@@ -414,7 +449,7 @@ startup_timeout_sec = 20
 
 1. **AGENTS.md**: Project-specific instructions that shape every conversation
 2. **Settings**: Control permissions and behavior at user and project level
-3. **Hooks**: Automate pre/post actions for consistency and safety
+3. **Git Hooks & CI**: Automate quality checks with standard development tools
 4. **MCP Servers**: Extend Codex with external tools and services
 
 ---
@@ -422,6 +457,6 @@ startup_timeout_sec = 20
 ## Next Steps
 
 1. Create an AGENTS.md for your current project
-2. Set up a hook to auto-format code after edits
+2. Set up Git hooks with husky/lint-staged to auto-format code
 3. Install one MCP server (GitHub is a good start)
 4. Proceed to [Module 2: Skills](02-skills.md)
