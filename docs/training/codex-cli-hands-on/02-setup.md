@@ -4,7 +4,7 @@ Prerequisites:
 - Node 18+ or Homebrew access; shell with `curl`/`zsh`/`bash`.
 - ChatGPT account with Codex access (preferred) or OpenAI API key as fallback.
 - A small practice repo you can modify safely (e.g., a toy script).
-- **Important:** Codex CLI requires running inside a Git repository to track changes and prevent destructive operations.
+- **Recommended:** Run inside a Git repository for change tracking and safety. Use `--skip-git-repo-check` to run outside a repo if needed.
 
 Install Codex CLI (see [official README](https://github.com/openai/codex#readme)):
 - `npm install -g @openai/codex` or `brew install --cask codex`
