@@ -43,7 +43,6 @@ graph TB
     ROOT --> playbook["docs/playbook\nQuick reference"]
     ROOT --> outlines["docs/outlines\nModule outlines"]
     ROOT --> practice["practice/\nWorkspace for exercises"]
-    ROOT --> helpers["codex_helpers/\nHelper functions for Codex"]
     ROOT --> codexExamples[".codex-examples/\nSample prompts + functions"]
     ROOT --> tests["tests/\nVerification suites"]
     ROOT --> scripts["scripts/\nCLI helpers"]
@@ -227,7 +226,7 @@ Update module status as you complete them:
 ## Codex Workspace
 
 - **`.codex-examples/`** holds sample helper functions, prompt templates, logging scripts, and context files. Copy the pieces you need into your own `.codex/` folder to jumpstart a session.
-- **`.codex/functions.json`** documents the helper functions you register with each session (name, description, parameter schema). Keep it synced with `codex_helpers/` so prompts see the same catalog every time.
+- **`.codex/functions.json`** documents the helper functions you register with each session (name, description, parameter schema).
 - **Context files** like `.codex/context.md` describe the current project state. Include them at the start of a session so Codex understands your assumptions without re-reading every detail.
 
 ## Contributing
@@ -236,6 +235,8 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 - Reporting issues and suggesting enhancements
 - Adding patterns, exercises, and examples
 - Code style and pull request process
+
+**[Engineering Board](https://github.com/users/lbijeau/projects/2)** - Track project progress and find issues to work on.
 
 ## License
 
