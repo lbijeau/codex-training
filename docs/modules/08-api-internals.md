@@ -191,6 +191,8 @@ if response.output and response.output[0].type == "function_call":
 
 > **Note**: The Responses API structure may evolve. Always verify the current request format in the [OpenAI API documentation](https://platform.openai.com/docs). Key fields to check: `previous_response_id`, `call_id`, and the tool output format.
 
+> **Note**: A response can include multiple tool calls. In production code, iterate over `response.output` and handle each `function_call` in order, sending a `function_call_output` for each `call_id` before continuing.
+
 Codex now sees the tool result and can continue reasoning.
 
 ### Tool wrappers instead of built-in tools

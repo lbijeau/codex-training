@@ -71,8 +71,8 @@ npx husky init
 echo 'npx lint-staged' > .husky/pre-commit
 ```
 
+Example `package.json` snippet:
 ```json
-// package.json
 {
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": ["prettier --write", "eslint --fix"],
