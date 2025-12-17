@@ -256,7 +256,8 @@ codex sessions list      # List recent sessions
 
 ### Safety Flags
 ```bash
--a, --ask-for-approval   # Approve everything
+-a on-request            # Require approval before actions
+--full-auto              # Auto-approve safe operations
 --sandbox read-only      # Can't write files
 --sandbox workspace-write # Write to project (default)
 ```

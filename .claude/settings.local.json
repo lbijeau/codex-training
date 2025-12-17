@@ -4,7 +4,9 @@
       "Bash(rg:*)",
       "mcp__imagegen__render-mermaid",
       "Bash(git mv:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue edit:*)"
     ]
   }
 }

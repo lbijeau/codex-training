@@ -3,7 +3,7 @@
 Use this module as an add-on after the core labs. Focus: automation with `codex exec`, richer config, observability, execpolicy, MCP client setup, and a TypeScript SDK primer.
 
 ## Automation with `codex exec`
-- Modes: default read-only; `--full-auto` to enable writes; `--sandbox` to set sandbox explicitly.
+- Modes: default requires approval; `--full-auto` auto-approves safe operations; `--sandbox` controls file access (read-only, workspace-write, danger-full-access).
 - Structured outputs: `--json` to stream events (`command_execution`, `file_change`, `mcp_tool_call`, `agent_message`) and `--output-schema` to enforce JSON schema for the final message.
 - Resume: `codex exec resume --last "follow-up prompt"` keeps context; re-specify flags if needed.
 - Lab idea: pipe JSONL to `jq` to count file changes:
