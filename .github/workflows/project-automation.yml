@@ -2,14 +2,16 @@ name: Project Automation
 
 on:
   issues:
-    types: [opened]
+    types: [opened, assigned]
   pull_request:
     types: [opened, closed]
+  create:
 
 env:
   PROJECT_ID: PVT_kwHOACLQ0M4BKw_G
   STATUS_FIELD_ID: PVTSSF_lAHOACLQ0M4BKw_Gzg6ibXM
   STATUS_BACKLOG: beef0a85
+  STATUS_IN_PROGRESS: 47fc9ee4
   STATUS_IN_REVIEW: 2d117e49
   STATUS_DONE: 98236657
 
@@ -25,30 +27,117 @@ jobs:
           project-url: https://github.com/users/lbijeau/projects/2
           github-token: ${{ secrets.PROJECT_TOKEN }}
 
-  pr-opened:
-    name: Move to In Review when PR opened
+  # Move to In Progress when BOTH assigned AND branch exists
+  issue-assigned:
+    name: Check for In Progress on assignment
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    if: github.event_name == 'issues' && github.event.action == 'assigned'
     steps:
-      - name: Move linked issues to In Review
+      - name: Check for branch and move to In Progress
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.PROJECT_TOKEN }}
           script: |
-            const body = context.payload.pull_request.body || '';
-            const fixes = body.match(/(?:fixes|closes|resolves)\s+#(\d+)/gi) || [];
-            const issueNumbers = fixes.map(m => m.match(/\d+/)[0]);
+            const issueNumber = context.payload.issue.number;
 
-            for (const issueNumber of issueNumbers) {
-              // Get the issue node ID
-              const issue = await github.rest.issues.get({
+            // Check if a branch exists containing this issue number
+            const { data: branches } = await github.rest.repos.listBranches({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            const pattern = new RegExp(`(^|[-_/])${issueNumber}([-_/]|$)`);
+            const matchingBranch = branches.find(b => pattern.test(b.name));
+
+            if (!matchingBranch) {
+              console.log(`No branch found for issue #${issueNumber}, skipping`);
+              return;
+            }
+
+            console.log(`Found branch ${matchingBranch.name} for issue #${issueNumber}`);
+
+            // Move to In Progress
+            const contentId = context.payload.issue.node_id;
+            const query = `
+              query($contentId: ID!) {
+                node(id: $contentId) {
+                  ... on Issue {
+                    projectItems(first: 10) {
+                      nodes {
+                        id
+                        project { id }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+            const result = await github.graphql(query, { contentId });
+            const items = result.node?.projectItems?.nodes || [];
+            const projectItem = items.find(i => i.project.id === process.env.PROJECT_ID);
+
+            if (projectItem) {
+              const mutation = `
+                mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                  updateProjectV2ItemFieldValue(input: {
+                    projectId: $projectId
+                    itemId: $itemId
+                    fieldId: $fieldId
+                    value: { singleSelectOptionId: $optionId }
+                  }) {
+                    projectV2Item { id }
+                  }
+                }
+              `;
+              await github.graphql(mutation, {
+                projectId: process.env.PROJECT_ID,
+                itemId: projectItem.id,
+                fieldId: process.env.STATUS_FIELD_ID,
+                optionId: process.env.STATUS_IN_PROGRESS
+              });
+              console.log(`Moved issue #${issueNumber} to In Progress`);
+            }
+
+  branch-created:
+    name: Check for In Progress on branch creation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'create' && github.event.ref_type == 'branch'
+    steps:
+      - name: Check for assigned issue and move to In Progress
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_TOKEN }}
+          script: |
+            const branchName = context.payload.ref;
+
+            // Extract issue number from branch name (e.g., "16-improve-..." or "fix/16-...")
+            const match = branchName.match(/(?:^|[-_/])(\d+)(?:[-_/]|$)/);
+            if (!match) {
+              console.log(`No issue number found in branch ${branchName}`);
+              return;
+            }
+
+            const issueNumber = parseInt(match[1]);
+            console.log(`Found issue #${issueNumber} in branch ${branchName}`);
+
+            // Get the issue and check if it's assigned
+            try {
+              const { data: issue } = await github.rest.issues.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                issue_number: parseInt(issueNumber)
+                issue_number: issueNumber
               });
-              const contentId = issue.data.node_id;
 
-              // Find the project item for this issue
+              if (!issue.assignees || issue.assignees.length === 0) {
+                console.log(`Issue #${issueNumber} is not assigned, skipping`);
+                return;
+              }
+
+              console.log(`Issue #${issueNumber} is assigned to ${issue.assignees.map(a => a.login).join(', ')}`);
+
+              // Move to In Progress
+              const contentId = issue.node_id;
               const query = `
                 query($contentId: ID!) {
                   node(id: $contentId) {
@@ -68,7 +157,71 @@ jobs:
               const projectItem = items.find(i => i.project.id === process.env.PROJECT_ID);
 
               if (projectItem) {
-                // Update status to In Review
+                const mutation = `
+                  mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                    updateProjectV2ItemFieldValue(input: {
+                      projectId: $projectId
+                      itemId: $itemId
+                      fieldId: $fieldId
+                      value: { singleSelectOptionId: $optionId }
+                    }) {
+                      projectV2Item { id }
+                    }
+                  }
+                `;
+                await github.graphql(mutation, {
+                  projectId: process.env.PROJECT_ID,
+                  itemId: projectItem.id,
+                  fieldId: process.env.STATUS_FIELD_ID,
+                  optionId: process.env.STATUS_IN_PROGRESS
+                });
+                console.log(`Moved issue #${issueNumber} to In Progress`);
+              }
+            } catch (e) {
+              console.log(`Issue #${issueNumber} not found or error: ${e.message}`);
+            }
+
+  pr-opened:
+    name: Move to In Review when PR opened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    steps:
+      - name: Move linked issues to In Review
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_TOKEN }}
+          script: |
+            const body = context.payload.pull_request.body || '';
+            const fixes = body.match(/(?:fixes|closes|resolves)\s+#(\d+)/gi) || [];
+            const issueNumbers = fixes.map(m => m.match(/\d+/)[0]);
+
+            for (const issueNumber of issueNumbers) {
+              const issue = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: parseInt(issueNumber)
+              });
+              const contentId = issue.data.node_id;
+
+              const query = `
+                query($contentId: ID!) {
+                  node(id: $contentId) {
+                    ... on Issue {
+                      projectItems(first: 10) {
+                        nodes {
+                          id
+                          project { id }
+                        }
+                      }
+                    }
+                  }
+                }
+              `;
+              const result = await github.graphql(query, { contentId });
+              const items = result.node?.projectItems?.nodes || [];
+              const projectItem = items.find(i => i.project.id === process.env.PROJECT_ID);
+
+              if (projectItem) {
                 const mutation = `
                   mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
                     updateProjectV2ItemFieldValue(input: {
