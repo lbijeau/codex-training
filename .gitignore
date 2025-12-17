@@ -80,3 +80,4 @@ secrets.json
 
 # OS-specific
 *.icloud
+.worktrees/
