@@ -148,7 +148,7 @@ codex --sandbox read-only
 ```bash
 codex                           # Interactive TUI in current directory
 codex --cd ~/other-project      # Start in different directory
-codex --resume                  # Continue last session
+codex resume                    # Continue last session
 codex exec "prompt"             # Non-interactive, single response
 ```
 
@@ -250,8 +250,7 @@ API-focused content (internals, custom integrations) is in Modules 8-9 for when 
 ```bash
 codex                    # Start interactive session
 codex exec "prompt"      # Non-interactive
-codex --resume           # Continue last session
-codex sessions list      # List recent sessions
+codex resume             # Continue last session
 ```
 
 ### Safety Flags
