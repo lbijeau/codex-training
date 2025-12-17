@@ -469,7 +469,6 @@ Example:
 
 - Open an issue for questions about contributing
 - Use GitHub Discussions (if enabled) for broader topics
-- Post training material reviews in Discussions and link any related hub issue(s)
 - Be patient and respectful with responses
 
 ### Recognition
