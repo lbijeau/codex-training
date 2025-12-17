@@ -165,25 +165,27 @@ After you see a tool call, run the matching tool and send the result back:
 ```python
 # Check if Codex wants to call a tool
 if response.output and response.output[0].type == "function_call":
-    call = response.output[0]  # Extract tool name and args
+    tool_call = response.output[0]  # Extract tool call details
 
     # Run YOUR implementation of the tool
-    result = list_todos(call.arguments)
+    result = list_todos(tool_call.arguments)
 
-    # Send the result back to Codex as a "tool" message
+    # Send the result back using the response ID for continuation
     follow_up = client.responses.create(
         model="codex-1",
+        previous_response_id=response.id,  # Continue from previous response
         input=[
-            {"role": "user", "content": "Get the list of TODOs."},
-            {"type": "function_call", "id": call.id, "name": call.name, "arguments": call.arguments},
             {
                 "type": "function_call_output",
-                "call_id": call.id,       # Must match the tool call ID
-                "output": result          # Your tool's output (usually JSON string)
+                "call_id": tool_call.call_id,  # Match the tool call ID
+                "output": result               # Your tool's output (JSON string)
             }
         ]
     )
 ```
+
+> **Note**: The Responses API structure may evolve. Always verify the current request format in the [OpenAI API documentation](https://platform.openai.com/docs). Key fields to check: `previous_response_id`, `call_id`, and the tool output format.
+
 Codex now sees the tool result and can continue reasoning.
 
 ### Tool wrappers instead of built-in tools
@@ -405,23 +407,26 @@ codex "Show me only the validateUser function from src/auth.ts and review it"
 **3. Streaming** — Stop early if output diverges:
 
 ```python
-stream = client.responses.create(
+# Using the OpenAI SDK's streaming helper
+from openai import OpenAI
+client = OpenAI()
+
+output = ""
+with client.responses.create(
     model="codex-1",
     input=messages,
     stream=True
-)
-
-output = ""
-for event in stream:
-    if event.type == "content_block_delta":
-        delta = event.delta.text or ""
-        output += delta
-        print(delta, end="", flush=True)
+) as stream:
+    for text in stream.text_stream:
+        output += text
+        print(text, end="", flush=True)
 
         # Stop if we detect repetition or off-topic content
         if len(output) > 2000 and is_repetitive(output):
             break
 ```
+
+> **Note**: The exact streaming API may vary. Consult the [OpenAI API documentation](https://platform.openai.com/docs) for current streaming patterns.
 
 **4. Cache context** — Store state between sessions:
 

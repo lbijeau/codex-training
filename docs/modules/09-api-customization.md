@@ -96,47 +96,22 @@ Brief description of what this project does.
 
 ---
 
-## 2. Settings & Configuration
+## 2. Configuration & Permissions
 
-Codex settings control behavior, permissions, and defaults.
+Codex configuration is primarily managed through AGENTS.md files and runtime settings.
 
-### Settings Location
+### Configuration Location
 
 ```
 ~/.codex/
-├── settings.json      # User settings
-├── AGENTS.md          # Global instructions
-└── skills/            # Custom skills
-```
-
-### Key Settings
-
-```json
-{
-  "permissions": {
-    "allow_file_write": true,
-    "allow_bash": true,
-    "allowed_tools": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
-  },
-  "behavior": {
-    "auto_compact": true,
-    "verbose_errors": false
-  }
-}
+├── AGENTS.md          # Global instructions (primary configuration)
+├── commands/          # Custom slash commands
+└── skills/            # Custom skills (optional)
 ```
 
 ### Permission Management
 
-Codex asks for permission before potentially destructive actions. You can pre-approve certain operations:
-
-```
-You: "I trust you to edit files in src/ without asking"
-
-Codex: I'll remember that. For this session, I won't ask before
-editing files in the src/ directory.
-```
-
-Or set it in your AGENTS.md:
+Codex asks for permission before potentially destructive actions. You can pre-approve operations in your AGENTS.md:
 
 ```markdown
 ## Permissions
@@ -145,23 +120,30 @@ Or set it in your AGENTS.md:
 - Always ask before running `rm` commands
 ```
 
-### Project-Level Settings
+Or grant permissions conversationally during a session:
 
-Create `.codex/settings.json` in your project root:
-
-```json
-{
-  "context_files": [
-    "docs/architecture.md",
-    "docs/api-spec.md"
-  ],
-  "ignore_patterns": [
-    "node_modules/**",
-    "dist/**",
-    "*.min.js"
-  ]
-}
 ```
+You: "I trust you to edit files in src/ without asking"
+
+Codex: I'll remember that. For this session, I won't ask before
+editing files in the src/ directory.
+```
+
+> **Note**: For the most current configuration options, run `codex --help` or check the [official Codex CLI documentation](https://docs.anthropic.com/en/docs/claude-code).
+
+### Project-Level Configuration
+
+You can create project-specific AGENTS.md files to customize Codex behavior per project:
+
+```
+project-root/
+├── AGENTS.md           # Project-specific instructions (read by Codex)
+├── .codex/
+│   └── commands/       # Custom slash commands for this project
+└── src/
+```
+
+The project-level `AGENTS.md` is automatically combined with your global `~/.codex/AGENTS.md`, with project settings taking precedence.
 
 ---
 
