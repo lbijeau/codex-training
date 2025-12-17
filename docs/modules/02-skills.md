@@ -243,7 +243,7 @@ codex "I need to plan a new feature. Use superpowers:writing-plans"
 
 **Pattern 2: Prompt hint (best-effort matching)**
 ```bash
-codex "I've tried 3 fixes and the bug is still there. Use systematic-debugging."
+codex "I've tried 3 fixes and the bug is still there. Use superpowers:systematic-debugging."
 # Hint helps Codex recognize which skill to use
 ```
 
@@ -344,11 +344,11 @@ Use these prompt patterns to invoke the right skill for common situations:
 
 | Situation | Recommended Skill | Prompt Pattern |
 |-----------|------------------|----------------|
-| Bug persists after multiple attempts | `systematic-debugging` | "Use systematic-debugging to trace this issue" |
-| Starting a complex feature | `brainstorming` | "Let's use brainstorming before coding" |
-| Need implementation plan | `writing-plans` | "Create a plan using writing-plans" |
-| Think work is complete | `verification-before-completion` | "Run verification-before-completion" |
-| Want code reviewed | `requesting-code-review` | "Use requesting-code-review on my changes" |
+| Bug persists after multiple attempts | `superpowers:systematic-debugging` | "Use superpowers:systematic-debugging to trace this issue" |
+| Starting a complex feature | `superpowers:brainstorming` | "Let's use superpowers:brainstorming before coding" |
+| Need implementation plan | `superpowers:writing-plans` | "Create a plan using superpowers:writing-plans" |
+| Think work is complete | `superpowers:verification-before-completion` | "Run superpowers:verification-before-completion" |
+| Want code reviewed | `superpowers:requesting-code-review` | "Use superpowers:requesting-code-review on my changes" |
 
 ---
 
