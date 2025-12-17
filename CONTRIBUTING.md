@@ -34,12 +34,40 @@ This project adheres to a code of conduct that all contributors are expected to 
 If you find bugs, errors, or areas for improvement:
 
 1. **Check existing issues** to avoid duplicates
-2. **Create a new issue** with a clear, descriptive title
-3. **Include details**:
-   - Which module/exercise is affected
-   - What you expected vs. what happened
-   - Steps to reproduce (if applicable)
-   - Suggestions for improvement
+2. **Create a new issue** using the appropriate template
+3. **Fill out all required fields** - this helps LLMs and humans alike
+
+### Issue Workflow
+
+Issues follow a deterministic workflow. Status transitions:
+
+```
+Backlog → Ready
+  when: problem is clear and scoped
+
+Ready → In Progress
+  when: someone assigns themselves
+
+In Progress → In Review
+  when: PR is opened
+
+In Review → Done
+  when: PR is merged
+
+Any → Blocked
+  when: state:blocked label is applied
+```
+
+### Labels
+
+We use structured labels for machine-readability:
+
+| Namespace | Examples | Purpose |
+|-----------|----------|---------|
+| `type:` | bug, feature, chore, spike | What kind of work |
+| `state:` | blocked, needs-info | Current blockers |
+| `area:` | modules, exercises, docs, video | Where in the codebase |
+| `priority:` | p0, p1, p2 | Urgency (p0 = critical) |
 
 ### Suggesting Enhancements
 
@@ -99,7 +127,6 @@ codex-training/
 │   └── prompt_templates/ # Prompt templates
 ├── examples/             # Code examples
 ├── practice/             # Practice workspace
-├── codex_helpers/        # Helper scripts
 └── .codex-examples/      # Sample workspace configuration
 ```
 

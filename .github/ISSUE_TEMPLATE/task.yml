@@ -1,0 +1,83 @@
+name: Task
+description: General task or work item
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for any work item. Keep it concise and LLM-friendly.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is broken or missing?
+      placeholder: Describe the current state and why it needs to change.
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired Outcome
+      description: What does success look like?
+      placeholder: Be specific about the end state.
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Any limitations or requirements?
+      placeholder: |
+        - API compatibility
+        - Backward compatibility
+        - Performance requirements
+        - Security considerations
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Links, context, prior art
+      placeholder: Any additional context, links to related issues, or prior attempts.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - feature
+        - bug
+        - chore
+        - spike
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - p2 (normal)
+        - p1 (high)
+        - p0 (critical)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - modules
+        - exercises
+        - docs
+        - video
+    validations:
+      required: true
