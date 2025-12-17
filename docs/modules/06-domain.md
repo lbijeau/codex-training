@@ -29,6 +29,7 @@ Master patterns for common software development scenarios: refactoring, architec
 
 ### Refactoring Workflow
 
+<!-- Note: Edge labels may render with gray backgrounds on GitHub - this is a known limitation -->
 ```mermaid
 flowchart LR
     UNDERSTAND["🔍 Understand"]
