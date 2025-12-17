@@ -2,7 +2,7 @@
 
 Use a disposable repo. Keep approvals visible so learners see the safety loop. Each lab lists a goal, steps, and checks.
 
-> **Note:** Codex CLI requires running inside a Git repository. Ensure your practice repo is initialized with `git init` before starting labs.
+> **Note:** Running inside a Git repository is recommended for change tracking. Use `git init` to initialize, or `--skip-git-repo-check` to run outside a repo.
 
 ## Lab 1: Orientation Prompt (interactive TUI)
 Goal: Verify Codex can read files and respond with context.  
