@@ -27,7 +27,7 @@ Strong PRDs start with an evidence-backed problem statement. This exercise build
 1. Copy the PRD template into your workspace:
    ```bash
    mkdir -p practice/pm-prd
-   cp docs/templates/prd.md practice/pm-prd/prd.md
+   cp docs/exercises/pm-prd/prd-template.md practice/pm-prd/prd.md
    ```
 2. Fill in the **Problem Statement** section in `practice/pm-prd/prd.md`.
 3. Add at least two citations in the **Evidence / Sources** section.

@@ -10,7 +10,7 @@ Define what is in scope and how success will be verified.
 If you skipped Exercise 1, create the PRD draft first:
 ```bash
 mkdir -p practice/pm-prd
-cp docs/templates/prd.md practice/pm-prd/prd.md
+cp docs/exercises/pm-prd/prd-template.md practice/pm-prd/prd.md
 ```
 
 1. Update **Scope** in `practice/pm-prd/prd.md` with 3-5 bullets.

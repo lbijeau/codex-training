@@ -11,22 +11,22 @@
 ### Task 1: Add PRD template
 
 **Files:**
-- Create: `docs/templates/prd.md`
+- Create: `docs/exercises/pm-prd/prd-template.md`
 
 **Step 1: Write the failing test**
 
 ```bash
-test -f docs/templates/prd.md
+test -f docs/exercises/pm-prd/prd-template.md
 ```
 
 **Step 2: Run test to verify it fails**
 
-Run: `test -f docs/templates/prd.md`
+Run: `test -f docs/exercises/pm-prd/prd-template.md`
 Expected: exit status 1 (file missing)
 
 **Step 3: Write minimal implementation**
 
-Create `docs/templates/prd.md` with:
+Create `docs/exercises/pm-prd/prd-template.md` with:
 
 ```markdown
 # Product Requirements Document (PRD)
@@ -64,13 +64,13 @@ Describe what is in scope for this effort.
 
 **Step 4: Run test to verify it passes**
 
-Run: `test -f docs/templates/prd.md`
+Run: `test -f docs/exercises/pm-prd/prd-template.md`
 Expected: exit status 0
 
 **Step 5: Commit**
 
 ```bash
-git add docs/templates/prd.md
+git add docs/exercises/pm-prd/prd-template.md
 git commit -m "Add PRD template for PM clinic"
 ```
 
@@ -166,7 +166,7 @@ Strong PRDs start with an evidence-backed problem statement. This exercise build
 1. Copy the PRD template into your workspace:
    ```bash
    mkdir -p practice/pm-prd
-   cp docs/templates/prd.md practice/pm-prd/prd.md
+   cp docs/exercises/pm-prd/prd-template.md practice/pm-prd/prd.md
    ```
 2. Fill in the **Problem Statement** section in `practice/pm-prd/prd.md`.
 3. Add at least two citations in the **Evidence / Sources** section.

@@ -13,7 +13,7 @@ Goals clarify success. Non-goals prevent scope creep. Constraints keep delivery 
 If you skipped Exercise 1, create the PRD draft first:
 ```bash
 mkdir -p practice/pm-prd
-cp docs/templates/prd.md practice/pm-prd/prd.md
+cp docs/exercises/pm-prd/prd-template.md practice/pm-prd/prd.md
 ```
 
 1. Open `practice/pm-prd/prd.md`.
