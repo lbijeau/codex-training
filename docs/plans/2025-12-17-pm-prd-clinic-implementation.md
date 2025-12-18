@@ -41,6 +41,9 @@ Describe the user problem and why it matters. Include evidence from repo sources
 ## Non-Goals
 - [ ] Non-goal 1
 
+## Constraints
+- [ ] Constraint 1
+
 ## Scope
 Describe what is in scope for this effort.
 
@@ -243,7 +246,7 @@ Goals clarify success. Non-goals prevent scope creep. Constraints keep delivery 
 
 1. Open `practice/pm-prd/prd.md`.
 2. Fill in **Goals** with 2-3 measurable outcomes.
-3. Add at least one constraint in **Non-Goals** (what this effort will not do).
+3. Add 1-2 items in **Constraints** (limits you must work within).
 
 ## Part B: Cite Evidence
 
@@ -326,6 +329,7 @@ git commit -m "Add PRD clinic exercises 2-4"
 **Files:**
 - Create: `docs/exercises/pm-prd/inputs/product-brief.md`
 - Create: `docs/exercises/pm-prd/inputs/repo-context.md`
+- Create: `docs/support/tagging.md`
 - Create: `practice/pm-prd/README.md`
 
 **Step 1: Write the failing test**
@@ -333,12 +337,13 @@ git commit -m "Add PRD clinic exercises 2-4"
 ```bash
 test -f docs/exercises/pm-prd/inputs/product-brief.md
 test -f docs/exercises/pm-prd/inputs/repo-context.md
+test -f docs/support/tagging.md
 test -f practice/pm-prd/README.md
 ```
 
 **Step 2: Run test to verify it fails**
 
-Run: the three `test -f` commands above
+Run: the four `test -f` commands above
 Expected: exit status 1 for each
 
 **Step 3: Write minimal implementation**
@@ -369,10 +374,30 @@ Create `docs/exercises/pm-prd/inputs/repo-context.md` with:
 ```markdown
 # Repo Context Notes
 
-- README states the product currently supports email-based intake only.
+- Note: Issue #42 and `docs/support/tagging.md` are synthetic references for this exercise.
+- Assume the product currently supports email-based intake only (exercise assumption).
 - Issue #42 requests "bulk tag suggestions" for repeated issues.
 - Last quarter metrics show 48h average first response time.
 - The team already uses a tagging taxonomy in `docs/support/tagging.md`.
+```
+
+Create `docs/support/tagging.md` with:
+
+```markdown
+# Support Tagging Taxonomy (Training Stub)
+
+This is a stub document used by the PM/PO PRD Clinic exercises.
+
+Current high-level tags:
+- login
+- billing
+- performance
+- integrations
+- ui-ux
+
+Notes:
+- Tags are applied manually during triage.
+- No automation is in place yet.
 ```
 
 Create `practice/pm-prd/README.md` with:
@@ -394,6 +419,7 @@ Run:
 ```bash
 test -f docs/exercises/pm-prd/inputs/product-brief.md
 test -f docs/exercises/pm-prd/inputs/repo-context.md
+test -f docs/support/tagging.md
 test -f practice/pm-prd/README.md
 ```
 Expected: exit status 0 for each
@@ -401,7 +427,7 @@ Expected: exit status 0 for each
 **Step 5: Commit**
 
 ```bash
-git add docs/exercises/pm-prd/inputs/product-brief.md docs/exercises/pm-prd/inputs/repo-context.md practice/pm-prd/README.md
+git add docs/exercises/pm-prd/inputs/product-brief.md docs/exercises/pm-prd/inputs/repo-context.md docs/support/tagging.md practice/pm-prd/README.md
 git commit -m "Add PRD clinic inputs and workspace"
 ```
 
