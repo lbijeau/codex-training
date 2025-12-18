@@ -1,0 +1,8 @@
+{
+  "docs": [
+    {
+      "path": "docs/exercises/missing.md",
+      "requiredSections": ["Objective"]
+    }
+  ]
+}

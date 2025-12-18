@@ -4,7 +4,7 @@ from pathlib import Path
 import re
 from typing import Iterable
 
-HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
+HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*$", re.MULTILINE)
 
 
 def _load_manifest(path: Path) -> dict:
@@ -27,7 +27,11 @@ def verify(root: str) -> list[str]:
     root_path = Path(root)
     errors: list[str] = []
 
-    for manifest_path in root_path.rglob("*.manifest.json"):
+    base_path = root_path / "docs" / "exercises"
+    if not base_path.exists():
+        return [f"{root_path}: missing docs/exercises"]
+
+    for manifest_path in base_path.rglob("*.manifest.json"):
         try:
             manifest = _load_manifest(manifest_path)
         except json.JSONDecodeError as exc:
