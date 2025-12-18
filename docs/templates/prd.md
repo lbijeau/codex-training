@@ -10,6 +10,9 @@ Describe the user problem and why it matters. Include evidence from repo sources
 ## Non-Goals
 - [ ] Non-goal 1
 
+## Constraints
+- [ ] Constraint 1
+
 ## Scope
 Describe what is in scope for this effort.
 
