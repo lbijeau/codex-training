@@ -1,6 +1,7 @@
 # Exercise 5: Function Calling Exploration
 
-Goal: Understand how to expose your helper scripts as functions and how Codex uses them to reason about structured data.
+## Objective
+Understand how to expose your helper scripts as functions and how Codex uses them to reason about structured data.
 
 ## Part A: Identify the helpers you already need
 1. List three operations you frequently ask Codex to do where it would help to have a structured helper (e.g., read a file, list TODOs, run tests).

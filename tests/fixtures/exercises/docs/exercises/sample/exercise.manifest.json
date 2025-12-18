@@ -1,0 +1,17 @@
+{
+  "docs": [
+    {
+      "path": "docs/exercises/sample/exercise-1.md",
+      "requiredSections": ["Objective", "Background"]
+    }
+  ],
+  "references": [
+    "docs/exercises/sample/README.md"
+  ],
+  "outputs": [
+    {
+      "fixture": "docs/exercises/sample/fixtures/output.md",
+      "requiredSections": ["Result"]
+    }
+  ]
+}
