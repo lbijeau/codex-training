@@ -1,0 +1,702 @@
+1
+00:00:00,000 --> 00:00:10,000
+[SLIDE]
+Codex CLI Mastery
+- 9 modules
+- CLI-first workflows
+- Safety + quality
+
+[NARRATION]
+This training takes you from basic Codex CLI usage to advanced workflows. We focus on safe, repeatable practices that scale from quick fixes to complex systems.
+
+2
+00:00:10,000 --> 00:00:20,000
+[SLIDE]
+Module 1: Getting Started
+- Install and authenticate
+- First real task
+- Safety model
+
+[NARRATION]
+Module 1 gets you productive in under an hour. You install Codex CLI, run a real task, and learn the approval and sandbox model that keeps changes safe.
+
+3
+00:00:20,000 --> 00:00:36,000
+[SLIDE]
+What Codex CLI Is
+- Works in your repo
+- Reads and edits files
+- You approve changes
+
+[NARRATION]
+Codex CLI is a terminal assistant that operates directly in your codebase. It reads files, proposes edits, and only applies changes after you approve.
+
+[ASSETS]
+type: mermaid
+purpose: illustrate Codex CLI propose-and-approve loop
+content:
+  flowchart LR
+    A[You prompt] --> B[Codex reads repo]
+    B --> C[Proposes changes]
+    C --> D{Approve?}
+    D -->|Yes| E[Apply edits]
+    D -->|No| F[No changes]
+
+4
+00:00:36,000 --> 00:00:46,000
+[SLIDE]
+Install and Verify
+- Install script or npm
+- codex auth login
+- codex --version
+
+[NARRATION]
+Install Codex CLI with the official script or npm, then authenticate with the login flow. Verify the install by checking the version command.
+
+5
+00:00:46,000 --> 00:00:56,000
+[SLIDE]
+First Task Workflow
+- Start a session
+- Ask a concrete question
+- Approve a small edit
+
+[NARRATION]
+Begin with a real, scoped task so you learn the feedback loop. Read or summarize files first, then try a tiny edit to see the approval step in action.
+
+6
+00:00:56,000 --> 00:01:06,000
+[SLIDE]
+Safety Model
+- Approval modes
+- Sandbox modes
+- Read-only option
+
+[NARRATION]
+Codex uses approvals and sandboxes to prevent unintended changes. Start with suggest or always approvals and use read-only when you only want analysis.
+
+7
+00:01:06,000 --> 00:01:16,000
+[SLIDE]
+Essential Commands
+- codex, codex exec
+- /diff, /undo
+- --sandbox, --profile
+
+[NARRATION]
+Learn the core commands early: interactive sessions, non-interactive exec, and the TUI helpers. Profiles and sandbox flags make safety repeatable across projects.
+
+8
+00:01:16,000 --> 00:01:26,000
+[SLIDE]
+Why Skills Matter
+- From ad-hoc to process
+- Fewer misses
+- Faster outcomes
+
+[NARRATION]
+Skills shift you from guessing to process. They encode proven workflows, reduce missed steps, and make complex tasks more reliable.
+
+9
+00:01:26,000 --> 00:01:36,000
+[SLIDE]
+Module 2: Skills
+- Reusable workflows
+- Superpowers library
+- Custom skills
+
+[NARRATION]
+Module 2 introduces skills as named, repeatable workflows. You learn how to install the library, invoke skills, and build your own.
+
+10
+00:01:36,000 --> 00:01:46,000
+[SLIDE]
+Skills Solve
+- Forgotten steps
+- Inconsistent prompts
+- Trial and error
+
+[NARRATION]
+Without skills, people improvise and miss critical steps. Skills provide structure, consistent prompts, and checklists that prevent common mistakes.
+
+11
+00:01:46,000 --> 00:01:56,000
+[SLIDE]
+Install Superpowers
+- Clone repo
+- Create ~/.codex/skills
+- Update AGENTS.md
+
+[NARRATION]
+Superpowers is optional but powerful. Clone the library, create a personal skills directory, and configure AGENTS.md to load skills.
+
+12
+00:01:56,000 --> 00:02:06,000
+[SLIDE]
+Bootstrap and Verify
+- Run bootstrap
+- See skill list
+- Update via git pull
+
+[NARRATION]
+Run the bootstrap command each session to load skills. Verify that skills are listed, and update the library with a regular git pull.
+
+13
+00:02:06,000 --> 00:02:16,000
+[SLIDE]
+Skill Categories
+- Planning
+- Quality
+- Workflow
+
+[NARRATION]
+The core library clusters around planning, quality, and workflow. Each skill defines when to use it, the steps to follow, and anti-patterns to avoid.
+
+14
+00:02:16,000 --> 00:02:26,000
+[SLIDE]
+Invoking Skills
+- Explicit call
+- Prompt hint
+- Ask for suggestion
+
+[NARRATION]
+You can call a skill directly, hint it in a prompt, or ask Codex which skill fits. Explicit invocation is the most reliable pattern.
+
+15
+00:02:26,000 --> 00:02:36,000
+[SLIDE]
+Feature Workflow
+- Brainstorm
+- Plan
+- Execute
+- Verify
+
+[NARRATION]
+A typical skill-driven flow starts with brainstorming to clarify requirements, then a written plan, structured execution, and a verification gate before completion.
+
+16
+00:02:36,000 --> 00:02:52,000
+[SLIDE]
+3-Attempt Rule
+- Stop after 3 fails
+- Use systematic debugging
+- Prevent guess loops
+
+[NARRATION]
+After three failed fixes, you are likely guessing. Stop and switch to systematic debugging to trace the root cause and add regression tests.
+
+[ASSETS]
+type: mermaid
+purpose: show 3-attempt rule decision path
+content:
+  flowchart TD
+    A[Bug found] --> B[Attempt 1]
+    B -->|Fail| C[Attempt 2]
+    C -->|Fail| D[Attempt 3]
+    D -->|Fail| E[Stop]
+    E --> F[Systematic debugging]
+
+17
+00:02:52,000 --> 00:03:02,000
+[SLIDE]
+Skill Anti-Patterns
+- Skipping steps
+- Guessing after 3 tries
+- Declaring done early
+
+[NARRATION]
+Common failures come from skipping steps or declaring completion without verification. Skills exist to prevent these shortcuts.
+
+18
+00:03:02,000 --> 00:03:12,000
+[SLIDE]
+Build Custom Skills
+- Repeatable workflows
+- Steps + checklists
+- Team consistency
+
+[NARRATION]
+Create a custom skill when you repeat the same workflow. A template with steps, checklists, and anti-patterns makes team practices consistent.
+
+19
+00:03:12,000 --> 00:03:22,000
+[SLIDE]
+Module 3: Speed and Efficiency
+- Batch operations
+- Prompt pipelines
+- Context control
+
+[NARRATION]
+Module 3 focuses on efficiency. You learn to batch independent work, chain prompts effectively, and preserve context without wasting tokens.
+
+20
+00:03:22,000 --> 00:03:32,000
+[SLIDE]
+Batching Requests
+- Read many files at once
+- Combine tool actions
+- Fewer round trips
+
+[NARRATION]
+When tasks are independent, bundle them in one request. This reduces latency, keeps context tighter, and speeds up decisions.
+
+21
+00:03:32,000 --> 00:03:42,000
+[SLIDE]
+Prompt Pipelines
+- Discovery to plan to execute
+- Sequential prompt orchestration
+- Parallel terminals OK
+
+[NARRATION]
+In practice, you orchestrate work as a sequence of prompts and hand-offs. Use separate terminals or codex exec for parallel investigations.
+
+22
+00:03:42,000 --> 00:03:52,000
+[SLIDE]
+Context Optimization
+- Targeted reads
+- Summaries under 500 tokens
+- Resume or manual context files
+
+[NARRATION]
+Keep prompts scoped and reuse short summaries. When running parallel sessions, persist context in files to avoid losing critical decisions.
+
+23
+00:03:52,000 --> 00:04:02,000
+[SLIDE]
+Task Decomposition
+- Dependency-first
+- Role templates
+- Verification chains
+
+[NARRATION]
+Decompose by dependencies so independent reads happen together. Role-based prompts and verification chains keep execution orderly and testable.
+
+24
+00:04:02,000 --> 00:04:12,000
+[SLIDE]
+Verification Chains
+- Summarize change
+- Ask for tests
+- Run and confirm
+
+[NARRATION]
+After a change, summarize what changed, ask what should be tested, run those tests, and only proceed on a clean result.
+
+25
+00:04:12,000 --> 00:04:22,000
+[SLIDE]
+Strategy Selection
+- Batch, pipeline, or single prompt
+- Choose by dependency
+- Always validate
+
+[NARRATION]
+Pick the execution strategy that matches the dependency structure. Regardless of the path, finish with a validation step.
+
+26
+00:04:22,000 --> 00:04:32,000
+[SLIDE]
+Module 4: Planning
+- Prevent scope creep
+- Stage execution
+- Handle ambiguity
+
+[NARRATION]
+Module 4 focuses on planning and execution. You learn how to structure plans, execute in batches, and clarify ambiguous requirements.
+
+27
+00:04:32,000 --> 00:04:42,000
+[SLIDE]
+Why Plan
+- Avoid rework
+- Surface edge cases
+- Track progress
+
+[NARRATION]
+Planning avoids mid-stream refactors and missed requirements. It also gives you a clear progress signal as you complete stages.
+
+28
+00:04:42,000 --> 00:04:52,000
+[SLIDE]
+Plan Structure
+- Stages with goals
+- Success criteria
+- Tests + files
+
+[NARRATION]
+A good plan breaks work into stages, each with goals and success criteria. It lists tests to write and files to touch.
+
+29
+00:04:52,000 --> 00:05:08,000
+[SLIDE]
+Plan-Review-Execute
+- Plan first
+- Review checkpoints
+- Execute in stages
+
+[NARRATION]
+Use a plan-review-execute loop to keep control. Review after each stage so problems are caught early.
+
+[ASSETS]
+type: mermaid
+purpose: show plan-review-execute cycle
+content:
+  flowchart LR
+    A[Plan] --> B[Review]
+    B -->|Approve| C[Execute stage]
+    C --> B
+    C --> D[Complete]
+
+30
+00:05:08,000 --> 00:05:18,000
+[SLIDE]
+Batch Execution
+- Small batches
+- Test per batch
+- Commit per stage
+
+[NARRATION]
+Batching reduces risk. Keep batches small, test after each batch, and commit changes stage by stage.
+
+31
+00:05:18,000 --> 00:05:28,000
+[SLIDE]
+Handling Ambiguity
+- Ask focused options
+- Update plan
+- Resume execution
+
+[NARRATION]
+When requirements are unclear, pause to clarify options. Update the plan, then proceed with the chosen direction.
+
+32
+00:05:28,000 --> 00:05:38,000
+[SLIDE]
+Module 5: Quality
+- Multi-layer review
+- TDD + debugging
+- Quality gates
+
+[NARRATION]
+Module 5 builds quality into every step. You apply layered reviews, test-driven development, and strong verification gates.
+
+33
+00:05:38,000 --> 00:05:54,000
+[SLIDE]
+Multi-Layer Review
+- Automated checks
+- AI review
+- Human review
+
+[NARRATION]
+Each review layer catches different defects. Combining automated checks, AI review, and human review raises reliability.
+
+[ASSETS]
+type: mermaid
+purpose: illustrate multi-layer review flow
+content:
+  flowchart LR
+    A[Code] --> B[Automated checks]
+    B --> C[AI review]
+    C --> D[Human review]
+    D --> E[Merge]
+
+34
+00:05:54,000 --> 00:06:04,000
+[SLIDE]
+TDD with Codex
+- Red to green to refactor
+- Tests first
+- Minimal code
+
+[NARRATION]
+Use Codex as a pair programmer for TDD. Write the failing test first, implement the smallest fix, then refactor safely.
+
+35
+00:06:04,000 --> 00:06:14,000
+[SLIDE]
+Systematic Debugging
+- Reproduce
+- Trace root cause
+- Hypothesize and verify
+
+[NARRATION]
+Stop guessing and debug systematically. Reproduce the issue, trace the root cause, form a hypothesis, and verify with a regression test.
+
+36
+00:06:14,000 --> 00:06:24,000
+[SLIDE]
+Quality Gates
+- Verification before completion
+- Lint, test, typecheck
+- No silent failures
+
+[NARRATION]
+Quality gates are explicit checkpoints before claiming done. Run tests, linting, and type checks, and fix failures immediately.
+
+37
+00:06:24,000 --> 00:06:34,000
+[SLIDE]
+Root Cause Analysis
+- Trace backwards
+- Identify trigger
+- Prevent recurrence
+
+[NARRATION]
+Root cause analysis focuses on the original trigger, not the surface symptom. Capture the cause, then prevent it with tests or validation.
+
+38
+00:06:34,000 --> 00:06:44,000
+[SLIDE]
+Quality Takeaways
+- Layered reviews
+- TDD discipline
+- Verification habit
+
+[NARRATION]
+The quality discipline is about consistency. Layered reviews, test-first habits, and verification gates compound over time.
+
+39
+00:06:44,000 --> 00:06:54,000
+[SLIDE]
+Module 6: Domain Work
+- Refactoring
+- Architecture exploration
+- Security + performance
+
+[NARRATION]
+Module 6 covers deeper domain work. You learn safe refactoring, system exploration, performance tuning, and security reviews.
+
+40
+00:06:54,000 --> 00:07:04,000
+[SLIDE]
+Large Refactors
+- Interface first
+- Extract by provider
+- Clean up last
+
+[NARRATION]
+Refactor large codebases by creating interfaces and isolating providers. This keeps changes safe and reversible.
+
+41
+00:07:04,000 --> 00:07:14,000
+[SLIDE]
+Architecture Exploration
+- Entry points
+- Key flows
+- Dependencies map
+
+[NARRATION]
+Start by mapping entry points and primary flows. Then identify dependencies and data flow to understand the system quickly.
+
+42
+00:07:14,000 --> 00:07:24,000
+[SLIDE]
+Legacy Code Changes
+- Characterization tests
+- Find a seam
+- Change safely
+
+[NARRATION]
+For legacy code, capture current behavior with characterization tests, find a seam for isolation, and make changes safely.
+
+43
+00:07:24,000 --> 00:07:34,000
+[SLIDE]
+Performance Optimization
+- Measure first
+- Analyze bottlenecks
+- Validate gains
+
+[NARRATION]
+Optimization starts with measurement. Analyze the bottleneck, optimize cautiously, and validate results with before-after data.
+
+44
+00:07:34,000 --> 00:07:44,000
+[SLIDE]
+Security Review
+- Input validation
+- Auth checks
+- Sensitive data
+
+[NARRATION]
+Security reviews focus on validation, authentication boundaries, and sensitive data handling. Build checklists so issues are caught consistently.
+
+45
+00:07:44,000 --> 00:07:54,000
+[SLIDE]
+Module 7: Integration
+- GitHub CLI
+- Multi-tool workflows
+- CI/CD
+
+[NARRATION]
+Module 7 integrates Codex into real workflows. You use GitHub CLI, orchestrate multiple tools, and connect to CI pipelines.
+
+46
+00:07:54,000 --> 00:08:04,000
+[SLIDE]
+GitHub CLI
+- PRs, issues, checks
+- Fewer browser hops
+- Faster reviews
+
+[NARRATION]
+The gh CLI lets Codex manage pull requests and issues directly. It reduces context switching and speeds up review loops.
+
+47
+00:08:04,000 --> 00:08:14,000
+[SLIDE]
+Multi-Tool Workflows
+- Combine scripts + gh
+- Single prompt orchestration
+- Structured outputs
+
+[NARRATION]
+Design workflows that combine scripts, gh, and Codex prompts. Use structured outputs so Codex can synthesize results.
+
+48
+00:08:14,000 --> 00:08:24,000
+[SLIDE]
+CI/CD Integration
+- Trigger checks
+- Diagnose failures
+- Rerun safely
+
+[NARRATION]
+Codex can watch CI runs, summarize failures, and help rerun jobs. This tight loop reduces time to fix broken builds.
+
+49
+00:08:24,000 --> 00:08:34,000
+[SLIDE]
+Knowledge Transfer
+- Playbooks and patterns
+- Prompt templates
+- Share workflows
+
+[NARRATION]
+Make knowledge portable by capturing workflows in playbooks and templates. This prevents tribal knowledge and speeds onboarding.
+
+50
+00:08:34,000 --> 00:08:44,000
+[SLIDE]
+Module 8: API Internals
+- Session architecture
+- Tool wrappers
+- Context control
+
+[NARRATION]
+Module 8 dives into how Codex sessions work internally. You learn how tools are invoked and how to manage context safely.
+
+51
+00:08:44,000 --> 00:08:54,000
+[SLIDE]
+Session Architecture
+- Prompt in, tools out
+- Approvals enforced
+- Deterministic flow
+
+[NARRATION]
+A session takes a prompt, calls tools as needed, and applies changes only with approval. Understanding the flow helps you design safer automations.
+
+52
+00:08:54,000 --> 00:09:04,000
+[SLIDE]
+Tool Wrappers
+- Define helpers
+- JSON schemas
+- Structured results
+
+[NARRATION]
+Tool wrappers let Codex call your scripts. Define a clear schema and return structured JSON so outputs are easy to combine.
+
+53
+00:09:04,000 --> 00:09:14,000
+[SLIDE]
+Context and Tokens
+- Summaries over raw logs
+- Persist key state
+- Avoid duplication
+
+[NARRATION]
+Manage the context budget by summarizing outputs and persisting only what you need. This keeps sessions stable and efficient.
+
+54
+00:09:14,000 --> 00:09:24,000
+[SLIDE]
+Chaining Requests
+- Discovery to plan to execute
+- Local scripts for data
+- Explicit hand-offs
+
+[NARRATION]
+Complex work is best handled by chained prompts. Use local scripts to gather data, then pass explicit hand-offs between stages.
+
+55
+00:09:24,000 --> 00:09:34,000
+[SLIDE]
+Module 9: Customization
+- Project rules
+- Permissions
+- Automation
+
+[NARRATION]
+Module 9 shows how to customize Codex for your project. You define instructions, set permissions, and automate routine checks.
+
+56
+00:09:34,000 --> 00:09:44,000
+[SLIDE]
+AGENTS.md
+- Project overview
+- Conventions
+- Guardrails
+
+[NARRATION]
+AGENTS.md is where you define project context and rules. Clear instructions guide Codex toward safe and consistent behavior.
+
+57
+00:09:44,000 --> 00:09:54,000
+[SLIDE]
+Config and Permissions
+- Approval modes
+- Sandbox scopes
+- Profiles
+
+[NARRATION]
+Set approval and sandbox policies based on risk. Profiles make it easy to switch between safe analysis and trusted automation.
+
+58
+00:09:54,000 --> 00:10:04,000
+[SLIDE]
+Automation Hooks
+- Git hooks
+- CI checks
+- Repeatable gates
+
+[NARRATION]
+Automation hooks enforce quality by default. Use git hooks and CI to prevent regressions before code reaches main.
+
+59
+00:10:04,000 --> 00:10:14,000
+[SLIDE]
+MCP Servers
+- External resources
+- Structured context
+- Safe integration
+
+[NARRATION]
+MCP servers provide structured resources like schemas or files. They allow Codex to pull context safely without ad-hoc scraping.
+
+60
+00:10:14,000 --> 00:10:24,000
+[SLIDE]
+Wrap-Up
+- Practice modules in order
+- Use skills early
+- Verify every change
+
+[NARRATION]
+Progress through the modules in sequence and apply skills early. The consistent theme is safety and verification on every change.
