@@ -204,6 +204,14 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 
 - **[Maintainer Docs](docs/maintainers/README.md)**: Patterns, playbook, templates, prompt library, and examples
 
+## Exercise Verification
+
+Run the automated checks with:
+
+```bash
+python3 scripts/verify_exercises.py
+```
+
 ## Progress Tracking
 
 Update module status as you complete them:
