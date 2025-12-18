@@ -1,58 +1,258 @@
 {
   "docs": [
-    "docs/exercises/04-planning/exercise-2.md",
-    "docs/exercises/04-planning/exercise-3.md",
+    {
+      "path": "docs/exercises/04-planning/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/04-planning/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
     "docs/exercises/04-planning/README.md",
-    "docs/exercises/04-planning/exercise-4.md",
-    "docs/exercises/04-planning/exercise-1.md",
-    "docs/exercises/05-quality/exercise-2.md",
-    "docs/exercises/05-quality/exercise-3.md",
-    "docs/exercises/05-quality/README.md",
-    "docs/exercises/05-quality/exercise-4.md",
-    "docs/exercises/05-quality/exercise-5.md",
-    "docs/exercises/05-quality/exercise-1.md",
-    "docs/exercises/07-integration/exercise-2.md",
-    "docs/exercises/07-integration/exercise-3.md",
-    "docs/exercises/07-integration/README.md",
-    "docs/exercises/07-integration/exercise-4.md",
-    "docs/exercises/07-integration/exercise-1.md",
-    "docs/exercises/pm-prd/inputs/product-brief.md",
-    "docs/exercises/pm-prd/inputs/repo-context.md",
-    "docs/exercises/pm-prd/exercise-2.md",
-    "docs/exercises/pm-prd/exercise-3.md",
-    "docs/exercises/pm-prd/README.md",
-    "docs/exercises/pm-prd/prd-template.md",
-    "docs/exercises/pm-prd/exercise-4.md",
-    "docs/exercises/pm-prd/exercise-1.md",
-    "docs/exercises/06-domain/exercise-2.md",
-    "docs/exercises/06-domain/exercise-3.md",
-    "docs/exercises/06-domain/README.md",
-    "docs/exercises/06-domain/exercise-4.md",
-    "docs/exercises/06-domain/exercise-5.md",
-    "docs/exercises/06-domain/exercise-1.md",
-    "docs/exercises/09-api-customization/exercise-2.md",
-    "docs/exercises/09-api-customization/exercise-3.md",
-    "docs/exercises/09-api-customization/README.md",
-    "docs/exercises/09-api-customization/exercise-4.md",
-    "docs/exercises/09-api-customization/exercise-5.md",
-    "docs/exercises/09-api-customization/exercise-1.md",
-    "docs/exercises/02-skills/exercise-2.md",
-    "docs/exercises/02-skills/exercise-3.md",
-    "docs/exercises/02-skills/README.md",
-    "docs/exercises/02-skills/exercise-4.md",
-    "docs/exercises/02-skills/exercise-1.md",
+    {
+      "path": "docs/exercises/04-planning/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/04-planning/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
     "docs/exercises/01-getting-started/README.md",
-    "docs/exercises/08-api-internals/exercise-2.md",
-    "docs/exercises/08-api-internals/exercise-3.md",
-    "docs/exercises/08-api-internals/README.md",
-    "docs/exercises/08-api-internals/exercise-4.md",
-    "docs/exercises/08-api-internals/exercise-5.md",
-    "docs/exercises/08-api-internals/exercise-1.md",
-    "docs/exercises/03-speed/exercise-2.md",
-    "docs/exercises/03-speed/exercise-3.md",
+    {
+      "path": "docs/exercises/09-api-customization/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/09-api-customization/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/09-api-customization/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/09-api-customization/README.md",
+    {
+      "path": "docs/exercises/09-api-customization/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/09-api-customization/exercise-5.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/03-speed/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/03-speed/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
     "docs/exercises/03-speed/README.md",
-    "docs/exercises/03-speed/exercise-4.md",
-    "docs/exercises/03-speed/exercise-1.md"
+    {
+      "path": "docs/exercises/03-speed/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/03-speed/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/pm-prd/prd-template.md",
+    {
+      "path": "docs/exercises/pm-prd/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/pm-prd/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/pm-prd/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/pm-prd/README.md",
+    {
+      "path": "docs/exercises/pm-prd/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/02-skills/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/02-skills/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/02-skills/README.md",
+    {
+      "path": "docs/exercises/02-skills/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/02-skills/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/06-domain/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/06-domain/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/06-domain/README.md",
+    {
+      "path": "docs/exercises/06-domain/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/06-domain/exercise-5.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/06-domain/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/05-quality/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/05-quality/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/05-quality/README.md",
+    {
+      "path": "docs/exercises/05-quality/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/05-quality/exercise-5.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/05-quality/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/07-integration/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/07-integration/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/07-integration/README.md",
+    {
+      "path": "docs/exercises/07-integration/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/07-integration/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/08-api-internals/exercise-2.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/08-api-internals/exercise-3.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/08-api-internals/README.md",
+    {
+      "path": "docs/exercises/08-api-internals/exercise-4.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/08-api-internals/exercise-5.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    {
+      "path": "docs/exercises/08-api-internals/exercise-1.md",
+      "requiredSections": [
+        "Objective"
+      ]
+    },
+    "docs/exercises/pm-prd/inputs/product-brief.md",
+    "docs/exercises/pm-prd/inputs/repo-context.md"
   ],
   "references": [
     "docs/exercises/pm-prd/inputs/product-brief.md",

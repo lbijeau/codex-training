@@ -1,6 +1,7 @@
 # Exercise 3: Chaining Prompts and Breaking Work into Steps
 
-Goal: Practice how to split a big request into manageable prompts so Codex never loses track of the context.
+## Objective
+Practice how to split a big request into manageable prompts so Codex never loses track of the context.
 
 ## Part A: Evaluate a task
 1. Pick a real task (e.g., "Add logging to the data pipeline" or "Audit the authentication module").
