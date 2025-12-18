@@ -55,6 +55,11 @@ A standalone training track for new Codex CLI users and PM/trainers. Covers inst
 
 📁 **[Start Here](docs/training/codex-cli-hands-on/README.md)** | ⏱️ ~90 minutes total
 
+### PM/PO PRD Clinic
+A short, practical track for PMs and POs to draft PRDs with repo context using the Codex CLI.
+
+📁 **[Start Here](docs/exercises/pm-prd/README.md)** | ⏱️ ~2 hours total
+
 ---
 
 ## Modules

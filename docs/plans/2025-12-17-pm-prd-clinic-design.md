@@ -28,7 +28,7 @@ Each module follows a consistent pattern:
 5. Self-check (short checklist)
 
 ## Components
-- PRD template in `docs/maintainers/templates/prd.md`
+- PRD template in `docs/exercises/pm-prd/prd-template.md`
 - Exercise guides in `docs/exercises/pm-prd/`
 - Sample inputs in `docs/exercises/pm-prd/inputs/` to ensure training works even with sparse repo context
 - Workspace target in `practice/pm-prd/` for learner output
