@@ -80,4 +80,4 @@ secrets.json
 
 # OS-specific
 *.icloud
-.worktrees/
+practice/pm-prd/prd.md
