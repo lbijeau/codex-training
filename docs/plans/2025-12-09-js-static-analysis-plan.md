@@ -33,7 +33,7 @@ Use `fs.promises` to walk files, chunk by function/block heuristics, and track l
 Expect the command now exits zero when run against unique files and non-zero with duplicates, matching the earlier fixture output.
 
 **Step 5: Capture the execution output**
-Add the one-line report to `docs/templates/static-analysis-report.md` sample area so readers know how to paste results into Codex prompts.
+Add the one-line report to `docs/maintainers/templates/static-analysis-report.md` sample area so readers know how to paste results into Codex prompts.
 
 ### Task 2: Complexity delta reporter (`scripts/report_complexity_diff.js`)
 
@@ -60,7 +60,7 @@ Parse `git diff --cached` for added/modified JS/TS functions, count lines and ne
 Expect the warning repeated and command still fails until diff is simplified.
 
 **Step 5: Document commands**
-Add instructions to `docs/examples/session-drive.md` that mention running `node scripts/report_complexity_diff.js` before log entry creation.
+Add instructions to `docs/maintainers/playbook/scenarios.md` that mention running `node scripts/report_complexity_diff.js` before log entry creation.
 
 ### Task 3: Dependency adjacency linter (`scripts/check_cross_layer_imports.js`)
 
@@ -86,18 +86,18 @@ Define layer rules (e.g., `practice/static-checks/cross-layer/ui-*` cannot impor
 No violation should exit 0; violating fixture still produces warnings.
 
 **Step 5: Record the report**
-Add a static-analysis bullet to `docs/templates/static-analysis-report.md` summarizing the cross-layer rule output.
+Add a static-analysis bullet to `docs/maintainers/templates/static-analysis-report.md` summarizing the cross-layer rule output.
 
 ### Task 4: Static check hook and report template
 
 **Files:**
 - Create: `scripts/run_static_checks.sh`
-- Modify: `docs/examples/session-drive.md` (add a step referencing the hook)
-- Create: `docs/templates/static-analysis-report.md`
+- Modify: `docs/maintainers/playbook/scenarios.md` (add a step referencing the hook)
+- Create: `docs/maintainers/templates/static-analysis-report.md`
 - Test: run `bash scripts/run_static_checks.sh` after staging changes
 
 **Step 1: Write failing template**
-Draft `docs/templates/static-analysis-report.md` with placeholders for each analyzer output.
+Draft `docs/maintainers/templates/static-analysis-report.md` with placeholders for each analyzer output.
 
 **Step 2: Run hook before implementation**
 ```
@@ -112,11 +112,11 @@ Execute `node scripts/check_duplicates.js`, `node scripts/report_complexity_diff
 With no violations, the hook should exit 0 and print `Static checks clean.`
 
 **Step 5: Update docs**
-Mention the hook and template in `docs/examples/session-drive.md` and reference the template in `docs/playbook/scenarios.md` so teammates know to paste findings into Codex prompts.
+Mention the hook and template in `docs/maintainers/playbook/scenarios.md` and reference the template in `docs/maintainers/playbook/scenarios.md` so teammates know to paste findings into Codex prompts.
 
 ### Verification
 1. `node scripts/check_duplicates.js practice/static-checks/duplicate-sample` outputs the expected match.
 2. `node scripts/report_complexity_diff.js` warns on the staged complexity fixture and reports line/depth counts.
 3. `node scripts/check_cross_layer_imports.js practice/static-checks/cross-layer` flags the UI→DB import.
 4. `bash scripts/run_static_checks.sh` aggregates warnings, logs them, and exits 1 when issues exist.
-5. `docs/templates/static-analysis-report.md` template includes sections for each analyzer output.
+5. `docs/maintainers/templates/static-analysis-report.md` template includes sections for each analyzer output.

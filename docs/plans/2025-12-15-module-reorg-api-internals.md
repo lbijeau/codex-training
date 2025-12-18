@@ -53,7 +53,7 @@
 - Modify: `GETTING_STARTED.md`
 - Modify: `PROGRESS.md`
 - Modify: `docs/exercises/**/README.md` (module navigation)
-- Modify: `docs/examples/session-drive.md` (if module numbers referenced)
+- Modify: `docs/maintainers/playbook/scenarios.md` (if module numbers referenced)
 
 **Steps:**
 1. Update module list order/links in README and GETTING_STARTED to reflect new numbering and titles.
@@ -66,14 +66,14 @@
 **Files:**
 - Modify: `README.md` mermaid diagram (if module nodes exist)
 - Modify: any diagrams in `docs/modules/` that encode module numbers
-- Modify: `docs/patterns/**`, `docs/playbook/**`, `docs/templates/**` if they reference module numbers
+- Modify: `docs/maintainers/patterns/**`, `docs/maintainers/playbook/**`, `docs/maintainers/templates/**` if they reference module numbers
 
 **Steps:**
 1. Update mermaid diagrams to use new module numbering/labels.
 2. Search in patterns/playbook/templates for module references and adjust.
 3. Re-render any stored diagram images if needed (or note to regenerate).
 
-**Verification:** `rg "Module [0-9]" docs/patterns docs/playbook docs/templates README.md` shows updated references; mermaid blocks reflect new numbering.
+**Verification:** `rg "Module [0-9]" docs/maintainers/patterns docs/maintainers/playbook docs/maintainers/templates README.md` shows updated references; mermaid blocks reflect new numbering.
 
 ### Task 5: Clean up redirects/alias handling (optional safety)
 **Files:**

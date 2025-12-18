@@ -94,6 +94,6 @@ Avoid:
 
 ## See Also
 
-- [Pattern Library](../docs/patterns/)
+- [Pattern Library](../docs/maintainers/patterns/)
 - [Exercises](../docs/exercises/)
 - [Modules](../docs/modules/)

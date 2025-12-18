@@ -14,12 +14,12 @@ Effective Codex integration isn't just about one project—it's about building r
 
 1. Create the prompt library structure:
    ```bash
-   mkdir -p docs/prompt_templates
+   mkdir -p docs/maintainers/prompt_templates
    ```
 
 2. Create a feature planning prompt:
    ```markdown
-   <!-- docs/prompt_templates/feature_plan.md -->
+   <!-- docs/maintainers/prompt_templates/feature_plan.md -->
    # Feature Planning Prompt
 
    ## Purpose
@@ -75,7 +75,7 @@ Effective Codex integration isn't just about one project—it's about building r
 
 3. Create a bug investigation prompt:
    ```markdown
-   <!-- docs/prompt_templates/bug_investigation.md -->
+   <!-- docs/maintainers/prompt_templates/bug_investigation.md -->
    # Bug Investigation Prompt
 
    ## Purpose
@@ -113,7 +113,7 @@ Effective Codex integration isn't just about one project—it's about building r
 
 4. Create a prompt index:
    ```markdown
-   <!-- docs/prompt_templates/README.md -->
+   <!-- docs/maintainers/prompt_templates/README.md -->
    # Prompt Template Library
 
    ## Available Templates
@@ -364,13 +364,13 @@ Effective Codex integration isn't just about one project—it's about building r
    echo "Setting up Codex workflow..."
 
    # Create directories
-   mkdir -p codex_helpers docs/prompt_templates scripts
+   mkdir -p codex_helpers docs/maintainers/prompt_templates scripts
 
    # Copy helpers
    cp -r starter-kit/codex_helpers/* codex_helpers/
 
    # Copy prompt templates
-   cp -r starter-kit/docs/prompt_templates/* docs/prompt_templates/
+   cp -r starter-kit/docs/maintainers/prompt_templates/* docs/maintainers/prompt_templates/
 
    # Copy scripts
    cp starter-kit/scripts/* scripts/
@@ -399,7 +399,7 @@ Effective Codex integration isn't just about one project—it's about building r
    echo "Next steps:"
    echo "1. Edit codex_helpers/config.json with your project details"
    echo "2. Run scripts/session_start.sh to verify setup"
-   echo "3. Review docs/prompt_templates/ for available templates"
+   echo "3. Review docs/maintainers/prompt_templates/ for available templates"
    ```
 
 3. Create an onboarding guide:
@@ -428,7 +428,7 @@ Effective Codex integration isn't just about one project—it's about building r
    - `test_runner`: Run tests with structured output
    - `diff_validator`: Validate changes before commit
 
-   ### Prompt Templates (`docs/prompt_templates/`)
+   ### Prompt Templates (`docs/maintainers/prompt_templates/`)
    Tested prompts for common workflows:
    - Feature planning
    - Bug investigation
@@ -458,7 +458,7 @@ Effective Codex integration isn't just about one project—it's about building r
 
    ### Add a Prompt Template
 
-   Create `docs/prompt_templates/my_template.md`:
+   Create `docs/maintainers/prompt_templates/my_template.md`:
    ```markdown
    # My Template
 
@@ -482,7 +482,7 @@ Effective Codex integration isn't just about one project—it's about building r
 
 1. Create a patterns document:
    ```markdown
-   <!-- docs/patterns/README.md -->
+   <!-- docs/maintainers/patterns/README.md -->
    # Codex Integration Patterns
 
    Proven patterns for effective Codex workflows.
@@ -637,7 +637,7 @@ To use in a new project:
 
 ```
 Essential Knowledge Assets
-├── Prompts (docs/prompt_templates/)
+├── Prompts (docs/maintainers/prompt_templates/)
 │   ├── Tested templates for common tasks
 │   ├── Clear usage instructions
 │   └── Required helper documentation
@@ -649,7 +649,7 @@ Essential Knowledge Assets
 │   ├── Session automation
 │   ├── Validation hooks
 │   └── Workflow orchestration
-└── Patterns (docs/patterns/)
+└── Patterns (docs/maintainers/patterns/)
     ├── Proven approaches
     ├── Anti-patterns to avoid
     └── Adaptation guidelines

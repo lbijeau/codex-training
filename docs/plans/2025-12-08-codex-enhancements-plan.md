@@ -11,7 +11,7 @@
 ### Task 1: Create runnable session example and helper catalog documentation
 
 **Files:**
-- Create: `docs/examples/session-drive.md`, `docs/helpers/README.md`
+- Create: `docs/maintainers/playbook/scenarios.md`, `docs/helpers/README.md`
 - Modify: `codex_helpers/README.md`
 - Test: `scripts/helper_usage.sh`
 
@@ -29,20 +29,20 @@
 ### Task 2: Build automation scripts for context syncing and template rendering
 
 **Files:**
-- Create: `scripts/update_context.sh`, `scripts/template_builder.py`, `docs/prompt_templates/README.md`
+- Create: `scripts/update_context.sh`, `scripts/template_builder.py`, `docs/maintainers/prompt_templates/README.md`
 - Test: run the scripts manually
 
 **Step 1: `update_context.sh` should gather git status, TODOs (via helper), and selected pattern summaries into `.codex/context.md`
 
 **Step 2: `template_builder.py` renders prompt templates with placeholders and records used helpers
 
-**Step 3: Document the prompt template workflow in `docs/prompt_templates/README.md`
+**Step 3: Document the prompt template workflow in `docs/maintainers/prompt_templates/README.md`
 
 ### Task 3: Provide new documentation templates for helper reviews and testing narratives
 
 **Files:**
-- Create: `docs/templates/helper-doc-template.md`, `docs/templates/prompt-review.md`, `docs/templates/testing-report.md`
-- Modify: `docs/playbook/scenarios.md` to reference the templates
+- Create: `docs/maintainers/templates/helper-doc-template.md`, `docs/maintainers/templates/prompt-review.md`, `docs/maintainers/templates/testing-report.md`
+- Modify: `docs/maintainers/playbook/scenarios.md` to reference the templates
 - Test: Demonstrate template usage (manual)
 
 **Step 1: Build helper doc template describing schema, validation scripts, examples

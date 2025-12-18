@@ -163,4 +163,4 @@ test('rejects email with multiple @', () => {
 
 ## Related Pattern
 
-See: [docs/patterns/quality/tdd-workflow.md](../../docs/patterns/quality/tdd-workflow.md)
+See: [docs/maintainers/patterns/quality/tdd-workflow.md](../../docs/maintainers/patterns/quality/tdd-workflow.md)

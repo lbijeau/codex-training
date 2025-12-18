@@ -204,4 +204,4 @@ As you work:
 
 ## Related Pattern
 
-See: [docs/patterns/planning/stage-based-planning.md](../../docs/patterns/planning/stage-based-planning.md)
+See: [docs/maintainers/patterns/planning/stage-based-planning.md](../../docs/maintainers/patterns/planning/stage-based-planning.md)

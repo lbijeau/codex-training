@@ -5,7 +5,7 @@
 **Architecture:** The work touches three layers:
 1. `docs/modules/01-internals.md` becomes a primer on chat sessions, function-calling flows, and context management.
 2. `docs/modules/02-customization.md` plus the Module 1 exercises pivot from hypothetical agents to prompt templates, helper manifests, and validation scripts.
-3. Companion docs (`README.md`, `GETTING_STARTED.md`, `RESOURCES.md`, `PROGRESS.md`, `docs/playbook`, `docs/patterns`, `.codex-examples`, `docs/plans`) are updated so the narrative consistently highlights Codex-native workflows.
+3. Companion docs (`README.md`, `GETTING_STARTED.md`, `RESOURCES.md`, `PROGRESS.md`, `docs/maintainers/playbook`, `docs/maintainers/patterns`, `.codex-examples`, `docs/plans`) are updated so the narrative consistently highlights Codex-native workflows.
 
 ## Tasks
 
@@ -28,7 +28,7 @@
 
 ### Task 3: Align Supporting Docs
 
-**Files**: `README.md`, `GETTING_STARTED.md`, `RESOURCES.md`, `PROGRESS.md`, `docs/playbook/checklists.md`, `.codex-examples/README.md`, `.codex-examples/config.json`, `docs/patterns/speed/*`, `docs/modules/06-domain.md`, `docs/modules/07-collaboration.md`, `docs/modules/08-integration.md`, `docs/plans/2025-12-07-codex-code-mastery-program-design.md`, `docs/plans/2025-12-07-codex-training-setup.md`
+**Files**: `README.md`, `GETTING_STARTED.md`, `RESOURCES.md`, `PROGRESS.md`, `docs/maintainers/playbook/checklists.md`, `.codex-examples/README.md`, `.codex-examples/config.json`, `docs/maintainers/patterns/speed/*`, `docs/modules/06-domain.md`, `docs/modules/07-collaboration.md`, `docs/modules/08-integration.md`, `docs/plans/2025-12-07-codex-code-mastery-program-design.md`, `docs/plans/2025-12-07-codex-training-setup.md`
 
 **Steps**:
 1. Update narratives to mention prompt templates, helper functions, logging scripts, validation steps, and session summaries.

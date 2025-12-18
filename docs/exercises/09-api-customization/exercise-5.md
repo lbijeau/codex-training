@@ -84,7 +84,7 @@ The previous exercises covered individual customization components. This exercis
 
    ## Customization
 
-   See docs/patterns/README.md for customization guidelines.
+   See docs/maintainers/patterns/README.md for customization guidelines.
 
    ## Updates
 
@@ -123,8 +123,8 @@ The previous exercises covered individual customization components. This exercis
    mkdir -p "$TARGET_DIR/.codex/hooks"
    mkdir -p "$TARGET_DIR/.codex/logs"
    mkdir -p "$TARGET_DIR/scripts"
-   mkdir -p "$TARGET_DIR/docs/prompt_templates"
-   mkdir -p "$TARGET_DIR/docs/patterns"
+   mkdir -p "$TARGET_DIR/docs/maintainers/prompt_templates"
+   mkdir -p "$TARGET_DIR/docs/maintainers/patterns"
 
    # Copy AGENTS.md
    if [ "$KEEP_AGENTS" != true ]; then
@@ -148,11 +148,11 @@ The previous exercises covered individual customization components. This exercis
    echo "✅ Installed scripts"
 
    # Copy prompt templates
-   cp -r "$SCRIPT_DIR/docs/prompt_templates/"* "$TARGET_DIR/docs/prompt_templates/"
+   cp -r "$SCRIPT_DIR/docs/maintainers/prompt_templates/"* "$TARGET_DIR/docs/maintainers/prompt_templates/"
    echo "✅ Installed prompt templates"
 
    # Copy patterns
-   cp -r "$SCRIPT_DIR/docs/patterns/"* "$TARGET_DIR/docs/patterns/"
+   cp -r "$SCRIPT_DIR/docs/maintainers/patterns/"* "$TARGET_DIR/docs/maintainers/patterns/"
    echo "✅ Installed patterns documentation"
 
    # Set up Git hooks
@@ -284,7 +284,7 @@ The previous exercises covered individual customization components. This exercis
 
    ## Getting Help
 
-   - Check `docs/patterns/` for common patterns
+   - Check `docs/maintainers/patterns/` for common patterns
    - Ask in #codex-help Slack channel
    - Create an issue in the codex-config repo
    ```
