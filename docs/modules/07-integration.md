@@ -280,7 +280,7 @@ Want me to add priority labels to these issues?
 
 ### Workflow ingredients
 A Codex-driven workflow typically coordinates:
-- **Prompt templates** (`docs/prompt_templates/feature_plan.md`) to capture intent
+- **Prompt templates** (`docs/maintainers/prompt_templates/feature_plan.md`) to capture intent
 - **Helper functions** (`codex_helpers/`) that read files, run tests, gather metrics
 - **Validation scripts** (`scripts/validate.sh`) that ensure safety before accepting output
 - **Logging hooks** that archive every session for traceability
@@ -361,7 +361,7 @@ Codex prepares the description, but CI validates before merging.
 ## 4. Knowledge Transfer
 
 ### Portable prompt library
-Store prompts that worked well in `docs/prompt_templates/` with metadata:
+Store prompts that worked well in `docs/maintainers/prompt_templates/` with metadata:
 ```
 - prompt_name: feature_plan
   purpose: plan new feature rollout
@@ -369,7 +369,7 @@ Store prompts that worked well in `docs/prompt_templates/` with metadata:
   constraints: must mention security considerations
 ```
 When starting a new repository, copy the prompts, tweak the `system` message, and reuse the helper manifest. Bundle them into a small “starter kit” with:
-- `docs/prompt_templates/` export + a `README.md` that maps prompts → helpers → guardrails
+- `docs/maintainers/prompt_templates/` export + a `README.md` that maps prompts → helpers → guardrails
 - `codex_helpers/functions.json` plus a short `codex_helpers/README.md` that explains return schemas and timeouts
 - A one-page “first run” script (e.g., `scripts/session_start.sh`) that prints git status, TODO counts, and helper availability so every session begins with the same context
 
@@ -385,9 +385,9 @@ Maintain README sections describing how to add new helpers and register them in 
 For every new project:
 1. Copy `codex_helpers/` and update the manifest
 2. Import prompt templates for common workflows (bug triage, release notes)
-3. Document the helper names and their expected roles in `docs/playbook/scenarios.md`
+3. Document the helper names and their expected roles in `docs/maintainers/playbook/scenarios.md`
 4. Run `scripts/session_start.sh` to emit a quick status summary so each Codex session begins with baseline context
-5. Add a freshness signal: stamp `docs/prompt_templates/README.md` with “Last validated on: YYYY-MM-DD” and note the model version used for validation
+5. Add a freshness signal: stamp `docs/maintainers/prompt_templates/README.md` with “Last validated on: YYYY-MM-DD” and note the model version used for validation
 6. Capture portability gaps: if a helper assumes repo-specific paths or env vars, document the shim needed in `codex_helpers/README.md` so it is obvious what to swap out
 
 ---
@@ -402,7 +402,7 @@ Publish your helper catalog on GitHub:
  - Provide a `scripts/demo.sh` that runs a realistic helper call end-to-end so consumers can verify setup quickly
 
 ### Pattern sharing
-Write about integration patterns in `docs/patterns/` or blog posts:
+Write about integration patterns in `docs/maintainers/patterns/` or blog posts:
 - “How we coordinate prompt batches for feature delivery”
 - “Function catalogs we trust for CI safety”
 - “Session orchestration for multi-step investigations”
@@ -426,5 +426,5 @@ Contribution intake tips:
 ## Next Steps
 1. Build a helper, register it via `tools.json`, and use it in a Codex session
 2. Update your CI workflow to reflect the same helpers (e.g., call the helper after tests)
-3. Document the story in `docs/playbook/scenarios.md`
+3. Document the story in `docs/maintainers/playbook/scenarios.md`
 4. Share the pattern with others (Docs, README, blog snippet)

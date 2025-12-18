@@ -212,15 +212,15 @@ Then create a Pull Request on GitHub.
 
 ### Adding Patterns
 
-Patterns go in `docs/patterns/` organized by category:
+Patterns go in `docs/maintainers/patterns/` organized by category:
 
 | Category | Directory | Description |
 |----------|-----------|-------------|
-| Speed | `docs/patterns/speed/` | Performance and efficiency |
-| Quality | `docs/patterns/quality/` | Code quality and verification |
-| Debugging | `docs/patterns/debugging/` | Problem-solving approaches |
-| Planning | `docs/patterns/planning/` | Task decomposition and execution |
-| Architecture | `docs/patterns/architecture/` | Design and exploration |
+| Speed | `docs/maintainers/patterns/speed/` | Performance and efficiency |
+| Quality | `docs/maintainers/patterns/quality/` | Code quality and verification |
+| Debugging | `docs/maintainers/patterns/debugging/` | Problem-solving approaches |
+| Planning | `docs/maintainers/patterns/planning/` | Task decomposition and execution |
+| Architecture | `docs/maintainers/patterns/architecture/` | Design and exploration |
 
 **Pattern Template**:
 
@@ -298,7 +298,7 @@ Explanation of the solution approach
 
 ### Adding Playbook Entries
 
-**Scenarios** (`docs/playbook/scenarios.md`):
+**Scenarios** (`docs/maintainers/playbook/scenarios.md`):
 
 ```markdown
 **Scenario**: [What you're trying to do]
@@ -307,7 +307,7 @@ Explanation of the solution approach
 **See**: [Link to pattern or module]
 ```
 
-**Checklists** (`docs/playbook/checklists.md`):
+**Checklists** (`docs/maintainers/playbook/checklists.md`):
 
 ```markdown
 ## [Workflow Name]

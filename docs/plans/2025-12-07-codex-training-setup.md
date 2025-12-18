@@ -146,7 +146,7 @@ Run: edit `RESOURCES.md` to replace or supplement the reference list so the cura
 Expected: Resources list contains Codex references (OpenAI docs, relevant discussion forums) while still covering general AI tooling.
 
 **Step 4: Ensure every example/exercise/pattern references `.codex` config paths and Codex-specific prompts (rather than `.codex`) so the learning materials align with the renamed workspace**
-Run: search within `examples/`, `docs/patterns/`, and `practice/` for `.codex` and adjust the instructions as necessary.
+Run: search within `examples/`, `docs/maintainers/patterns/`, and `practice/` for `.codex` and adjust the instructions as necessary.
 Expected: Each how-to now mentions `.codex` directories and Codex prompts/configs.
 
 **Step 5: Re-run a quick `rg -n 'Codex Code'` to confirm prominent placement in the main docs**

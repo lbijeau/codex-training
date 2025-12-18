@@ -424,7 +424,7 @@ Module 1 (Foundation)
 
 **Short-term** (After Module 1 Practice):
 - [ ] Review session: Extract patterns from Module 1
-- [ ] Add patterns to docs/patterns/
+- [ ] Add patterns to docs/maintainers/patterns/
 - [ ] Update playbook with Module 1 insights
 - [ ] Choose next module (2, 3, or 4)
 - [ ] Build chosen module

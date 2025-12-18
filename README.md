@@ -39,9 +39,8 @@ graph TB
     ROOT["codex-training repo"]
     ROOT --> modules["docs/modules\nModule guides"]
     ROOT --> exercises["docs/exercises\nHands-on practice"]
-    ROOT --> patterns["docs/patterns\nReusable patterns"]
-    ROOT --> playbook["docs/playbook\nQuick reference"]
-    ROOT --> outlines["docs/outlines\nModule outlines"]
+    ROOT --> training["docs/training\nHands-on training"]
+    ROOT --> maintainers["docs/maintainers\nMaintainer references"]
     ROOT --> practice["practice/\nWorkspace for exercises"]
     ROOT --> codexExamples[".codex-examples/\nSample prompts + functions"]
     ROOT --> tests["tests/\nVerification suites"]
@@ -72,7 +71,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Install and configure Codex CLI
 - Built-in tools (file read, apply_patch, shell) and TUI vs exec flows
 - Hands-on labs in `docs/training/codex-cli-hands-on/`
-- Where to find helpers and prompt templates in this repo
+- Where to find helper docs and maintainer prompt templates in this repo
 
 📁 [Module Content](docs/modules/01-getting-started.md) | 🏋️ [Exercises](docs/exercises/01-getting-started/)
 
@@ -197,11 +196,13 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 
 **Total Time**: 20-30 hours spread over weeks/months at your own pace
 
-## Your Resources
+## Learner Resources
 
-- **[Pattern Library](docs/patterns/)**: Reusable patterns organized by category
-- **[Playbook](docs/playbook/)**: Quick reference guide for daily use
 - **[Practice Workspace](practice/)**: Sandbox for exercises and experiments
+
+## Maintainer References
+
+- **[Maintainer Docs](docs/maintainers/README.md)**: Patterns, playbook, templates, prompt library, and examples
 
 ## Progress Tracking
 

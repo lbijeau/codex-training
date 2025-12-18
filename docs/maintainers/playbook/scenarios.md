@@ -37,12 +37,12 @@ This file will be populated as you discover patterns. After each module and exer
 Add your discovered scenarios below as you learn:
 
 **Scenario**: Documenting a helper function for Codex
-**Approach**: Use `docs/templates/helper-doc-template.md` to capture schema, usage, validation, then publish it under `docs/helpers/` and link it in `codex_helpers/README.md`
+**Approach**: Use `docs/maintainers/templates/helper-doc-template.md` to capture schema, usage, validation, then publish it under `docs/helpers/` and link it in `codex_helpers/README.md`
 **Why**: Keeps helper contracts consistent and makes prompt reviews easier
 **See**: [Helper Documentation Template](../templates/helper-doc-template.md)
 
 **Scenario**: I want Codex to know about static analysis findings before refactoring
-**Approach**: Review your code for duplicates, complexity, and architectural issues, record findings in `docs/templates/static-analysis-report.md`, and paste the summarized bullets into the prompt along with helper names.
+**Approach**: Review your code for duplicates, complexity, and architectural issues, record findings in `docs/maintainers/templates/static-analysis-report.md`, and paste the summarized bullets into the prompt along with helper names.
 **Why**: Keeps Codex focused on the previously flagged duplicates, complexity spikes, or forbidden imports without rehashing the entire diff.
 **See**: [Static Analysis Report Template](../templates/static-analysis-report.md)
 

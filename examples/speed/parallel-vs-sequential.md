@@ -99,4 +99,4 @@ If no (dependent) → Sequential is necessary
 
 ## Related Pattern
 
-See: [docs/patterns/speed/parallel-execution.md](../../docs/patterns/speed/parallel-execution.md)
+See: [docs/maintainers/patterns/speed/parallel-execution.md](../../docs/maintainers/patterns/speed/parallel-execution.md)

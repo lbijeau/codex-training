@@ -54,8 +54,8 @@ After completing Module 1 exercises:
 
 1. Review what you learned
 2. Identify reusable patterns
-3. Add to `docs/patterns/` (speed, quality, debugging, etc.)
-4. Update your `docs/playbook/` with quick reference items
+3. Add to `docs/maintainers/patterns/` (speed, quality, debugging, etc.)
+4. Update your `docs/maintainers/playbook/` with quick reference items
 
 ### Step 4: Continue Through Modules
 
@@ -236,13 +236,13 @@ codex-training/
 - Hints and solutions included
 - Build muscle memory
 
-**Pattern Library** (`docs/patterns/`):
+**Pattern Library** (`docs/maintainers/patterns/`):
 - You populate as you learn
 - Organized by category
 - Reusable solutions
 - Document discoveries
 
-**Playbook** (`docs/playbook/`):
+**Playbook** (`docs/maintainers/playbook/`):
 - Quick reference for daily work
 - Scenario-based lookup
 - Checklists for workflows
@@ -312,7 +312,7 @@ Update the checklist as you complete modules:
 
 ### In Playbook
 
-Add to `docs/playbook/scenarios.md` as you discover patterns:
+Add to `docs/maintainers/playbook/scenarios.md` as you discover patterns:
 ```
 **Scenario**: I need to read multiple files
 **Approach**: Request all in parallel (single message)
@@ -324,9 +324,9 @@ Add to `docs/playbook/scenarios.md` as you discover patterns:
 
 Document patterns in appropriate category:
 ```
-docs/patterns/speed/parallel-execution.md
-docs/patterns/quality/code-review-workflow.md
-docs/patterns/debugging/systematic-approach.md
+docs/maintainers/patterns/speed/parallel-execution.md
+docs/maintainers/patterns/quality/code-review-workflow.md
+docs/maintainers/patterns/debugging/systematic-approach.md
 ```
 
 ---
