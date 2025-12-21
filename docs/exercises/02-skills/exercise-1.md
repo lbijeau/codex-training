@@ -132,13 +132,15 @@ You should see skills in categories like:
 
 ### Common Issues
 
-1. **AGENTS.md not found**: Must be at `~/.codex/AGENTS.md` (global) or `.codex/AGENTS.md` (project)
+1. **AGENTS.md not found**: Must be at `~/.codex/AGENTS.md` (global) or `./AGENTS.md` (project)
 2. **Skills not loading**: Restart Codex session after adding AGENTS.md configuration
 3. **Permission denied**: Run `chmod +x` on the bootstrap script
 
 ### Key Insight
 
 Skills are loaded when Codex starts a session. Changes to AGENTS.md require a session restart to take effect.
+
+Verified with Codex CLI v0.76.0.
 
 </details>
 
