@@ -56,6 +56,7 @@ build/
 *.temp
 .cache/
 .slideshow-temp/
+.worktrees/
 
 # Generated output
 output/
