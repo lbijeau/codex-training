@@ -67,4 +67,3 @@ Full reference: [Codex CLI + TUI Reference](cli-reference.md).
 | `/undo` | Undo last file change |
 | `/diff` | Show pending changes |
 | `/model` | Switch model mid-session |
-

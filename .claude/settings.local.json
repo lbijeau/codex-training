@@ -4,7 +4,13 @@
       "Bash(rg:*)",
       "mcp__imagegen__render-mermaid",
       "Bash(git mv:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(gh pr review:*)",
+      "Bash(jq:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh api:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)"
     ]
   }
 }
