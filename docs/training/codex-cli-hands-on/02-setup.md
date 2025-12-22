@@ -38,6 +38,8 @@ Readiness check:
 
 ## Quick Reference
 
+Full reference: [Codex CLI + TUI Reference](cli-reference.md).
+
 ### Common CLI Flags
 
 | Flag | Description |
@@ -66,36 +68,3 @@ Readiness check:
 | `/diff` | Show pending changes |
 | `/model` | Switch model mid-session |
 
-### Config File (`~/.codex/config.toml`)
-
-```toml
-# Model settings
-model = "codex-1"              # Default model
-temperature = 0.7              # Response randomness (0-1)
-
-# Safety defaults
-sandbox = "workspace-write"    # read-only | workspace-write | danger-full-access
-approval_policy = "on-failure" # untrusted | on-failure | on-request | never
-
-# Features (experimental)
-[features]
-skills = true                  # Enable skills from ~/.codex/skills/
-
-# Named profiles (use with --profile)
-[profiles.safe]
-sandbox = "read-only"
-approval_policy = "untrusted"
-
-[profiles.auto]
-sandbox = "workspace-write"
-approval_policy = "never"
-
-# MCP server integration
-[mcp.servers.memory]
-command = "npx"
-args = ["-y", "@anthropic/mcp-memory"]
-```
-
-For all config options, see the [official config docs](https://github.com/openai/codex/blob/main/docs/config.md).
-
-For the full CLI reference, see the [official CLI docs](https://github.com/openai/codex/blob/main/docs/cli.md).
