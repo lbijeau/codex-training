@@ -211,6 +211,31 @@ When gathering independent information:
 
 ---
 
+## Success Criteria
+
+You can self-check this exercise by confirming all of the following:
+
+- You created `practice/scratch/file1.txt` through `file5.txt` with the module lines shown.
+- Sequential approach produced 5 separate Codex responses; parallel approach produced 1 response.
+- You recorded a simple time comparison (even a rough minute/second note) for sequential vs. parallel.
+- You answered Part B with a clear parallel/sequential choice for all 5 scenarios.
+- You wrote 3 parallelized prompts in Part C that combine the original requests.
+
+## Example Output (snippet)
+
+Your exact wording may differ, but you should see a response similar to this after the parallel read:
+
+```
+Reading file1.txt...file5.txt in parallel.
+
+Summary:
+- Authentication
+- Database
+- API
+- Frontend
+- Logging
+```
+
 ## Reflection Questions
 
 1. What percentage of your typical requests could be parallelized?
