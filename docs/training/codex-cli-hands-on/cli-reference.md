@@ -105,14 +105,24 @@ codex [OPTIONS] <COMMAND> [ARGS]
 
 | Command | Description |
 |---------|-------------|
-| `/help` | Show available commands. |
-| `/status` | Show session info (workdir, sandbox, session ID). |
-| `/skills` | List available skills (if enabled). |
-| `/clear` | Clear conversation history. |
-| `/compact` | Summarize and compress context. |
-| `/undo` | Undo last file change. |
-| `/diff` | Show pending changes. |
-| `/model` | Switch model mid-session. |
+| `/model` | Choose model and reasoning effort. |
+| `/approvals` | Choose what Codex can do without approval. |
+| `/review` | Review current changes and find issues. |
+| `/new` | Start a new chat during a conversation. |
+| `/resume` | Resume an old chat. |
+| `/init` | Create an `AGENTS.md` file with instructions for Codex. |
+| `/compact` | Summarize conversation to prevent context limit. |
+| `/undo` | Ask Codex to undo a turn. |
+| `/diff` | Show git diff (including untracked files). |
+| `/mention` | Mention a file. |
+| `/status` | Show current session configuration and token usage. |
+| `/mcp` | List configured MCP tools. |
+| `/experimental` | Open experimental feature menu. |
+| `/skills` | Browse and insert skills (experimental). |
+| `/logout` | Log out of Codex. |
+| `/quit` | Exit Codex. |
+| `/exit` | Exit Codex. |
+| `/feedback` | Send logs to maintainers. |
 
 ## Examples
 
@@ -145,6 +155,7 @@ codex --add-dir ../shared "compare configs"
 | `RUST_LOG` | Increase logging verbosity (e.g., `RUST_LOG=codex_core=debug`). |
 
 Log file note: TUI logs live at `~/.codex/log/codex-tui.log` (paths may vary on Windows/WSL).
+Provider-specific keys (e.g., `AZURE_OPENAI_API_KEY`, `MISTRAL_API_KEY`) are configured via `env_key` in `config.toml`.
 
 ## Config File (`~/.codex/config.toml`)
 
@@ -183,5 +194,7 @@ args = ["-y", "@anthropic/mcp-memory"]
 
 ## References
 
-- Official CLI docs: https://github.com/openai/codex/blob/main/docs/cli.md
+- Getting started: https://github.com/openai/codex/blob/main/docs/getting-started.md
+- Exec mode: https://github.com/openai/codex/blob/main/docs/exec.md
+- Slash commands: https://github.com/openai/codex/blob/main/docs/slash_commands.md
 - Config docs: https://github.com/openai/codex/blob/main/docs/config.md
