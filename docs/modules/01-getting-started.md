@@ -116,13 +116,16 @@ Codex can read files and run commands, so it has guardrails.
 
 ### Approval Modes
 
-| Mode | What Happens | When to Use |
+| Policy (`--ask-for-approval`) | What Happens | When to Use |
 |------|--------------|-------------|
-| `suggest` (default) | Asks before writes/commands | Normal work |
-| `always` | Asks before everything | Learning, sensitive repos |
-| `never` | No approvals | Trusted automation only |
+| `untrusted` | Only "trusted" commands run without approval; all others ask | Cautious workflows |
+| `on-failure` | Runs commands without asking; asks only when escalation is needed | Batch work with fallback |
+| `on-request` | Model decides when to ask | Mixed workflows |
+| `never` | Never asks | Trusted automation only |
 
-Start with `suggest` or `always`. Avoid `never` until you trust your setup.
+Start with `untrusted` or `on-request`. Avoid `never` until you trust your setup.
+
+Verified with Codex CLI v0.76.0.
 
 ### Sandbox Modes
 
@@ -166,11 +169,13 @@ codex exec "prompt"             # Non-interactive, single response
 ### Useful Flags
 
 ```bash
-codex -a untrusted              # Require approval for untrusted commands
+codex -a untrusted              # Only trusted commands run without approval
 codex --sandbox read-only       # Read-only mode
 codex --model gpt-5.1-codex-max # Specific model
 codex --profile safe            # Use a saved profile
 ```
+
+Verified with Codex CLI v0.76.0.
 
 ---
 
@@ -180,18 +185,21 @@ Save your preferences in `~/.codex/config.toml`:
 
 ```toml
 model = "gpt-5.1-codex-max"
-approval = "suggest"
+approval_policy = "on-request"
+sandbox = "workspace-write"
 
 [profiles.safe]
-approval = "always"
+approval_policy = "untrusted"
 sandbox = "read-only"
 
 [profiles.auto]
-approval = "never"
+approval_policy = "never"
 sandbox = "workspace-write"
 ```
 
 Then use: `codex --profile safe`
+
+Verified with Codex CLI v0.76.0.
 
 ---
 
@@ -256,11 +264,13 @@ codex resume             # Pick from recent sessions
 
 ### Safety Flags
 ```bash
--a on-request            # Require approval before actions
+-a on-request            # Model decides when to ask
 --full-auto              # Alias for -a on-request + --sandbox workspace-write
 --sandbox read-only      # Can't write files
---sandbox workspace-write # Write to project (default)
+--sandbox workspace-write # Write to project
 ```
+
+Verified with Codex CLI v0.76.0.
 
 ### TUI Commands
 ```

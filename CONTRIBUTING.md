@@ -120,11 +120,8 @@ codex-training/
 ├── docs/
 │   ├── modules/          # Core learning content
 │   ├── exercises/        # Hands-on practice
-│   ├── patterns/         # Reusable pattern library
-│   ├── playbook/         # Quick reference guides
 │   ├── plans/            # Design documents
-│   ├── templates/        # Document templates
-│   └── prompt_templates/ # Prompt templates
+│   └── maintainers/      # Patterns, playbook, and templates
 ├── examples/             # Code examples
 ├── practice/             # Practice workspace
 └── .codex-examples/      # Sample workspace configuration

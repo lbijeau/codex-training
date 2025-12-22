@@ -42,7 +42,7 @@ graph TB
     ROOT --> training["docs/training\nHands-on training"]
     ROOT --> maintainers["docs/maintainers\nMaintainer references"]
     ROOT --> practice["practice/\nWorkspace for exercises"]
-    ROOT --> codexExamples[".codex-examples/\nSample prompts + functions"]
+    ROOT --> codexExamples["docs/training/codex-cli-hands-on/examples/\nSample prompts + configs"]
     ROOT --> tests["tests/\nVerification suites"]
     ROOT --> scripts["scripts/\nCLI helpers"]
     ROOT --> resources["RESOURCES.md\nLinks & references"]
@@ -54,6 +54,8 @@ graph TB
 A standalone training track for new Codex CLI users and PM/trainers. Covers installation, safety model, interactive labs, automation with `codex exec`, and Jupyter integration.
 
 📁 **[Start Here](docs/training/codex-cli-hands-on/README.md)** | ⏱️ ~90 minutes total
+
+Verified with Codex CLI v0.76.0.
 
 ### PM/PO PRD Clinic
 A short, practical track for PMs and POs to draft PRDs with repo context using the Codex CLI.
@@ -239,8 +241,7 @@ Update module status as you complete them:
 
 ## Codex Workspace
 
-- **`.codex-examples/`** holds sample helper functions, prompt templates, logging scripts, and context files. Copy the pieces you need into your own `.codex/` folder to jumpstart a session.
-- **`.codex/functions.json`** documents the helper functions you register with each session (name, description, parameter schema).
+- **`docs/training/codex-cli-hands-on/examples/`** holds sample AGENTS and rules files you can reuse in your own `.codex/` folder to jumpstart a session.
 - **Context files** like `.codex/context.md` describe the current project state. Include them at the start of a session so Codex understands your assumptions without re-reading every detail.
 
 ## Contributing

@@ -36,7 +36,7 @@ Superpowers is a curated library of skills for common development tasks. Before 
 
 **Task**: Add superpowers to your Codex configuration.
 
-1. Open or create `~/.codex/AGENTS.md`
+1. Open or create `~/.codex/AGENTS.md` (global) or `./AGENTS.md` (project)
 
 2. Add this section:
    ```markdown
@@ -50,7 +50,7 @@ Superpowers is a curated library of skills for common development tasks. Before 
 3. Save the file
 
 **Verification**:
-- Run `cat ~/.codex/AGENTS.md` and confirm the superpowers section exists
+- Run `cat ~/.codex/AGENTS.md` or `cat ./AGENTS.md` and confirm the superpowers section exists
 
 ## Part C: Bootstrap and Verify
 
@@ -100,7 +100,7 @@ chmod +x ~/.codex/superpowers/.codex/superpowers-codex
 <details>
 <summary>Hint 3: If skills don't appear</summary>
 
-Make sure AGENTS.md is in the correct location (`~/.codex/AGENTS.md`) and restart your Codex session.
+Make sure AGENTS.md is in the correct location (`~/.codex/AGENTS.md` or `./AGENTS.md`) and restart your Codex session.
 </details>
 
 ---
@@ -115,7 +115,7 @@ Make sure AGENTS.md is in the correct location (`~/.codex/AGENTS.md`) and restar
 After installation, you should have:
 ```
 ~/.codex/
-├── AGENTS.md              # Configuration with superpowers section
+├── AGENTS.md              # Configuration with superpowers section (global)
 ├── superpowers/           # Cloned superpowers repo
 │   └── .codex/
 │       └── superpowers-codex  # Bootstrap script
@@ -132,13 +132,15 @@ You should see skills in categories like:
 
 ### Common Issues
 
-1. **AGENTS.md not found**: Must be at `~/.codex/AGENTS.md` (global) or `.codex/AGENTS.md` (project)
+1. **AGENTS.md not found**: Must be at `~/.codex/AGENTS.md` (global) or `./AGENTS.md` (project)
 2. **Skills not loading**: Restart Codex session after adding AGENTS.md configuration
 3. **Permission denied**: Run `chmod +x` on the bootstrap script
 
 ### Key Insight
 
 Skills are loaded when Codex starts a session. Changes to AGENTS.md require a session restart to take effect.
+
+Verified with Codex CLI v0.76.0.
 
 </details>
 

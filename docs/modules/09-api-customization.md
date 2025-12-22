@@ -98,7 +98,7 @@ Brief description of what this project does.
 
 ## 2. Configuration & Permissions
 
-Codex configuration is primarily managed through AGENTS.md files and runtime settings.
+Codex configuration is managed through `~/.codex/config.toml` and runtime flags, while AGENTS.md provides project instructions and context.
 
 ### Configuration Location
 
@@ -110,25 +110,11 @@ Codex configuration is primarily managed through AGENTS.md files and runtime set
 
 ### Permission Management
 
-Codex asks for permission before potentially destructive actions. You can pre-approve operations in your AGENTS.md:
-
-```markdown
-## Permissions
-- Edit files in `src/` without confirmation
-- Run `npm test` and `npm run lint` without confirmation
-- Always ask before running `rm` commands
-```
-
-Or grant permissions conversationally during a session:
-
-```
-You: "I trust you to edit files in src/ without asking"
-
-Codex: I'll remember that. For this session, I won't ask before
-editing files in the src/ directory.
-```
+Codex asks for permission before potentially destructive actions based on its approval policy (`--ask-for-approval`) and sandbox mode (`--sandbox`). Use CLI flags or config values for permission behavior; AGENTS.md should focus on instructions and context, not approval settings.
 
 > **Note**: For the most current configuration options, run `codex --help` and check the repository documentation.
+
+Verified with Codex CLI v0.76.0.
 
 ### Project-Level Configuration
 
