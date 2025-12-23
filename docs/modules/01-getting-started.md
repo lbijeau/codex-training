@@ -51,7 +51,7 @@ npm install -g @openai/codex
 ### Step 2: Authenticate
 
 ```bash
-codex auth login
+codex login
 # Follow the browser prompts
 ```
 
@@ -59,7 +59,7 @@ codex auth login
 
 ```bash
 codex --version
-# Should show: OpenAI Codex v0.7x.x
+# Should show: codex-cli 0.77.0
 ```
 
 ---
@@ -125,7 +125,7 @@ Codex can read files and run commands, so it has guardrails.
 
 Start with `untrusted` or `on-request`. Avoid `never` until you trust your setup.
 
-Verified with Codex CLI v0.76.0.
+Verified with Codex CLI v0.77.0.
 
 ### Sandbox Modes
 
@@ -171,11 +171,11 @@ codex exec "prompt"             # Non-interactive, single response
 ```bash
 codex -a untrusted              # Only trusted commands run without approval
 codex --sandbox read-only       # Read-only mode
-codex --model gpt-5.1-codex-max # Specific model
+codex --model <model-id>        # Specific model
 codex --profile safe            # Use a saved profile
 ```
 
-Verified with Codex CLI v0.76.0.
+Verified with Codex CLI v0.77.0.
 
 ---
 
@@ -184,7 +184,7 @@ Verified with Codex CLI v0.76.0.
 Save your preferences in `~/.codex/config.toml`:
 
 ```toml
-model = "gpt-5.1-codex-max"
+model = "<model-id>"
 approval_policy = "on-request"
 sandbox = "workspace-write"
 
@@ -199,7 +199,7 @@ sandbox = "workspace-write"
 
 Then use: `codex --profile safe`
 
-Verified with Codex CLI v0.76.0.
+Verified with Codex CLI v0.77.0.
 
 ---
 
@@ -270,7 +270,7 @@ codex resume             # Pick from recent sessions
 --sandbox workspace-write # Write to project
 ```
 
-Verified with Codex CLI v0.76.0.
+Verified with Codex CLI v0.77.0.
 
 ### TUI Commands
 ```
