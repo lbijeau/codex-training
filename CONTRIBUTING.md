@@ -121,7 +121,7 @@ codex-training/
 │   ├── modules/          # Core learning content
 │   ├── exercises/        # Hands-on practice
 │   ├── plans/            # Design documents
-│   └── maintainers/      # Patterns, playbook, and templates
+│   └── maintainers/      # Patterns, playbook, templates, and prompt templates
 ├── examples/             # Code examples
 ├── practice/             # Practice workspace
 └── .codex-examples/      # Sample workspace configuration
