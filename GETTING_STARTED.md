@@ -44,7 +44,7 @@ Module 1 is the foundation for CLI users. Everything builds from here.
    - Try `codex exec` for a non-interactive run
    - Complete the hands-on labs in `docs/training/codex-cli-hands-on/`
 
-Verified with Codex CLI v0.76.0.
+Verified with Codex CLI v0.77.0.
 
 3. **Experiment**: Use `practice/scratch/` for hands-on work
 
