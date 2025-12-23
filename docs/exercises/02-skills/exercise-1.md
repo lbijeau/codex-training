@@ -38,6 +38,8 @@ Superpowers is a curated library of skills for common development tasks. Before 
 
 1. Open or create `~/.codex/AGENTS.md` (global) or `./AGENTS.md` (project)
 
+AGENTS.md is for instructions and context only; configure permissions with CLI flags or `~/.codex/config.toml`.
+
 2. Add this section:
    ```markdown
    # Superpowers
@@ -140,7 +142,7 @@ You should see skills in categories like:
 
 Skills are loaded when Codex starts a session. Changes to AGENTS.md require a session restart to take effect.
 
-Verified with Codex CLI v0.76.0.
+Verified with Codex CLI v0.77.0.
 
 </details>
 

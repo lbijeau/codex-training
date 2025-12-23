@@ -104,17 +104,20 @@ Codex configuration is managed through `~/.codex/config.toml` and runtime flags,
 
 ```
 ~/.codex/
-├── AGENTS.md          # Global instructions (primary configuration)
-└── skills/            # Custom skills (optional, see Module 2)
+├── config.toml         # CLI configuration (approval policy, sandbox, profiles)
+├── AGENTS.md           # Global instructions (no permissions)
+└── skills/             # Custom skills (optional, see Module 2)
 ```
 
 ### Permission Management
 
 Codex asks for permission before potentially destructive actions based on its approval policy (`--ask-for-approval`) and sandbox mode (`--sandbox`). Use CLI flags or config values for permission behavior; AGENTS.md should focus on instructions and context, not approval settings.
 
+> **Note**: AGENTS.md provides instructions and context only. Approvals and sandbox settings must be configured via CLI flags or `~/.codex/config.toml`.
+
 > **Note**: For the most current configuration options, run `codex --help` and check the repository documentation.
 
-Verified with Codex CLI v0.76.0.
+Verified with Codex CLI v0.77.0.
 
 ### Project-Level Configuration
 
@@ -126,7 +129,7 @@ project-root/
 └── src/
 ```
 
-The project-level `AGENTS.md` is automatically combined with your global `~/.codex/AGENTS.md`, with project settings taking precedence.
+The project-level `AGENTS.md` is automatically combined with your global `~/.codex/AGENTS.md`, with project instructions taking precedence.
 
 ---
 
