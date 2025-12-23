@@ -104,7 +104,7 @@ Codex configuration is managed through `~/.codex/config.toml` and runtime flags,
 
 ```
 ~/.codex/
-├── AGENTS.md          # Global instructions (primary configuration)
+├── AGENTS.md          # Global instructions
 └── skills/            # Custom skills (optional, see Module 2)
 ```
 
@@ -126,7 +126,7 @@ project-root/
 └── src/
 ```
 
-The project-level `AGENTS.md` is automatically combined with your global `~/.codex/AGENTS.md`, with project settings taking precedence.
+The project-level `AGENTS.md` is automatically combined with your global `~/.codex/AGENTS.md` (see the precedence note above).
 
 ---
 
