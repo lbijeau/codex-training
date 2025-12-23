@@ -25,7 +25,7 @@ AGENTS.md is a markdown file that Codex reads at the start of every conversation
 | `./AGENTS.md` | Current project | Project-specific instructions |
 | `~/.codex/AGENTS.md` | All projects | Personal preferences, global conventions |
 
-Project-level AGENTS.md takes precedence and is combined with your global one.
+Project instructions live in `./AGENTS.md`. Global instructions live in `~/.codex/AGENTS.md`. Codex combines both, and project instructions take precedence.
 
 ### What to Include
 
