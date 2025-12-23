@@ -42,7 +42,8 @@ graph TB
     ROOT --> training["docs/training\nHands-on training"]
     ROOT --> maintainers["docs/maintainers\nMaintainer references"]
     ROOT --> practice["practice/\nWorkspace for exercises"]
-    ROOT --> codexExamples["docs/training/codex-cli-hands-on/examples/\nSample prompts + configs"]
+    ROOT --> codexExamples[".codex-examples/\nSample Codex config"]
+    ROOT --> trainingExamples["docs/training/codex-cli-hands-on/examples/\nSample prompts + configs"]
     ROOT --> tests["tests/\nVerification suites"]
     ROOT --> scripts["scripts/\nCLI helpers"]
     ROOT --> resources["RESOURCES.md\nLinks & references"]
@@ -241,8 +242,9 @@ Update module status as you complete them:
 
 ## Codex Workspace
 
-- **`docs/training/codex-cli-hands-on/examples/`** holds sample AGENTS and rules files you can reuse in your own `.codex/` folder to jumpstart a session.
-- **Context files** like `.codex/context.md` describe the current project state. Include them at the start of a session so Codex understands your assumptions without re-reading every detail.
+- **`.codex-examples/`** holds sample Codex configuration you can copy into your own `.codex/` folder to jumpstart a session.
+- **`docs/training/codex-cli-hands-on/examples/`** holds sample prompts and rules files used by the training track.
+- **Context files** like `.codex-examples/context.md` describe the current project state. Include them at the start of a session so Codex understands your assumptions without re-reading every detail.
 
 ## Contributing
 
