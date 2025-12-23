@@ -1,4 +1,4 @@
-# Getting Started with Codex Code Mastery
+# Getting Started with Codex CLI Mastery Program
 
 Welcome to your comprehensive Codex Code training program! This guide will help you begin your journey from experienced user to expert practitioner.
 

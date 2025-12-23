@@ -1,6 +1,6 @@
-# Contributing to Codex Code Mastery Program
+# Contributing to Codex CLI Mastery Program
 
-Thank you for your interest in contributing to the Codex Code Mastery Program! This document provides guidelines for contributing to this educational resource.
+Thank you for your interest in contributing to the Codex CLI Mastery Program! This document provides guidelines for contributing to this educational resource.
 
 ## Table of Contents
 
