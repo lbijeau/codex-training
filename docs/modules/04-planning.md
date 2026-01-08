@@ -326,10 +326,10 @@ Use the `executing-plans` skill for controlled execution:
 codex "Use superpowers:executing-plans to start executing IMPLEMENTATION_PLAN.md"
 ```
 
-> **⚠️ Important**: Plan execution is not fully automatic. Codex will:
-> - Ask for approval before making changes to files
+> **⚠️ Important**: Plan execution is guided, not automatic. Codex will:
+> - Ask for approval before making file changes or running commands (including tests)
 > - Pause between stages for your review
-> - Run tests and show results before proceeding
+> - Offer to run tests and show results once you approve
 >
 > Never skip these checkpoints. Review changes, verify tests pass, and approve each step explicitly.
 
@@ -356,6 +356,8 @@ Task 3/3: Write tests
 [Creates spec/models/notification_spec.rb]
 ✅ Tests written
 
+Codex: Ready to run tests for Stage 1. Approve?
+You: Yes, run tests.
 Running tests for Stage 1...
 ✅ All tests pass
 
