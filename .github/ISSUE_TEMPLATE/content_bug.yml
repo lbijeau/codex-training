@@ -1,0 +1,25 @@
+name: Content Bug
+description: Report a typo, broken link, or outdated instruction.
+title: "[Bug]: <Short Description>"
+labels: ["bug", "documentation"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page / File
+      description: Which file or documentation page has the issue?
+      placeholder: docs/modules/01-getting-started.md
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the Bug
+      description: What is incorrect?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Fix
+      description: If you know how to fix it, please describe it here.
