@@ -102,7 +102,7 @@ Think about workflows you do repeatedly:
 
 **Task**: Make the skill available and verify it works.
 
-1. Add to your AGENTS.md:
+1. Add to your project `./AGENTS.md` or global `~/.codex/AGENTS.md` (see Module 9 for precedence):
 
    ```markdown
    # Custom Skills
@@ -157,7 +157,7 @@ triggers:
 <details>
 <summary>Hint 2: Making skills discoverable</summary>
 
-Add your skills to AGENTS.md so Codex knows about them. You can also reference them explicitly:
+Add your skills to your project `./AGENTS.md` or global `~/.codex/AGENTS.md` so Codex knows about them (see Module 9 for precedence). You can also reference them explicitly:
 "Use ~/.codex/skills/pre-pr-checklist.md"
 </details>
 
@@ -209,7 +209,7 @@ Show the skill in action so usage is clear.
 ### Making Skills Stick
 
 For a skill to be useful, it must be:
-1. **Discoverable**: Listed in AGENTS.md or easy to reference
+1. **Discoverable**: Listed in `./AGENTS.md` or `~/.codex/AGENTS.md` (see Module 9 for precedence) or easy to reference
 2. **Triggered**: Either automatically or easily invoked
 3. **Complete**: Covers the full workflow without gaps
 4. **Maintained**: Updated as the workflow evolves

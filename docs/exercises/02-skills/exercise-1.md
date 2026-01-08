@@ -36,7 +36,9 @@ Superpowers is a curated library of skills for common development tasks. Before 
 
 **Task**: Add superpowers to your Codex configuration.
 
-1. Open or create `~/.codex/AGENTS.md` (global) or `./AGENTS.md` (project)
+1. Open or create `./AGENTS.md` (project) or `~/.codex/AGENTS.md` (global)
+
+Project instructions live in `./AGENTS.md`. Global instructions live in `~/.codex/AGENTS.md`. Codex combines both, and project instructions take precedence. See Module 9 for details.
 
 AGENTS.md is for instructions and context only; configure permissions with CLI flags or `~/.codex/config.toml`.
 
@@ -52,7 +54,7 @@ AGENTS.md is for instructions and context only; configure permissions with CLI f
 3. Save the file
 
 **Verification**:
-- Run `cat ~/.codex/AGENTS.md` or `cat ./AGENTS.md` and confirm the superpowers section exists
+- Run `cat ./AGENTS.md` or `cat ~/.codex/AGENTS.md` and confirm the superpowers section exists
 
 ## Part C: Bootstrap and Verify
 
@@ -102,7 +104,7 @@ chmod +x ~/.codex/superpowers/.codex/superpowers-codex
 <details>
 <summary>Hint 3: If skills don't appear</summary>
 
-Make sure AGENTS.md is in the correct location (`~/.codex/AGENTS.md` or `./AGENTS.md`) and restart your Codex session.
+Make sure AGENTS.md is in the correct location (`./AGENTS.md` or `~/.codex/AGENTS.md`) and restart your Codex session.
 </details>
 
 ---
@@ -134,7 +136,7 @@ You should see skills in categories like:
 
 ### Common Issues
 
-1. **AGENTS.md not found**: Must be at `~/.codex/AGENTS.md` (global) or `./AGENTS.md` (project)
+1. **AGENTS.md not found**: Must be at `./AGENTS.md` (project) or `~/.codex/AGENTS.md` (global)
 2. **Skills not loading**: Restart Codex session after adding AGENTS.md configuration
 3. **Permission denied**: Run `chmod +x` on the bootstrap script
 
