@@ -2,7 +2,7 @@
 
 ## Overview
 
-Skills are packaged workflows that capture proven techniques for common tasks. Instead of remembering the right prompts and sequences every time, skills encode expert knowledge into reusable patterns you can invoke by name.
+Skills here mean workflow playbooks: reusable prompt patterns, checklists, and step-by-step flows that make complex work repeatable. They are not a built-in Codex feature. You can use them as plain prompts, or load them from a library if you want a ready-made catalog.
 
 **Learning Objectives**:
 - Understand what skills are and why they matter
@@ -15,10 +15,10 @@ Skills are packaged workflows that capture proven techniques for common tasks. I
 
 ---
 
-> **⚠️ Prerequisites**: Skills require explicit setup before use. They are an optional enhancement to Codex CLI, not a built-in feature. Before starting this module:
+> **⚠️ Prerequisites**: Skills are optional. They require explicit setup only if you want a library like Superpowers. Before starting this module:
 > 1. Complete [Module 1: Getting Started](01-getting-started.md) to ensure Codex CLI is installed
-> 2. Follow the installation steps in Section 2 below to set up the superpowers library
-> 3. Verify installation by running the bootstrap command
+> 2. If you want a skill library, follow the installation steps in Section 2 below
+> 3. Verify installation by running the bootstrap command (library users only)
 >
 > If skills don't work after following these steps, check the troubleshooting section or consult the [superpowers documentation](https://github.com/obra/superpowers).
 
@@ -47,8 +47,8 @@ Codex: [Another guess...]
 
 **Example: Debugging with a skill**
 ```
-You: "The tests are failing. Use superpowers:systematic-debugging"
-Codex: [Follows proven 4-phase framework]
+You: "The tests are failing. Use a systematic debugging skill"
+Codex: [Follows a proven 4-phase framework]
 1. Reproduce reliably
 2. Trace backwards to root cause
 3. Form and test hypothesis
@@ -56,7 +56,7 @@ Codex: [Follows proven 4-phase framework]
 # Problem solved systematically
 ```
 
-### Skills Are Encoded Expertise
+### Skills Encode Expertise
 
 Think of skills as recipes from expert developers:
 
@@ -86,7 +86,7 @@ A skill typically includes:
 
 | Component | Purpose | Example |
 |-----------|---------|---------|
-| **Name** | How to invoke it | `superpowers:systematic-debugging` |
+| **Name** | How to invoke it | `systematic-debugging` |
 | **Trigger** | When to use it | "After 3 failed fix attempts" |
 | **Steps** | What to do | "1. Reproduce, 2. Trace, 3. Hypothesis..." |
 | **Checklists** | What not to skip | "[ ] Root cause identified" |
@@ -94,9 +94,9 @@ A skill typically includes:
 
 ---
 
-## 2. Installing Superpowers
+## 2. Optional: Install a Skill Library (Superpowers)
 
-Before using skills, you need to install the superpowers library. This is a one-time setup.
+If you want a ready-made library of skills, install Superpowers. This is a community library, not a Codex built-in.
 
 ### Prerequisites
 
@@ -148,7 +148,7 @@ Upon success, you'll see skill listings and bootstrap instructions, confirming t
 
 The superpowers library provides:
 - **20+ battle-tested skills** for planning, debugging, TDD, and code review
-- **Skill invocation patterns** you can use explicitly or via prompt hints
+- **Playbook invocation patterns** you can use explicitly or via prompt hints
 - **Custom skills directory** for your team's workflows
 - **Bootstrap system** that loads skills into your session (run manually)
 
@@ -185,11 +185,11 @@ git pull
 
 ---
 
-## 3. The Superpowers Skill Library
+## 3. Superpowers as an Example Library
 
 ### What is Superpowers?
 
-Superpowers is a curated library of skills for common development tasks. It's like having a senior developer's playbook available on demand.
+Superpowers is a curated library of skills for common development tasks. It's like having a senior developer's checklist and prompt templates available on demand. You can also write your own skills without any library.
 
 ### Core Skills Overview
 

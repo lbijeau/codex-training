@@ -2,6 +2,10 @@
 
 A comprehensive learning journey from experienced user to expert practitioner, covering technical depth, workflow optimization, pattern development, and teaching capability.
 
+## Docs Site
+
+The public docs site is built from `docs/`. Start at [docs/index.md](docs/index.md) and use `docs/README.md` for local setup.
+
 ## Philosophy
 
 This program builds mastery across four dimensions:

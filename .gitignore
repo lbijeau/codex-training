@@ -49,6 +49,8 @@ practice/scratch/*
 dist/
 build/
 *.log
+docs/.vitepress/cache/
+docs/.vitepress/dist/
 
 # Temporary files
 *.tmp
@@ -65,7 +67,7 @@ docs/modules/*.srt
 docs/modules/*.mp3
 
 # Claude local settings
-.claude/settings.local.json
+.claude/
 
 # Browser automation
 .puppeteer-home/

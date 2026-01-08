@@ -2,6 +2,10 @@
 
 Welcome to your comprehensive Codex CLI training program! This guide will help you begin your journey from experienced user to expert practitioner.
 
+## 📄 Docs Site
+
+The public docs site is generated from `docs/`. Start at [docs/index.md](docs/index.md) or read [docs/README.md](docs/README.md) for local setup.
+
 ## 📚 What You Have
 
 **Complete Learning Program**:
