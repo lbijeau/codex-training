@@ -280,7 +280,7 @@ Want me to add priority labels to these issues?
 
 ### Workflow ingredients
 A Codex-driven workflow typically coordinates:
-- **Prompt templates** (`docs/maintainers/prompt_templates/feature_plan.md`) to capture intent
+- **Prompt templates** like the [Feature Plan Template](../maintainers/prompt_templates/feature_plan.md) to capture intent
 - **Helper functions** (`codex_helpers/`) that read files, run tests, gather metrics
 - **Validation scripts** (`scripts/validate.sh`) that ensure safety before accepting output
 - **Logging hooks** that archive every session for traceability

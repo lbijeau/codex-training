@@ -76,7 +76,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Hands-on labs in `docs/training/codex-cli-hands-on/`
 - Where to find helper docs and maintainer prompt templates in this repo
 
-📁 [Module Content](docs/modules/01-getting-started.md) | 🏋️ [Exercises](docs/exercises/01-getting-started/)
+📁 [Module 1: Getting Started](docs/modules/01-getting-started.md) | 🏋️ [Exercises](docs/exercises/01-getting-started/)
 
 ---
 
@@ -89,7 +89,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - The 3-attempt rule for debugging
 - Creating custom skills for your team
 
-📁 [Module Content](docs/modules/02-skills.md) | 🏋️ [Exercises](docs/exercises/02-skills/)
+📁 [Module 2: Skills & Workflows](docs/modules/02-skills.md) | 🏋️ [Exercises](docs/exercises/02-skills/)
 
 ---
 
@@ -103,7 +103,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Task decomposition frameworks
 - Execution strategy selection (parallel vs sequential)
 
-📁 [Module Content](docs/modules/03-speed.md) | 🏋️ [Exercises](docs/exercises/03-speed/)
+📁 [Module 3: Speed & Efficiency](docs/modules/03-speed.md) | 🏋️ [Exercises](docs/exercises/03-speed/)
 
 ---
 
@@ -117,7 +117,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Progress tracking with TodoWrite
 - Handling ambiguity and pivots
 
-📁 [Module Content](docs/modules/04-planning.md) | 🏋️ [Exercises](docs/exercises/04-planning/)
+📁 [Module 4: Planning & Execution](docs/modules/04-planning.md) | 🏋️ [Exercises](docs/exercises/04-planning/)
 
 ---
 
@@ -131,7 +131,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Systematic debugging
 - Root cause analysis
 
-📁 [Module Content](docs/modules/05-quality.md) | 🏋️ [Exercises](docs/exercises/05-quality/)
+📁 [Module 5: Quality & Verification](docs/modules/05-quality.md) | 🏋️ [Exercises](docs/exercises/05-quality/)
 
 ---
 
@@ -145,7 +145,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Performance optimization
 - Security review patterns
 
-📁 [Module Content](docs/modules/06-domain.md) | 🏋️ [Exercises](docs/exercises/06-domain/)
+📁 [Module 6: Domain Patterns](docs/modules/06-domain.md) | 🏋️ [Exercises](docs/exercises/06-domain/)
 
 ---
 
@@ -159,7 +159,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Cross-project knowledge transfer
 - Contributing to the ecosystem
 
-📁 [Module Content](docs/modules/07-integration.md) | 🏋️ [Exercises](docs/exercises/07-integration/)
+📁 [Module 7: Advanced Integration](docs/modules/07-integration.md) | 🏋️ [Exercises](docs/exercises/07-integration/)
 
 ---
 
@@ -172,7 +172,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Context management and token budgets
 - Session persistence and recovery
 
-📁 [Module Content](docs/modules/08-api-internals.md) | 🏋️ [Exercises](docs/exercises/08-api-internals/)
+📁 [Module 8: API Internals](docs/modules/08-api-internals.md) | 🏋️ [Exercises](docs/exercises/08-api-internals/)
 
 ---
 
@@ -185,7 +185,7 @@ A short, practical track for PMs and POs to draft PRDs with repo context using t
 - Hooks for automation (pre/post tool use)
 - MCP servers for external tool integration
 
-📁 [Module Content](docs/modules/09-api-customization.md) | 🏋️ [Exercises](docs/exercises/09-api-customization/)
+📁 [Module 9: API Customization](docs/modules/09-api-customization.md) | 🏋️ [Exercises](docs/exercises/09-api-customization/)
 
 ---
 
@@ -248,7 +248,7 @@ Update module status as you complete them:
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+Contributions are welcome! Please see the [Contributing Guide](CONTRIBUTING.md) for guidelines on:
 - Reporting issues and suggesting enhancements
 - Adding patterns, exercises, and examples
 - Code style and pull request process

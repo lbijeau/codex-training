@@ -24,7 +24,7 @@ By completing this program, you will:
 
 ### Step 1: Read the Overview
 
-Start with the master [README.md](README.md) to understand:
+Start with the [Program Overview](README.md) to understand:
 - The 9 module structure
 - Learning philosophy
 - Expected time investment
@@ -34,7 +34,7 @@ Start with the master [README.md](README.md) to understand:
 
 Module 1 is the foundation for CLI users. Everything builds from here.
 
-1. **Read**: [docs/modules/01-getting-started.md](docs/modules/01-getting-started.md) (45-60 min)
+1. **Read**: [Module 1: Getting Started](docs/modules/01-getting-started.md) (45-60 min)
    - Install and authenticate Codex CLI
    - Learn built-in tools (file read, apply_patch, shell) and TUI vs exec
    - Locate helpers and prompt templates in this repo
@@ -367,8 +367,8 @@ docs/maintainers/patterns/debugging/systematic-approach.md
 Everything is prepared. The program is comprehensive, structured, and ready for you to begin.
 
 **Your Next Action**:
-1. Open [README.md](README.md) for the full overview
-2. Then open [docs/modules/01-getting-started.md](docs/modules/01-getting-started.md)
+1. Open the [Program Overview](README.md) for the full overview
+2. Then open [Module 1: Getting Started](docs/modules/01-getting-started.md)
 3. Start reading and learning!
 
 **Remember**: This is a journey, not a race. Take your time, practice thoroughly, and enjoy mastering Codex Code!
