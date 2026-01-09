@@ -17,7 +17,7 @@ Exercise steps:
   Approve reads only.
 
 - **Step 2: Generate a helper function**  
-  Run: `codex exec "write a pandas helper in notebooks/helpers.py with load_csv(path) and summarize(df) that returns row count and column stats"`  
+  Run: `codex -a on-request "write a pandas helper in notebooks/helpers.py with load_csv(path) and summarize(df) that returns row count and column stats"`  
   Approve the write; review the diff.  
   Paste the helper into a notebook cell or import it.
 
@@ -26,11 +26,11 @@ Exercise steps:
   Verify output in the cell. If no data exists, create a tiny CSV first.
 
 - **Step 4: Add a quick test**  
-  Ask: `codex exec "add tests/test_helpers.py with a fixture small CSV and assertions for summarize()"`  
+  Ask: `codex exec --full-auto "add tests/test_helpers.py with a fixture small CSV and assertions for summarize()"`  
   Run `pytest tests/test_helpers.py -q` to ensure green.
 
 - **Step 5: Safety check**  
-  Confirm Codex never touched notebook metadata unexpectedly; keep approvals on for any notebook writes.
+  Confirm Codex never touched notebook metadata unexpectedly; use interactive `codex` for notebook edits so approvals stay visible.
 
 Facilitator notes:
 - Remind learners Codex cannot see live notebook variables; describe state explicitly.

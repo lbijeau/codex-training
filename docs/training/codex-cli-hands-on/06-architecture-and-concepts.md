@@ -9,7 +9,7 @@ Overview:
 
 Codex modes:
 - Interactive TUI (`codex`): conversational, approvals surfaced inline, supports resume (`codex resume`).
-- Non-interactive automation (`codex exec`): defaults follow config; starts in `read-only` unless `--full-auto` (alias for `-a on-request` + `--sandbox workspace-write`) or sandbox explicitly loosened.
+- Non-interactive automation (`codex exec`): no approval prompts; defaults follow config and start in `read-only` unless `--full-auto` (alias for `-a on-request` + `--sandbox workspace-write`) or sandbox explicitly loosened. Use interactive `codex` when you need approval dialogs.
 - MCP server (`codex mcp-server`): run Codex as a server for other agents; tools `codex` and `codex-reply`.
 
 Instruction stack (see [AGENTS.md docs](https://github.com/openai/codex/blob/main/docs/agents_md.md)):
@@ -27,6 +27,7 @@ Skills (see [skills docs](https://github.com/openai/codex/blob/main/docs/skills.
 Sandboxing, approvals, execpolicy:
 - Sandbox modes: `read-only`, `workspace-write`, `danger-full-access` (⚠️ completely disables sandboxing; use only for trusted automation). TUI start banner shows roots; `codex exec` defaults to `read-only`.
 - Approval policies: `untrusted` (prompts for commands outside trusted set), `on-failure` (prompts if sandbox fails), `on-request` (model decides when to escalate), `never` (no prompts). Use `-a <policy>` flag to set approval policy (e.g., `-a untrusted`, `-a on-request`).
+- `codex exec` cannot pause for approvals; if a run needs approval, use interactive `codex` or set a non-prompting policy (for example, `approval_policy = "never"`) and review the diff afterward.
 - Execpolicy (see [execpolicy docs](https://github.com/openai/codex/blob/main/docs/execpolicy.md)): repo rules to allow/deny commands or files; enforce guardrails beyond approvals.
 - Safety best practice: request plan + diff before writes; decline broad/deleting commands; prefer minimal scope.
 
@@ -96,7 +97,7 @@ flowchart LR
   subgraph Automation
     B[codex exec]
     B --> B1[Default read-only]
-    B --> B2[--full-auto: -a on-request + writes]
+    B --> B2[--full-auto: -a on-request + workspace-write]
     B --> B3[--json / --output-schema]
   end
   subgraph MCP Client

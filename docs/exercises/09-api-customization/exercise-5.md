@@ -18,12 +18,10 @@ The previous exercises covered individual customization components. This exercis
    ├── README.md
    ├── setup.sh
    ├── AGENTS.md
-   ├── .codex/
-   │   ├── settings.json
-   │   ├── config.toml
-   │   └── hooks/
-   │       ├── pre-tool-use.sh
-   │       └── post-tool-use.sh
+   ├── config/
+   │   └── config.toml
+   ├── git-hooks/
+   │   └── pre-commit
    ├── scripts/
    │   ├── session_start.sh
    │   ├── session_end.sh
@@ -51,9 +49,9 @@ The previous exercises covered individual customization components. This exercis
    ```
 
    This will:
-   1. Copy configuration files to your project
-   2. Set up Git hooks
-   3. Configure MCP servers
+   1. Copy AGENTS.md and scripts into your project
+   2. Install a `config.toml` template to `~/.codex/config.toml`
+   3. Set up Git hooks
    4. Create necessary directories
 
    ## What's Included
@@ -64,10 +62,15 @@ The previous exercises covered individual customization components. This exercis
    - Team workflows
    - Security requirements
 
-   ### Hooks
-   Automated validation and quality checks:
-   - `pre-tool-use.sh`: Block dangerous operations
-   - `post-tool-use.sh`: Auto-format and test
+   ### Config (config/config.toml)
+   Shared defaults and profiles:
+   - Approval policy and sandbox defaults
+   - Feature flags (e.g., `skills`)
+   - MCP server configuration
+
+   ### Git Hooks
+   Automated checks before commits:
+   - `pre-commit`: Run lint/test gates
 
    ### Scripts
    Workflow automation:
@@ -120,8 +123,7 @@ The previous exercises covered individual customization components. This exercis
 
    # Create directories
    echo "Creating directories..."
-   mkdir -p "$TARGET_DIR/.codex/hooks"
-   mkdir -p "$TARGET_DIR/.codex/logs"
+   mkdir -p "$HOME/.codex"
    mkdir -p "$TARGET_DIR/scripts"
    mkdir -p "$TARGET_DIR/docs/maintainers/prompt_templates"
    mkdir -p "$TARGET_DIR/docs/maintainers/patterns"
@@ -132,14 +134,26 @@ The previous exercises covered individual customization components. This exercis
        echo "✅ Installed AGENTS.md"
    fi
 
-   # Copy .codex settings
-   cp "$SCRIPT_DIR/.codex/settings.json" "$TARGET_DIR/.codex/"
-   echo "✅ Installed .codex/settings.json"
+   # Copy config template
+   CONFIG_FILE="$HOME/.codex/config.toml"
+   if [ -f "$CONFIG_FILE" ] && [ "$2" != "--update" ]; then
+       read -p "config.toml exists at ~/.codex. Back up and overwrite? (y/n) " -n 1 -r
+       echo ""
+       if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+           echo "Keeping existing config.toml"
+           KEEP_CONFIG=true
+       fi
+   fi
 
-   # Copy hooks
-   cp "$SCRIPT_DIR/.codex/hooks/"*.sh "$TARGET_DIR/.codex/hooks/"
-   chmod +x "$TARGET_DIR/.codex/hooks/"*.sh
-   echo "✅ Installed hooks"
+   if [ "$KEEP_CONFIG" != true ]; then
+       if [ -f "$CONFIG_FILE" ]; then
+           BACKUP_FILE="$CONFIG_FILE.bak.$(date +%Y%m%d%H%M%S)"
+           cp "$CONFIG_FILE" "$BACKUP_FILE"
+           echo "✅ Backed up config to $BACKUP_FILE"
+       fi
+       cp "$SCRIPT_DIR/config/config.toml" "$CONFIG_FILE"
+       echo "✅ Installed ~/.codex/config.toml"
+   fi
 
    # Copy scripts
    cp "$SCRIPT_DIR/scripts/"* "$TARGET_DIR/scripts/"
@@ -157,7 +171,7 @@ The previous exercises covered individual customization components. This exercis
 
    # Set up Git hooks
    if [ -d "$TARGET_DIR/.git" ]; then
-       cp "$SCRIPT_DIR/.codex/hooks/pre-tool-use.sh" "$TARGET_DIR/.git/hooks/pre-commit"
+       cp "$SCRIPT_DIR/git-hooks/pre-commit" "$TARGET_DIR/.git/hooks/pre-commit"
        chmod +x "$TARGET_DIR/.git/hooks/pre-commit"
        echo "✅ Installed Git pre-commit hook"
    fi
@@ -168,7 +182,7 @@ The previous exercises covered individual customization components. This exercis
    echo ""
    echo "Next steps:"
    echo "1. Review and customize AGENTS.md for your project"
-   echo "2. Update .codex/settings.json with your preferences"
+   echo "2. Review ~/.codex/config.toml and adjust defaults"
    echo "3. Run ./scripts/session_start.sh to verify setup"
    echo "═══════════════════════════════════════════════════════════════"
    ```
@@ -246,10 +260,9 @@ The previous exercises covered individual customization components. This exercis
 
    ### During Development
 
-   Work with Codex normally. The hooks will:
-   - Log all tool usage
-   - Block dangerous operations
-   - Auto-format code changes
+   Work with Codex normally. The Git pre-commit hook will:
+   - Run lint/test gates
+   - Block commits on failures
 
    ### Completing Work
 
@@ -273,8 +286,8 @@ The previous exercises covered individual customization components. This exercis
    chmod +x scripts/*.sh
    ```
 
-   ### Hooks blocking operations
-   Check `.codex/logs/tool-usage.log` for details.
+   ### Git hook blocking commits
+   Re-run the failing command locally or edit `.git/hooks/pre-commit` to adjust the checks.
 
    ### MCP server issues
    ```bash
@@ -299,14 +312,12 @@ The previous exercises covered individual customization components. This exercis
 
    ### Configuration
    - [ ] AGENTS.md is read by Codex
-   - [ ] Settings take effect
-   - [ ] Ignore patterns work
+   - [ ] Profile defaults apply (approval_policy, sandbox, features)
+   - [ ] MCP servers work (if configured)
 
-   ### Hooks
-   - [ ] Pre-tool hook logs operations
-   - [ ] Pre-tool hook blocks dangerous commands
-   - [ ] Post-tool hook formats code
-   - [ ] Post-tool hook runs tests
+   ### Git Hooks
+   - [ ] Pre-commit hook runs lint/tests
+   - [ ] Hook blocks commits on failures
 
    ### Scripts
    - [ ] session_start.sh displays context
@@ -339,10 +350,9 @@ The previous exercises covered individual customization components. This exercis
    ./scripts/session_start.sh > /dev/null 2>&1
    echo "  ✅ Passed"
 
-   # Test 2: Hooks exist and are executable
-   echo "Test 2: Hooks configuration"
-   test -x .codex/hooks/pre-tool-use.sh
-   test -x .codex/hooks/post-tool-use.sh
+   # Test 2: Git hook exists and is executable
+   echo "Test 2: Git hook configuration"
+   test -x .git/hooks/pre-commit
    echo "  ✅ Passed"
 
    # Test 3: Validation script
@@ -358,7 +368,7 @@ The previous exercises covered individual customization components. This exercis
    # Test 5: Configuration files
    echo "Test 5: Configuration files"
    test -f AGENTS.md
-   test -f .codex/settings.json
+   test -f ~/.codex/config.toml
    echo "  ✅ Passed"
 
    echo ""
@@ -396,8 +406,8 @@ The previous exercises covered individual customization components. This exercis
 
    ## Adding New Components
 
-   ### New Hook
-   1. Create hook in `.codex/hooks/`
+   ### New Git Hook
+   1. Create hook in `git-hooks/`
    2. Test locally
    3. Update setup.sh to copy it
    4. Document in README.md
@@ -421,14 +431,13 @@ The previous exercises covered individual customization components. This exercis
    - Verify file locations
    - Check for syntax errors
 
-   ### Hooks not running
-   - Verify hook is executable
-   - Check hook output in logs
-   - Test hook manually
+   ### Git hook not running
+   - Verify `.git/hooks/pre-commit` is executable
+   - Run the hook script manually to see errors
 
    ### Quality issues not caught
    - Update validation script
-   - Add new patterns to hooks
+   - Add new checks to the pre-commit hook
    - Strengthen AGENTS.md guidance
 
    ## Deprecation Policy
@@ -481,14 +490,14 @@ Track compatibility in the README:
 Always have a rollback plan:
 ```bash
 # Backup current config
-cp -r .codex .codex.bak
+cp ~/.codex/config.toml ~/.codex/config.toml.bak
 cp AGENTS.md AGENTS.md.bak
 
 # Install new config
 ../codex-config/setup.sh
 
 # If issues, rollback
-rm -rf .codex && mv .codex.bak .codex
+mv ~/.codex/config.toml.bak ~/.codex/config.toml
 mv AGENTS.md.bak AGENTS.md
 ```
 </details>
@@ -506,9 +515,9 @@ mv AGENTS.md.bak AGENTS.md
 Team Repository: codex-config/
 ├── Core Configuration
 │   ├── AGENTS.md         # Project instructions
-│   └── .codex/           # Technical config
+│   └── config/           # config.toml template
 ├── Automation
-│   ├── hooks/            # Pre/post automation
+│   ├── git-hooks/        # Pre-commit automation
 │   └── scripts/          # Workflow scripts
 ├── Knowledge
 │   ├── prompt_templates/ # Tested prompts
@@ -519,7 +528,6 @@ Team Repository: codex-config/
 
 Project Repository: my-project/
 ├── AGENTS.md             # From codex-config
-├── .codex/               # From codex-config
 ├── scripts/              # From codex-config
 └── docs/                 # From codex-config + project-specific
 ```
@@ -550,7 +558,7 @@ Daily Use
 └────────┬────────┘
          ▼
 ┌─────────────────┐
-│ Codex + hooks   │ ──→ Automated quality
+│ Codex + git hook│ ──→ Automated quality
 └────────┬────────┘
          ▼
 ┌─────────────────┐
@@ -562,7 +570,7 @@ Daily Use
 
 1. **Easy installation**: Single command setup
 2. **Clear documentation**: Onboarding guide
-3. **Automated quality**: Hooks enforce standards
+3. **Automated quality**: Git hooks enforce standards
 4. **Maintainability**: Version control and updates
 5. **Team adoption**: Low friction, high value
 
@@ -573,7 +581,7 @@ Daily Use
    ↓
 2. Customize AGENTS.md for project
    ↓
-3. Adjust hooks for team needs
+3. Adjust git hooks for team needs
    ↓
 4. Add project-specific scripts
    ↓
@@ -598,8 +606,8 @@ Daily Use
 
 You've learned:
 - AGENTS.md for project instructions
-- Settings and permission management
-- Hooks for pre/post automation
+- Config and permission management
+- Git hooks and scripts for automation
 - MCP servers for extended capabilities
 - Complete integration and team adoption
 

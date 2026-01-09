@@ -23,18 +23,18 @@ Use this module as an add-on after the core labs. Focus: automation with `codex 
 - Profiles in `config.toml` let you swap defaults (models, approvals, sandbox, features).
 - Example snippet (model names may change; check `codex --help` for current options):
   ```toml
-  [profile.demo]
+  [profiles.demo]
   model = "codex-max"  # or current default model
-  ask_for_approval = true
-  sandbox_mode = "workspace-write"
-  [profile.demo.features]
+  approval_policy = "on-request"
+  sandbox = "workspace-write"
+  [profiles.demo.features]
   skills = true
   project_doc_fallback_filenames = ["TEAM_GUIDE.md"]
   ```
 - Lab idea: run `codex --profile demo --enable skills --cd /tmp/repo` and confirm skills and fallback AGENTS are recognized.
 
 ## Execpolicy advanced
-- Validate rules before use: `codex execpolicy check --rules ~/.codex/rules/training.rules --pretty git push origin main`
+- Validate rules before use: `codex execpolicy check --rules ~/.codex/rules/training.rules --pretty -- git push origin main`
 - Combine rule files with multiple `--rules` flags to see merged decisions.
 - Example “deny network install” rule:
   ```starlark
@@ -53,10 +53,11 @@ Use this module as an add-on after the core labs. Focus: automation with `codex 
 ## MCP client setup
 - Configure servers in `config.toml` (see [MCP integration](https://github.com/openai/codex/blob/main/docs/config.md#mcp-integration)). Example:
   ```toml
-  [[mcp_servers]]
-  name = "example-tools"
+  [mcp_servers.github]
   command = "npx"
-  args = ["example-mcp-server"]
+  args = ["-y", "@modelcontextprotocol/server-github"]
+  env_vars = ["GITHUB_TOKEN"]
+  startup_timeout_sec = 20
   ```
 - After enabling, tools appear in Codex (TUI or exec). Mention timeouts if using MCP inspector with `codex mcp-server`.
 - Lab idea: add a simple server, then ask Codex to list MCP tools and call one.

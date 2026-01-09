@@ -246,7 +246,7 @@ Update module status as you complete them:
 
 ## Codex Workspace
 
-- **`.codex-examples/`** holds sample Codex configuration you can copy into your own `.codex/` folder to jumpstart a session.
+- **`.codex-examples/`** holds sample assets (context, commands, skills) you can reference when building your own setup. For current CLI settings, use `~/.codex/config.toml` and `AGENTS.md`.
 - **`docs/training/codex-cli-hands-on/examples/`** holds sample prompts and rules files used by the training track.
 - **Context files** like `.codex-examples/context.md` describe the current project state. Include them at the start of a session so Codex understands your assumptions without re-reading every detail.
 

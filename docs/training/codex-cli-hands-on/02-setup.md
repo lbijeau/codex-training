@@ -23,6 +23,7 @@ Configuration (see [config docs](https://github.com/openai/codex/blob/main/docs/
 Safety: sandboxing and approvals (see [sandbox docs](https://github.com/openai/codex/blob/main/docs/sandbox.md) and [execpolicy docs](https://github.com/openai/codex/blob/main/docs/execpolicy.md)):
 - Show the workdir and writable roots at session start; explain approval policy.
 - Demonstrate an approval prompt by asking Codex to run a harmless command (e.g., `ls` outside the repo) with approvals on.
+- Remember: `codex exec` is non-interactive and will not prompt for approvals. Use interactive `codex` for approval-driven workflows or set a non-prompting policy for automation.
 - Execpolicy: highlight that repos can define rules to restrict actions.
 
 Environment prep for labs:
