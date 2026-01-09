@@ -38,7 +38,7 @@ export default withMermaid(defineConfig({
   ignoreDeadLinks: true,
   outDir: '.vitepress/dist',
   themeConfig: {
-    logo: `${siteBase}logo.png`,
+    logo: '/logo.png',
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Getting Started', link: '/getting-started' },
