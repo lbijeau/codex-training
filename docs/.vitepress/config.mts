@@ -99,7 +99,7 @@ export default withMermaid(defineConfig({
       { icon: 'github', link: 'https://github.com/lbijeau/codex-training' }
     ],
     footer: {
-      message: 'Independent community project in Alpha. Not affiliated with or endorsed by OpenAI.',
+      message: 'Independent community project in Alpha. Not affiliated with or endorsed by OpenAI. "Codex" is a trademark of OpenAI.',
       copyright: 'Copyright (c) 2026-present Luc Bijeau.'
     }
   }
