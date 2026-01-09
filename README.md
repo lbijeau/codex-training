@@ -1,10 +1,17 @@
+![Codex Training Banner](docs/public/og-image.png)
+
 # Codex CLI Mastery Program
 
-A comprehensive learning journey from experienced user to expert practitioner, covering technical depth, workflow optimization, pattern development, and teaching capability.
+A comprehensive learning journey from experienced user to expert practitioner, covering
+technical depth, workflow optimization, pattern development, and teaching capability.
+
+**[Docs](https://lbijeau.github.io/codex-training/)** |
+**[Start Here](docs/getting-started.md)**
 
 ## Docs Site
 
-The public docs site is built from `docs/`. Start at [docs/index.md](docs/index.md) and use `docs/README.md` for local setup.
+The public docs site is at https://lbijeau.github.io/codex-training/ and is built from
+`docs/`. Start at [docs/index.md](docs/index.md) and use `docs/README.md` for local setup.
 
 ## Philosophy
 

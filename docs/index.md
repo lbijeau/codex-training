@@ -5,6 +5,9 @@ hero:
   name: "Codex Training (Alpha)"
   text: "Master the Codex CLI"
   tagline: "Practical guidance for AI-powered software engineering"
+  image:
+    src: /logo.png
+    alt: Codex Training Logo
   actions:
     - theme: brand
       text: Get Started

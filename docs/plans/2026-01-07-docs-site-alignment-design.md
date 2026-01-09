@@ -3,10 +3,15 @@
 Date: 2026-01-07
 
 ## Goal
-Align codex-training docs structure with gemini-training by adding a public-facing docs site, clearer navigation, and curated entry points, while keeping content changes minimal and relevant.
+Align codex-training docs structure by adding a public-facing docs site, clearer
+navigation, and curated entry points, while keeping content changes minimal and
+relevant.
 
 ## Context
-gemini-training added a VitePress site, a landing page, a cookbook/recipes section, Mermaid diagrams, link hygiene, and repo hygiene updates. codex-training currently has rich markdown content but no docs site tooling.
+Recent docs site improvements added a VitePress site, a landing page, a
+cookbook/recipes section, Mermaid diagrams, link hygiene, and repo hygiene
+updates. codex-training currently has rich markdown content but no docs site
+tooling.
 
 ## Scope
 - Add a VitePress docs site rooted at `docs/` with a landing page and global nav/sidebar.

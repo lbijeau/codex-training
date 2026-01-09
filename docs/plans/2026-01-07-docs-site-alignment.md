@@ -2,7 +2,9 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Add a VitePress docs site and align content structure, navigation, and link hygiene with gemini-training while staying relevant to codex-training.
+**Goal:** Add a VitePress docs site and align content structure, navigation, and link
+hygiene with a consistent public docs standard while staying relevant to
+codex-training.
 
 **Architecture:** Use VitePress with Mermaid support rooted at `docs/`, add a minimal landing page and recipe index that link into existing content, then update navigation, links, and repo hygiene to support a public GitHub Pages site.
 
@@ -17,17 +19,14 @@
 - Review: `docs/exercises/01-getting-started/README.md`
 - Review: `docs/training/codex-cli-hands-on/README.md`
 - Review: `docs/maintainers/README.md`
-- Review (reference): `../gemini-training/docs/.vitepress/config.mts`
-- Review (reference): `../gemini-training/docs/index.md`
-- Review (reference): `../gemini-training/docs/recipes/README.md`
 
 **Step 1: Inspect existing codex-training entry points**
 
 Open the listed codex-training markdown files to understand current navigation and labels.
 
-**Step 2: Inspect gemini-training site structure**
+**Step 2: Inspect target site structure**
 
-Open the listed gemini-training files to mirror the structural patterns.
+Review the target VitePress layout patterns to mirror in codex-training.
 
 **Step 3: Capture navigation mapping**
 
@@ -460,7 +459,7 @@ jobs:
 
 **Step 2: Add student-facing issue templates if missing**
 
-Copy the three templates from gemini-training and adjust wording for Codex.
+Add three student-facing templates and adjust wording for Codex.
 
 **Step 3: Commit**
 
