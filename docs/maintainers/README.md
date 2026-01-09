@@ -1,6 +1,6 @@
 # Maintainer Docs
 
-Internal references for keeping the training materials consistent and up to date.
+Internal resources for maintainers to keep the training materials consistent and up to date. They are not surfaced in the main navigation to avoid confusing learners, but you can reach them via direct links from the modules/exercises that need them.
 
 ## Contents
 - **[Pattern Library](patterns/README.md)**: Reusable patterns and workflows

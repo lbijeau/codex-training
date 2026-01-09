@@ -16,7 +16,6 @@ export default withMermaid(defineConfig({
       { text: 'Modules', link: '/modules/01-getting-started' },
       { text: 'Exercises', link: '/exercises/01-getting-started/README' },
       { text: 'Training', link: '/training/codex-cli-hands-on/README' },
-      { text: 'Maintainers', link: '/maintainers/README' },
       { text: 'Recipes', link: '/recipes/README' }
     ],
     sidebar: [
@@ -59,25 +58,11 @@ export default withMermaid(defineConfig({
         ]
       },
       {
-        text: 'Maintainers',
-        collapsed: true,
-        items: [
-          { text: 'Maintainer Guide', link: '/maintainers/README' },
-          { text: 'Patterns', link: '/maintainers/patterns/README' },
-          { text: 'Playbook', link: '/maintainers/playbook/scenarios' },
-          { text: 'Prompt Templates', link: '/maintainers/prompt_templates/README' }
-        ]
-      },
-      {
         text: 'Recipes',
         collapsed: false,
         items: [
           { text: 'Overview', link: '/recipes/README' },
-          { text: 'Planning', link: '/recipes/planning' },
-          { text: 'Quality', link: '/recipes/quality' },
-          { text: 'Speed', link: '/recipes/speed' },
-          { text: 'Debugging', link: '/recipes/debugging' },
-          { text: 'Integration', link: '/recipes/integration' }
+          { text: 'RAG & Infinite Context', link: '/recipes/rag' }
         ]
       }
     ],

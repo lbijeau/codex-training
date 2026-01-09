@@ -1,12 +1,10 @@
 # Codex CLI Cookbook
 
-Short, outcome-focused guides that point into the core modules and exercises.
-Use these when you need a quick prompt or checklist rather than a full lesson.
+Outcome-focused guides and prompts that connect you to core workflows in the Codex CLI curriculum. These recipes are lighter than full modules—grab one when you want to solve a specific problem without jumping into a full lesson.
 
 ## Available Recipes
 
-- [Planning](./planning.md) - from intent to a focused implementation plan
-- [Quality](./quality.md) - review, testing, and verification workflows
-- [Speed](./speed.md) - faster iterations with structured prompts
-- [Debugging](./debugging.md) - systematic root cause analysis
-- [Integration](./integration.md) - connect Codex to team systems
+- **RAG & Infinite Context** - Retrieval-augmented generation for large projects (`/recipes/rag`)
+
+More recipes (planning, quality, speed, etc.) will land here once they are refreshed for Codex; for now the RAG recipe is the only one in the cookbook.
+- [RAG & Infinite Context](./rag.md) - retrieval-augmented generation for large projects
