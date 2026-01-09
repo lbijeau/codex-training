@@ -16,7 +16,7 @@ export default withMermaid(defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   sitemap: {
-    hostname: `${siteOrigin}/`
+    hostname: siteRootUrl
   },
   head: [
     ['link', { rel: 'icon', type: 'image/png', href: `${siteBase}logo.png` }],
@@ -38,7 +38,7 @@ export default withMermaid(defineConfig({
   ignoreDeadLinks: true,
   outDir: '.vitepress/dist',
   themeConfig: {
-    logo: '/logo.png',
+    logo: `${siteBase}logo.png`,
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Getting Started', link: '/getting-started' },
