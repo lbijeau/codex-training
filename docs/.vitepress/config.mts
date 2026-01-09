@@ -2,14 +2,43 @@ import { defineConfig } from 'vitepress'
 import { withMermaid } from 'vitepress-plugin-mermaid'
 
 const isProd = process.env.NODE_ENV === 'production'
+const siteOrigin = 'https://lbijeau.github.io'
+const siteBasePath = '/codex-training'
+const siteBase = isProd ? `${siteBasePath}/` : '/'
+const siteTitle = 'Codex Training [Alpha]'
+const siteDescription = 'Master the Codex CLI for software engineering'
+const siteRootUrl = `${siteOrigin}${siteBase}`
 
 export default withMermaid(defineConfig({
-  base: isProd ? '/codex-training/' : '/',
-  title: 'Codex Training [Alpha]',
-  description: 'Master the Codex CLI for software engineering',
+  base: siteBase,
+  title: siteTitle,
+  description: siteDescription,
+  cleanUrls: true,
+  lastUpdated: true,
+  sitemap: {
+    hostname: `${siteOrigin}/`
+  },
+  head: [
+    ['link', { rel: 'icon', type: 'image/png', href: `${siteBase}logo.png` }],
+    ['link', { rel: 'apple-touch-icon', href: `${siteBase}logo.png` }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:site_name', content: siteTitle }],
+    ['meta', { property: 'og:title', content: siteTitle }],
+    ['meta', { property: 'og:description', content: siteDescription }],
+    ['meta', { property: 'og:url', content: siteRootUrl }],
+    ['meta', { property: 'og:image', content: `${siteRootUrl}og-image.png` }],
+    ['meta', { property: 'og:image:alt', content: 'Codex Training logo' }],
+    ['meta', { property: 'og:image:width', content: '1200' }],
+    ['meta', { property: 'og:image:height', content: '675' }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:title', content: siteTitle }],
+    ['meta', { name: 'twitter:description', content: siteDescription }],
+    ['meta', { name: 'twitter:image', content: `${siteRootUrl}og-image.png` }]
+  ],
   ignoreDeadLinks: true,
   outDir: '.vitepress/dist',
   themeConfig: {
+    logo: '/logo.png',
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Getting Started', link: '/getting-started' },
