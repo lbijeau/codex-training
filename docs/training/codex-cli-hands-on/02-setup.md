@@ -8,7 +8,7 @@ Prerequisites:
 
 Install Codex CLI (see [official README](https://github.com/openai/codex#readme)):
 - `npm install -g @openai/codex` or `brew install --cask codex`
-- Verify version: `codex --version` (this training validated with v0.72.x)
+- Verify version: `codex --version` (this training validated with v0.77.0)
 
 Sign-in options (see [authentication docs](https://github.com/openai/codex/blob/main/docs/authentication.md)):
 - Preferred: `codex` → **Sign in with ChatGPT**.

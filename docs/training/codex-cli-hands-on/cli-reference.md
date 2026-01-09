@@ -1,11 +1,16 @@
 # Codex CLI + TUI Reference
 
-This page consolidates the local CLI help output and upstream docs for quick lookup. Local source: `codex --help` and `codex exec --help` from codex-cli 0.76.0. Upstream source: `docs/config.md`, `docs/exec.md`, and `docs/slash_commands.md` in the Codex repo. If anything differs, trust `codex --help` for your installed version.
+This page consolidates the local CLI help output and upstream docs for quick lookup. Local source: `codex --help` and `codex exec --help` from codex-cli 0.77.0. Upstream source: `docs/config.md`, `docs/exec.md`, and `docs/slash_commands.md` in the Codex repo. If anything differs, trust `codex --help` for your installed version.
 
 Upstream docs:
 - CLI and exec: https://github.com/openai/codex/blob/main/docs/exec.md
 - Slash commands: https://github.com/openai/codex/blob/main/docs/slash_commands.md
 - Config: https://github.com/openai/codex/blob/main/docs/config.md
+
+Refresh checklist (when bumping versions):
+1) Run `codex --version` and update the version string above.
+2) Capture `codex --help` and `codex exec --help` output and update tables/options.
+3) Spot-check slash commands against the upstream docs.
 
 ## CLI usage
 
