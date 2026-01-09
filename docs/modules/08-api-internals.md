@@ -37,7 +37,7 @@ flowchart TD
 
     subgraph conversation["💬 CONVERSATION LOOP"]
         U[/"USER PROMPT<br/>(your request)"/]
-        A{"ASSISTANT<br/>(text or tool_call)"}
+        A{"ASSISTANT<br/>(text or function_call)"}
         U --> A
     end
 
@@ -52,7 +52,7 @@ flowchart TD
     end
 
     S --> U
-    A -->|"tool_call"| F
+    A -->|"function_call"| F
     R --> A
     A -->|"text response"| FINAL
 
@@ -167,7 +167,7 @@ import json
 
 # Check if Codex wants to call a tool
 for item in response.output or []:
-    if item.type == "tool_call":
+    if item.type == "function_call":
         # Parse arguments (they come as a JSON string)
         args = json.loads(item.arguments or "{}")
 
@@ -180,17 +180,17 @@ for item in response.output or []:
             previous_response_id=response.id,  # Continue from previous response
             input=[
                 {
-                    "type": "tool_call_output",
-                    "tool_call_id": item.id,      # Match the tool call ID
+                    "type": "function_call_output",
+                    "call_id": item.call_id,      # Match the tool call ID
                     "output": json.dumps(result)  # Serialize result to JSON string
                 }
             ]
         )
 ```
 
-> **Note**: The Responses API structure may evolve. Always verify the current request format in the [OpenAI API documentation](https://platform.openai.com/docs). Key fields to check: `previous_response_id`, `tool_call_id`, and the tool output format.
+> **Note**: The Responses API structure may evolve. Always verify the current request format in the [OpenAI API documentation](https://platform.openai.com/docs). Key fields to check: `previous_response_id`, `call_id`, and the tool output format.
 
-> **Note**: A response can include multiple tool calls. In production code, iterate over `response.output` and handle each `tool_call` in order, sending a `tool_call_output` for each `tool_call_id` before continuing.
+> **Note**: A response can include multiple tool calls. In production code, iterate over `response.output` and handle each `function_call` in order, sending a `function_call_output` for each `call_id` before continuing.
 
 Codex now sees the tool result and can continue reasoning.
 
