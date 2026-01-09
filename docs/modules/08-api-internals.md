@@ -166,32 +166,31 @@ After you see a tool call, run the matching tool and send the result back:
 import json
 
 # Check if Codex wants to call a tool
-if response.output and response.output[0].type == "function_call":
-    tool_call = response.output[0]  # Extract tool call details
+for item in response.output or []:
+    if item.type == "tool_call":
+        # Parse arguments (they come as a JSON string)
+        args = json.loads(item.arguments or "{}")
 
-    # Parse arguments (they come as a JSON string)
-    args = json.loads(tool_call.arguments)
+        # Run YOUR implementation of the tool
+        result = list_todos(**args)  # Unpack parsed arguments
 
-    # Run YOUR implementation of the tool
-    result = list_todos(**args)  # Unpack parsed arguments
-
-    # Send the result back using the response ID for continuation
-    follow_up = client.responses.create(
-        model="codex-1",
-        previous_response_id=response.id,  # Continue from previous response
-        input=[
-            {
-                "type": "function_call_output",
-                "call_id": tool_call.call_id,  # Match the tool call ID
-                "output": json.dumps(result)   # Serialize result to JSON string
-            }
-        ]
-    )
+        # Send the result back using the response ID for continuation
+        follow_up = client.responses.create(
+            model="codex-1",
+            previous_response_id=response.id,  # Continue from previous response
+            input=[
+                {
+                    "type": "tool_call_output",
+                    "tool_call_id": item.id,      # Match the tool call ID
+                    "output": json.dumps(result)  # Serialize result to JSON string
+                }
+            ]
+        )
 ```
 
-> **Note**: The Responses API structure may evolve. Always verify the current request format in the [OpenAI API documentation](https://platform.openai.com/docs). Key fields to check: `previous_response_id`, `call_id`, and the tool output format.
+> **Note**: The Responses API structure may evolve. Always verify the current request format in the [OpenAI API documentation](https://platform.openai.com/docs). Key fields to check: `previous_response_id`, `tool_call_id`, and the tool output format.
 
-> **Note**: A response can include multiple tool calls. In production code, iterate over `response.output` and handle each `function_call` in order, sending a `function_call_output` for each `call_id` before continuing.
+> **Note**: A response can include multiple tool calls. In production code, iterate over `response.output` and handle each `tool_call` in order, sending a `tool_call_output` for each `tool_call_id` before continuing.
 
 Codex now sees the tool result and can continue reasoning.
 
@@ -354,7 +353,7 @@ log_tool_call(tool_name, tool_args, json.dumps(result))
 ### The context window
 OpenAI models have finite context windows (e.g., 128K tokens for later Codex models). Each message contributes to this total:
 ```
-Total context = system prompt + user/assistant history + function results + new generation
+Total context = system prompt + user/assistant history + tool results + new generation
 ```
 The window includes both incoming message tokens and the tokens you expect the model to emit, so budget accordingly.
 
@@ -812,7 +811,7 @@ def git_diff(args):
 
 ### Security and secrets
 
-**Never expose secrets in prompts or function results:**
+**Never expose secrets in prompts or tool results:**
 
 ```python
 import os
