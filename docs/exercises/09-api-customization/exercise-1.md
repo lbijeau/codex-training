@@ -1,20 +1,19 @@
-# Exercise 1: Create AGENTS.md & Settings
+# Exercise 1: Create AGENTS.md & Config
 
 ## Objective
 
-Learn to configure Codex for your project using AGENTS.md and settings files.
+Learn to configure Codex for your project using AGENTS.md and config defaults.
 
 ## Background
 
-AGENTS.md is a markdown file that Codex reads at the start of every conversation. Combined with settings files, it shapes how Codex behaves in your specific project context.
+AGENTS.md is a markdown file that Codex reads at the start of every conversation. Combined with config defaults and CLI flags, it shapes how Codex behaves in your specific project context.
 
 ## Part A: Create Project AGENTS.md
 
 **Task**: Write an AGENTS.md file for your current project.
 
-1. Create the file structure:
+1. Create the file:
    ```bash
-   mkdir -p .codex
    touch AGENTS.md
    ```
 
@@ -102,50 +101,30 @@ AGENTS.md is a markdown file that Codex reads at the start of every conversation
    - Testing: jest + react-testing-library
    ```
 
-## Part C: Configure Settings
+## Part C: Configure a Profile
 
-**Task**: Create project-level settings.
+**Task**: Create a config profile for this project.
 
-1. Create the settings file:
+1. Create or edit your global config:
    ```bash
-   mkdir -p .codex
-   touch .codex/settings.json
+   mkdir -p ~/.codex
+   $EDITOR ~/.codex/config.toml
    ```
 
-2. Configure context files:
-   ```json
-   {
-     "context_files": [
-       "docs/architecture.md",
-       "docs/api-spec.md",
-       "AGENTS.md"
-     ],
-     "ignore_patterns": [
-       "node_modules/**",
-       "dist/**",
-       "build/**",
-       "*.min.js",
-       "coverage/**",
-       ".git/**"
-     ]
-   }
+2. Add a profile (example):
+   ```toml
+   [profiles.project-demo]
+   model = "codex-max"
+   approval_policy = "on-request"
+   sandbox = "workspace-write"
+
+   [profiles.project-demo.features]
+   skills = true
    ```
 
-3. Set up permissions (if applicable):
-   ```json
-   {
-     "permissions": {
-       "auto_approve": [
-         "Read",
-         "Glob",
-         "Grep"
-       ],
-       "require_confirmation": [
-         "Bash",
-         "Write"
-       ]
-     }
-   }
+3. Run Codex with that profile:
+   ```bash
+   codex --profile project-demo
    ```
 
 ## Part D: Validate Configuration
@@ -213,15 +192,15 @@ AGENTS.md should include what Codex needs to know, not everything about the proj
 </details>
 
 <details>
-<summary>Hint 3: Global vs project settings</summary>
+<summary>Hint 3: Global vs project configuration</summary>
 
 | Location | Purpose |
 |----------|---------|
+| `~/.codex/config.toml` | Global defaults and profiles |
 | `~/.codex/AGENTS.md` | Personal preferences across all projects |
 | `./AGENTS.md` | Project-specific conventions |
-| `.codex/settings.json` | Project-specific technical settings |
 
-Project settings override global settings.
+Project instructions override global instructions. Profiles help you keep per-project defaults.
 </details>
 
 ---
@@ -301,29 +280,16 @@ It provides team collaboration features and integrates with Slack.
 - Sanitize output to prevent XSS
 ```
 
-### Settings Configuration
+### Config Profile Example
 
-```json
-// .codex/settings.json
-{
-  "context_files": [
-    "AGENTS.md",
-    "docs/architecture.md",
-    "src/types/index.ts"
-  ],
-  "ignore_patterns": [
-    "node_modules/**",
-    "dist/**",
-    "coverage/**",
-    ".git/**",
-    "*.min.js",
-    "*.map"
-  ],
-  "permissions": {
-    "auto_approve": ["Read", "Glob", "Grep"],
-    "require_confirmation": ["Bash", "Write", "Edit"]
-  }
-}
+```toml
+# ~/.codex/config.toml
+[profiles.myapp]
+approval_policy = "on-request"
+sandbox = "workspace-write"
+
+[profiles.myapp.features]
+skills = true
 ```
 
 ### Key Insight

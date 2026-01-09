@@ -61,6 +61,8 @@ codex [OPTIONS] <COMMAND> [ARGS]
 codex exec [OPTIONS] [PROMPT] [COMMAND]
 ```
 
+Note: `codex exec` is non-interactive; it will not pause for approval prompts. Use interactive `codex` when you need approvals.
+
 ### `codex exec` subcommands
 
 | Command | Purpose |
@@ -83,7 +85,7 @@ codex exec [OPTIONS] [PROMPT] [COMMAND]
 ## Common flag combinations
 
 ```
-# Run non-interactive with full-auto approvals and JSONL output
+# Run non-interactive with full-auto sandboxed execution and JSONL output
 codex exec --full-auto --json "summarize this repo"
 
 # Enforce a schema and save the final JSON output
@@ -137,7 +139,7 @@ Config file: `~/.codex/config.toml` (or `$CODEX_HOME/config.toml`). Most commonl
 | `model` | Model name (e.g., `gpt-5.1-codex-max`) |
 | `model_provider` | Provider id (default `openai`) |
 | `approval_policy` | `untrusted`, `on-failure`, `on-request`, `never` |
-| `sandbox_mode` | `read-only`, `workspace-write`, `danger-full-access` |
+| `sandbox` | `read-only`, `workspace-write`, `danger-full-access` |
 | `features.<name>` | Feature flags (`--enable`/`--disable` writes here) |
 | `profiles.<name>.*` | Profile-specific overrides (used with `--profile`) |
 | `mcp_servers.<id>.*` | MCP server config (`command`, `args`, `env`, `url`, `enabled`) |

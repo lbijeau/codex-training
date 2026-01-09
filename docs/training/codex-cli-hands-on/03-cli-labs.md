@@ -38,14 +38,14 @@ Checks:
 Goal: Use non-interactive mode for scripted tasks.
 Steps:
 1) Run: `codex exec --full-auto "add a unit test for hello.py that asserts the greeting contains Hello"`
-2) Review the output - `codex exec` is non-interactive and auto-completes without prompts.
-3) Check that `test_hello.py` (or equivalent) was created with appropriate assertions.
+2) Review the output - `codex exec` is non-interactive and completes without approval prompts.
+3) Check that `test_hello.py` (or equivalent) was created with appropriate assertions; review the diff.
 Checks:
 - Output shows file changes made.
 - Test file appears and assertions match the behavior.
 - Optional: `pytest -q` passes.
 
-> **Note**: `codex exec` does not prompt for approval - use `--full-auto` for writes or configure sandbox permissions.
+> **Note**: `codex exec` does not prompt for approval. `--full-auto` is a convenience alias for `-a on-request` + `--sandbox workspace-write`; if approvals are required, rerun in the interactive TUI.
 
 ## Lab 5: Multi-directory exposure (optional)
 Goal: Demonstrate `--add-dir` for multi-repo work.
