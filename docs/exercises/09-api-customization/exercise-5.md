@@ -135,8 +135,25 @@ The previous exercises covered individual customization components. This exercis
    fi
 
    # Copy config template
-   cp "$SCRIPT_DIR/config/config.toml" "$HOME/.codex/config.toml"
-   echo "✅ Installed ~/.codex/config.toml"
+   CONFIG_FILE="$HOME/.codex/config.toml"
+   if [ -f "$CONFIG_FILE" ] && [ "$2" != "--update" ]; then
+       read -p "config.toml exists at ~/.codex. Back up and overwrite? (y/n) " -n 1 -r
+       echo ""
+       if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+           echo "Keeping existing config.toml"
+           KEEP_CONFIG=true
+       fi
+   fi
+
+   if [ "$KEEP_CONFIG" != true ]; then
+       if [ -f "$CONFIG_FILE" ]; then
+           BACKUP_FILE="$CONFIG_FILE.bak.$(date +%Y%m%d%H%M%S)"
+           cp "$CONFIG_FILE" "$BACKUP_FILE"
+           echo "✅ Backed up config to $BACKUP_FILE"
+       fi
+       cp "$SCRIPT_DIR/config/config.toml" "$CONFIG_FILE"
+       echo "✅ Installed ~/.codex/config.toml"
+   fi
 
    # Copy scripts
    cp "$SCRIPT_DIR/scripts/"* "$TARGET_DIR/scripts/"
