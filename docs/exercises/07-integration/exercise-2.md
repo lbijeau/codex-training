@@ -382,30 +382,13 @@ logger.info(f"Starting helper with args: {args}")
 
 ### Complete Feature Workflow
 
-```
-┌─────────────────┐
-│ session_start   │ → Gather context
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  read_files     │ → Load relevant code
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  [Codex edits]  │ → Make changes
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  run_tests      │ → Verify changes
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│ validate_diff   │ → Safety check
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  gh pr create   │ → Submit work
-└─────────────────┘
+```mermaid
+flowchart TB
+  A[session_start] -->|Gather context| B[read_files]
+  B -->|Load relevant code| C[[Codex edits]]
+  C -->|Make changes| D[run_tests]
+  D -->|Verify changes| E[validate_diff]
+  E -->|Safety check| F[gh pr create]
 ```
 
 ### Advanced Orchestration Pattern

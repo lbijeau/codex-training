@@ -56,9 +56,9 @@ Instruction stack (source + PNG):
 ```mermaid
 graph TB
   subgraph Inputs
-    A[Global AGENTS (~/.codex/AGENTS.md)]
+    A[Global AGENTS - ~/.codex/AGENTS.md]
     B[Project AGENTS root to cwd]
-    C[Skills (names + descriptions)]
+    C[Skills - names + descriptions]
     D[Config.toml flags]
   end
   subgraph Codex
@@ -83,7 +83,7 @@ graph TB
   style Outputs fill:#e8fff3,stroke:#23a36c
 ```
 
-Image: `docs/training/codex-cli-hands-on/diagrams/instruction-stack.png` (SVG: `.../instruction-stack.svg`)
+Image: `docs/training/codex-cli-hands-on/diagrams/instruction-stack.png` (SVG: `docs/training/codex-cli-hands-on/diagrams/instruction-stack.svg`)
 
 Mode map (source + PNG):
 
@@ -119,13 +119,13 @@ flowchart LR
   style P fill:#fef6e4,stroke:#f0a500
 ```
 
-Image: `docs/training/codex-cli-hands-on/diagrams/modes-map.png` (SVG: `.../modes-map.svg`)
+Image: `docs/training/codex-cli-hands-on/diagrams/modes-map.png` (SVG: `docs/training/codex-cli-hands-on/diagrams/modes-map.svg`)
 
 Safety gates (source + PNG):
 
 ```mermaid
 graph TB
-  A[User request] --> B[Instruction stack (AGENTS + skills)]
+  A[User request] --> B[Instruction stack - AGENTS + skills]
   B --> C[Codex plan]
   C --> D[Sandbox rules]
   D --> E[Execpolicy rules]
@@ -133,7 +133,7 @@ graph TB
   F -->|allow| G[Execute command/edit]
   F -->|prompt/deny| H[Revise or skip]
   G --> I[Show diff/results]
-  I --> J[Validation (tests/checks)]
+  I --> J[Validation - tests/checks]
   J --> K[Done]
   H --> C
   style D fill:#f0f4ff,stroke:#6b8cff
@@ -142,4 +142,4 @@ graph TB
   style J fill:#e8fff3,stroke:#23a36c
 ```
 
-Image: `docs/training/codex-cli-hands-on/diagrams/safety-gates.png` (SVG: `.../safety-gates.svg`)
+Image: `docs/training/codex-cli-hands-on/diagrams/safety-gates.png` (SVG: `docs/training/codex-cli-hands-on/diagrams/safety-gates.svg`)

@@ -13,21 +13,14 @@ MCP servers connect Codex to external tools and services—databases, APIs, brow
 **Task**: Map out how MCP servers extend Codex.
 
 1. Study the MCP architecture:
-   ```
-   ┌─────────────────────────────────────────────────────────┐
-   │                        Codex                            │
-   └─────────────────────────┬───────────────────────────────┘
-                             │ MCP Protocol
-           ┌─────────────────┼─────────────────┐
-           ▼                 ▼                 ▼
-   ┌───────────────┐ ┌───────────────┐ ┌───────────────┐
-   │  GitHub MCP   │ │ Postgres MCP  │ │  Custom MCP   │
-   └───────┬───────┘ └───────┬───────┘ └───────┬───────┘
-           │                 │                 │
-           ▼                 ▼                 ▼
-   ┌───────────────┐ ┌───────────────┐ ┌───────────────┐
-   │  GitHub API   │ │   Database    │ │ Your Service  │
-   └───────────────┘ └───────────────┘ └───────────────┘
+   ```mermaid
+   flowchart TB
+     C[Codex] -->|MCP Protocol| GH[GitHub MCP]
+     C -->|MCP Protocol| PG[Postgres MCP]
+     C -->|MCP Protocol| CM[Custom MCP]
+     GH --> GHAPI[GitHub API]
+     PG --> DB[(Database)]
+     CM --> SVC[Your Service]
    ```
 
 2. List common MCP servers and their tools:

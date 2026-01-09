@@ -302,11 +302,10 @@ Running tests after each move...
 ✓ Tests passing after moving sendTicketResponse
 
 Final structure:
-src/email/
-├── index.ts           # Public exports
-├── sender.ts          # Core send function
-├── templates.ts       # Email templates
-└── notifications.ts   # All notification functions
+- src/email/index.ts           # Public exports
+- src/email/sender.ts          # Core send function
+- src/email/templates.ts       # Email templates
+- src/email/notifications.ts   # All notification functions
 ```
 
 #### Pattern: Extract Interface
@@ -422,14 +421,13 @@ Codex: Exploring the codebase...
 
 ## High-Level Structure
 
-    src/
-    ├── api/           # REST endpoints (Express routes)
-    ├── services/      # Business logic layer
-    ├── models/        # Database models (Sequelize)
-    ├── middleware/    # Auth, logging, error handling
-    ├── jobs/          # Background workers (Bull queues)
-    ├── utils/         # Shared utilities
-    └── config/        # Environment configuration
+- src/api/        # REST endpoints (Express routes)
+- src/services/   # Business logic layer
+- src/models/     # Database models (Sequelize)
+- src/middleware/ # Auth, logging, error handling
+- src/jobs/       # Background workers (Bull queues)
+- src/utils/      # Shared utilities
+- src/config/     # Environment configuration
 
 ## Entry Points
 - src/index.ts - Main server startup
@@ -560,131 +558,108 @@ Searching for auth-related code:
 
 Understand how modules relate to identify core vs. peripheral code.
 
-```
-You: "Map the dependencies in this codebase. Which modules
-      are core and which are leaf nodes?"
+**Example prompt**
+
+> You: "Map the dependencies in this codebase. Which modules are core and which are leaf nodes?"
+
+**Example output (excerpt)**
 
 Codex: I'll analyze import statements to build a dependency graph...
 
-Scanning 147 source files...
+**Dependency Analysis**
 
-## Dependency Analysis
+**Core Modules (most depended upon)**:
+- `src/db/connection.ts` — imported by 23 modules
+- `src/utils/logger.ts` — imported by 19 modules
+- `src/config/index.ts` — imported by 18 modules
+- `src/models/User.ts` — imported by 12 modules
+- `src/services/AuthService.ts` — imported by 8 modules
 
-### Core Modules (most depended upon)
-These are imported by many other modules - changes here have wide impact:
+**Leaf Modules (no dependents)**:
+- `src/api/routes/health.ts`
+- `src/jobs/cleanup.ts`
+- `src/scripts/migrate.ts`
+- `src/cli/commands/seed.ts`
 
-    src/db/connection.ts        → imported by 23 modules
-    src/utils/logger.ts         → imported by 19 modules
-    src/config/index.ts         → imported by 18 modules
-    src/models/User.ts          → imported by 12 modules
-    src/services/AuthService.ts → imported by 8 modules
+**Circular Dependencies Found ⚠️**
+- `src/services/OrderService.ts` ↔ `src/services/InventoryService.ts`
+- OrderService imports InventoryService (to check stock)
+- InventoryService imports OrderService (to get pending orders)
+- Recommendation: Extract shared logic to a new module or use events.
 
-### Leaf Modules (no dependents)
-These import others but nothing imports them - safe to modify:
+**Dependency Graph (simplified)**
 
-    src/api/routes/health.ts
-    src/jobs/cleanup.ts
-    src/scripts/migrate.ts
-    src/cli/commands/seed.ts
+```mermaid
+flowchart TB
+  config[config]
+  db[db]
+  models[models]
+  repos[repos]
+  services[services]
+  controllers[controllers]
+  routes[routes]
 
-### Circular Dependencies Found ⚠️
-    src/services/OrderService.ts ←→ src/services/InventoryService.ts
-
-    OrderService imports InventoryService (to check stock)
-    InventoryService imports OrderService (to get pending orders)
-
-    Recommendation: Extract shared logic to a new module or use events.
-
-### Dependency Graph (simplified)
-
-    ┌─────────────┐
-    │   config    │
-    └──────┬──────┘
-           │
-    ┌──────▼──────┐
-    │     db      │
-    └──────┬──────┘
-           │
-    ┌──────▼──────┐     ┌─────────────┐
-    │   models    │◄────│   repos     │
-    └──────┬──────┘     └──────┬──────┘
-           │                   │
-    ┌──────▼───────────────────▼──────┐
-    │           services              │
-    └──────────────┬──────────────────┘
-                   │
-    ┌──────────────▼──────────────────┐
-    │        controllers              │
-    └──────────────┬──────────────────┘
-                   │
-    ┌──────────────▼──────────────────┐
-    │           routes                │
-    └─────────────────────────────────┘
+  config --> db
+  db --> models
+  repos --> models
+  models --> services
+  repos --> services
+  services --> controllers
+  controllers --> routes
 ```
 
 #### Pattern: Data Flow Analysis
 
 Trace how data moves and transforms through the system.
 
-```
-You: "I need to understand how product data flows from
-      the admin dashboard to the customer-facing storefront."
+**Example prompt**
+
+> You: "I need to understand how product data flows from the admin dashboard to the customer-facing storefront."
+
+**Example output (excerpt)**
 
 Codex: I'll trace the product data flow...
 
-## Product Data Flow
-
 ### 1. Data Entry (Admin Dashboard)
 
-    Admin UI (React)
-        │
-        ▼ POST /api/admin/products
-    AdminProductController.create()
-        │
-        ▼ Validates & transforms
-    ProductService.createProduct()
-        │
-        ▼ INSERT INTO products
-    PostgreSQL (products table)
+```mermaid
+flowchart TB
+  AdminUI[Admin UI - React]
+  AdminUI --> Api[POST /api/admin/products]
+  Api --> Controller[AdminProductController.create]
+  Controller --> Validate[Validates & transforms]
+  Validate --> Service[ProductService.createProduct]
+  Service --> DB[(PostgreSQL: products table)]
+```
 
 ### 2. Data Processing (Background)
 
-    ProductCreatedEvent
-        │
-        ├──▶ SearchIndexer.indexProduct()
-        │        │
-        │        ▼
-        │    Elasticsearch (products index)
-        │
-        ├──▶ ImageProcessor.generateThumbnails()
-        │        │
-        │        ▼
-        │    S3 (product-images bucket)
-        │
-        └──▶ CacheWarmer.warmProductCache()
-                 │
-                 ▼
-             Redis (product:{id})
+```mermaid
+flowchart TB
+  Event[ProductCreatedEvent]
+  Event --> Search[SearchIndexer.indexProduct]
+  Search --> ES[(Elasticsearch: products index)]
+  Event --> Images[ImageProcessor.generateThumbnails]
+  Images --> S3[(S3: product-images bucket)]
+  Event --> Cache[CacheWarmer.warmProductCache]
+  Cache --> Redis[(Redis: product:{id})]
+```
 
 ### 3. Data Retrieval (Storefront)
 
-    Customer UI (React)
-        │
-        ▼ GET /api/products/:id
-    ProductController.getProduct()
-        │
-        ▼ Check cache first
-    Redis.get('product:123')
-        │
-        ├── Cache HIT → Return cached data
-        │
-        └── Cache MISS
-                │
-                ▼
-            ProductRepository.findById()
-                │
-                ▼
-            PostgreSQL → Cache → Return
+```mermaid
+flowchart TB
+  CustomerUI[Customer UI - React]
+  CustomerUI --> Get[GET /api/products/:id]
+  Get --> Controller[ProductController.getProduct]
+  Controller --> CacheCheck[Check cache first]
+  CacheCheck --> RedisGet[Redis.get product:123]
+  RedisGet -->|Cache HIT| ReturnHit[Return cached data]
+  RedisGet -->|Cache MISS| Repo[ProductRepository.findById]
+  Repo --> DB[(PostgreSQL)]
+  DB --> Cache[Cache]
+  Cache --> ReturnMiss[Return]
+```
 
 ### Data Transformations
 
@@ -700,7 +675,6 @@ Codex: I'll trace the product data flow...
 - src/services/ProductService.ts (business logic)
 - src/events/productHandlers.ts (async processing)
 - src/transformers/ProductTransformer.ts (DTO mapping)
-```
 
 ---
 
@@ -1745,18 +1719,15 @@ Monolith: legacy-orders.php
 
 First, place a router in front of the monolith. This becomes your
 "strangler" that can direct traffic to either system.
+```
+```mermaid
+flowchart TB
+  Gateway[API Gateway - new]
+  Gateway --> Monolith[Monolith - PHP]
+  Gateway --> Services[New Services]
+```
 
-    ┌─────────────────────────────────────────┐
-    │           API Gateway (new)             │
-    └────────────────┬────────────────────────┘
-                     │
-         ┌───────────┴───────────┐
-         ▼                       ▼
-    ┌─────────┐            ┌─────────┐
-    │ Monolith│            │  New    │
-    │  (PHP)  │            │Services │
-    └─────────┘            └─────────┘
-
+```
 Implementation:
 // api-gateway/routes.js
 const routes = {
@@ -1969,19 +1940,19 @@ export function createDatabase(): DatabaseAdapter {
   return new PostgreSQLAdapter();
 }
 
+```
+
 ## Summary
 
-    Time →
-    ┌────────────────────────────────────────────────────┐
-    │ Direct MySQL │ Abstraction │ Both │ PostgreSQL only │
-    └────────────────────────────────────────────────────┘
-                   ↑            ↑      ↑
-                   │            │      └── Remove MySQL
-                   │            └── Feature flag rollout
-                   └── All callers migrated
+```mermaid
+flowchart LR
+  A[Direct MySQL] --> B[Abstraction] --> C[Both] --> D[PostgreSQL only]
+  M[All callers migrated] -.-> B
+  F[Feature flag rollout] -.-> C
+  R[Remove MySQL] -.-> D
+```
 
 Every commit is deployable. No big bang. No feature branch.
-```
 
 ### Pattern: Dependency Inversion
 
@@ -2026,19 +1997,24 @@ class OrderService {
   }
 }
 
-## Problem Visualization
+```
 
-    OrderService
-        │
-        ├──► StripePayment (concrete)
-        ├──► EmailSender (concrete)
-        └──► InventoryDB (concrete)
+**Problem Visualization**
 
-    Testing OrderService requires:
-    - Real Stripe API (costs money, slow)
-    - Real email server (sends spam)
-    - Real database (complex setup)
+```mermaid
+flowchart TB
+  OS[OrderService]
+  OS --> Stripe[StripePayment - concrete]
+  OS --> Email[EmailSender - concrete]
+  OS --> Inv[InventoryDB - concrete]
+```
 
+**Testing OrderService requires:**
+- Real Stripe API (costs money, slow)
+- Real email server (sends spam)
+- Real database (complex setup)
+
+```
 ## Step 1: Define Interfaces
 
 Create interfaces that describe WHAT you need, not HOW it's done:
@@ -2160,18 +2136,31 @@ test('creates order and charges payment', async () => {
 
 // Tests run in milliseconds, no external services needed!
 
-## After: Inverted Dependencies
+```
 
-    PaymentProvider ◄─── OrderService ───► NotificationService
-          ▲                                        ▲
-          │                                        │
-    StripePayment                           SendGridEmail
-    MockPayment                             MockNotifications
+**After: Inverted Dependencies**
+
+```mermaid
+flowchart LR
+  Order[OrderService]
+  Pay[PaymentProvider]
+  Notif[NotificationService]
+  Stripe[StripePayment]
+  SendGrid[SendGridEmail]
+  MockPay[MockPayment]
+  MockNotif[MockNotifications]
+
+  Order --> Pay
+  Order --> Notif
+  Stripe --> Pay
+  MockPay --> Pay
+  SendGrid --> Notif
+  MockNotif --> Notif
+```
 
 High-level OrderService depends on abstractions.
 Low-level implementations also depend on abstractions.
 Easy to test, easy to swap implementations.
-```
 
 ### Pattern: Performance Budget
 
@@ -2486,7 +2475,7 @@ When reviewing PRs that touch authentication:
 ```
 
 **Mistake 3: Missing Context**
-```markdown
+````markdown
 # Bad
 Run the security scan.
 
@@ -2497,7 +2486,7 @@ npm audit
 ```
 Expected: 0 critical, 0 high vulnerabilities
 If issues found: Check if in our exceptions list (SECURITY_EXCEPTIONS.md)
-```
+````
 
 ### Example: Creating a Security Review Skill
 
@@ -2625,16 +2614,14 @@ Create `contexts/architecture.md` with:
 
 ### Skill Organization for Teams
 
-```
-~/.codex/
-├── superpowers/           # Community skills (read-only)
-└── skills/                # Your team's custom skills
-    ├── security-review.md
-    ├── architecture-exploration.md
-    ├── pre-deploy-checklist.md
-    ├── database-migration.md
-    └── incident-response.md
-```
+`~/.codex/` skill layout:
+- `superpowers/` — Community skills (read-only)
+- `skills/` — Your team's custom skills
+  - `security-review.md`
+  - `architecture-exploration.md`
+  - `pre-deploy-checklist.md`
+  - `database-migration.md`
+  - `incident-response.md`
 
 ### When Patterns Become Skills
 

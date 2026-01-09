@@ -151,7 +151,6 @@ Running: gh pr diff 234
 1. `src/auth/session.ts:45` - JWT secret is hardcoded
    ```typescript
    const secret = "hardcoded-secret";  // Should use env var
-   ```
 
 2. `src/auth/login.ts:23` - No rate limiting on login attempts
 
@@ -204,14 +203,11 @@ expect(error.message).toBe("Invalid email or password");
 
 // To this:
 expect(error.message).toBe("Invalid credentials");
-```
 
 Want me to make this fix and push?
-```
 
 ### Example: Issue Triage
 
-```
 You: "Look at our open bugs and prioritize them"
 
 Codex: I'll fetch and analyze open bug issues.

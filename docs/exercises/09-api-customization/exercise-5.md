@@ -13,28 +13,19 @@ The previous exercises covered individual customization components. This exercis
 **Task**: Build a self-contained customization package.
 
 1. Create the package structure:
-   ```
-   codex-config/
-   ├── README.md
-   ├── setup.sh
-   ├── AGENTS.md
-   ├── config/
-   │   └── config.toml
-   ├── git-hooks/
-   │   └── pre-commit
-   ├── scripts/
-   │   ├── session_start.sh
-   │   ├── session_end.sh
-   │   ├── validate.py
-   │   └── feature_workflow.sh
-   └── docs/
-       ├── prompt_templates/
-       │   ├── README.md
-       │   ├── feature_plan.md
-       │   └── bug_investigation.md
-       └── patterns/
-           └── README.md
-   ```
+   - `codex-config/README.md`
+   - `codex-config/setup.sh`
+   - `codex-config/AGENTS.md`
+   - `codex-config/config/config.toml`
+   - `codex-config/git-hooks/pre-commit`
+   - `codex-config/scripts/session_start.sh`
+   - `codex-config/scripts/session_end.sh`
+   - `codex-config/scripts/validate.py`
+   - `codex-config/scripts/feature_workflow.sh`
+   - `codex-config/docs/prompt_templates/README.md`
+   - `codex-config/docs/prompt_templates/feature_plan.md`
+   - `codex-config/docs/prompt_templates/bug_investigation.md`
+   - `codex-config/docs/patterns/README.md`
 
 2. Create the README:
    ```markdown
@@ -511,59 +502,41 @@ mv AGENTS.md.bak AGENTS.md
 
 ### Complete Integration Architecture
 
-```
-Team Repository: codex-config/
-├── Core Configuration
-│   ├── AGENTS.md         # Project instructions
-│   └── config/           # config.toml template
-├── Automation
-│   ├── git-hooks/        # Pre-commit automation
-│   └── scripts/          # Workflow scripts
-├── Knowledge
-│   ├── prompt_templates/ # Tested prompts
-│   └── patterns/         # Best practices
-└── Deployment
-    ├── setup.sh          # Installation
-    └── docs/             # Documentation
+```mermaid
+flowchart TB
+  subgraph TeamRepo["Team Repository: codex-config/"]
+    AGENTS[AGENTS.md - Project instructions]
+    CONFIG[config/ - config.toml template]
+    HOOKS[git-hooks/ - Pre-commit automation]
+    SCRIPTS[scripts/ - Workflow scripts]
+    PROMPTS[prompt_templates/ - Tested prompts]
+    PATTERNS[patterns/ - Best practices]
+    SETUP[setup.sh - Installation]
+    DOCS[docs/ - Documentation]
+  end
 
-Project Repository: my-project/
-├── AGENTS.md             # From codex-config
-├── scripts/              # From codex-config
-└── docs/                 # From codex-config + project-specific
+  subgraph ProjectRepo["Project Repository: my-project/"]
+    PAGENTS[AGENTS.md - From codex-config]
+    PSCRIPTS[scripts/ - From codex-config]
+    PDOCS[docs/ - From codex-config + project-specific]
+  end
 ```
 
 ### Integration Flow
 
-```
-Setup
-  │
-  ▼
-┌─────────────────┐
-│  setup.sh run   │ ──→ Install configuration
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Customize files │ ──→ Project-specific tweaks
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Verify setup    │ ──→ Run session_start.sh
-└────────┬────────┘
-         ▼
-Daily Use
-  │
-  ▼
-┌─────────────────┐
-│ session_start   │ ──→ Context loading
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ Codex + git hook│ ──→ Automated quality
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│  session_end    │ ──→ Verification
-└─────────────────┘
+```mermaid
+flowchart TB
+  subgraph Setup
+    S1[setup.sh run] -->|Install configuration| S2[Customize files]
+    S2 -->|Project-specific tweaks| S3[Verify setup]
+  end
+
+  subgraph DailyUse["Daily Use"]
+    D1[session_start] -->|Context loading| D2[Codex + git hook]
+    D2 -->|Automated quality| D3[session_end]
+  end
+
+  S3 --> D1
 ```
 
 ### Key Success Factors
@@ -576,18 +549,15 @@ Daily Use
 
 ### Customization Pattern
 
-```
-1. Start with base configuration
-   ↓
-2. Customize AGENTS.md for project
-   ↓
-3. Adjust git hooks for team needs
-   ↓
-4. Add project-specific scripts
-   ↓
-5. Document customizations
-   ↓
-6. Share learnings back to team
+```mermaid
+flowchart TB
+  A[Start with base configuration]
+  B[Customize AGENTS.md for project]
+  C[Adjust git hooks for team needs]
+  D[Add project-specific scripts]
+  E[Document customizations]
+  F[Share learnings back to team]
+  A --> B --> C --> D --> E --> F
 ```
 
 </details>

@@ -102,12 +102,10 @@ Codex configuration is managed through `~/.codex/config.toml` and runtime flags,
 
 ### Configuration Location
 
-```
-~/.codex/
-├── config.toml         # CLI configuration (approval policy, sandbox, profiles)
-├── AGENTS.md           # Global instructions
-└── skills/             # Custom skills (optional, see Module 2)
-```
+`~/.codex/` contains:
+- `config.toml` — CLI configuration (approval policy, sandbox, profiles)
+- `AGENTS.md` — Global instructions
+- `skills/` — Custom skills (optional, see Module 2)
 
 ### Permission Management
 
@@ -123,11 +121,9 @@ Verified with Codex CLI v0.77.0.
 
 You can create project-specific AGENTS.md files to customize Codex behavior per project:
 
-```
-project-root/
-├── AGENTS.md           # Project-specific instructions (read by Codex)
-└── src/
-```
+`project-root/` contains:
+- `AGENTS.md` — Project-specific instructions (read by Codex)
+- `src/`
 
 The project-level `AGENTS.md` is automatically combined with your global `~/.codex/AGENTS.md`, with project instructions taking precedence.
 
@@ -248,23 +244,15 @@ MCP (Model Context Protocol) servers extend Codex with new capabilities by conne
 
 ### What MCP Servers Do
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                     Codex                          │
-└─────────────────────────┬───────────────────────────────┘
-                          │
-          ┌───────────────┼───────────────┐
-          ▼               ▼               ▼
-    ┌──────────┐    ┌──────────┐    ┌──────────┐
-    │ Database │    │  GitHub  │    │  Slack   │
-    │   MCP    │    │   MCP    │    │   MCP    │
-    └──────────┘    └──────────┘    └──────────┘
-          │               │               │
-          ▼               ▼               ▼
-    ┌──────────┐    ┌──────────┐    ┌──────────┐
-    │ Postgres │    │ GitHub   │    │  Slack   │
-    │          │    │   API    │    │   API    │
-    └──────────┘    └──────────┘    └──────────┘
+```mermaid
+flowchart TB
+  C[Codex]
+  C --> DBM[Database MCP]
+  C --> GHM[GitHub MCP]
+  C --> SLM[Slack MCP]
+  DBM --> PG[Postgres]
+  GHM --> GHAPI[GitHub API]
+  SLM --> SLAPI[Slack API]
 ```
 
 MCP servers give Codex new tools:

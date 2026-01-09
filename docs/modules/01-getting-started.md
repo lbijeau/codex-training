@@ -21,15 +21,14 @@ This module gets you productive with Codex CLI in under an hour. You'll install 
 
 Codex CLI is a terminal-based AI assistant that can read your code, make changes, and run commands—with your approval. Unlike chat interfaces, Codex works directly in your codebase.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  You: "Add input validation to the login form"              │
-├─────────────────────────────────────────────────────────────┤
-│  Codex reads your code                                       │
-│  Codex proposes changes                                      │
-│  You approve or reject                                       │
-│  Changes applied to your files                               │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+  U["You: Add input validation to the login form"]
+  R[Codex reads your code]
+  P[Codex proposes changes]
+  A[You approve or reject]
+  C[Changes applied to your files]
+  U --> R --> P --> A --> C
 ```
 
 **Key difference from ChatGPT/Claude web**: Codex has direct access to your filesystem and can execute commands. That's powerful—and why it has a safety model.

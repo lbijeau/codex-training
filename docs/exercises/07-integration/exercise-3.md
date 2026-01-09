@@ -453,30 +453,13 @@ jobs:
 
 ### Complete CI Pipeline
 
-```
-┌─────────────────┐
-│   PR Created    │
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│   Lint Check    │──→ Fail fast on style
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│   Type Check    │──→ Catch type errors
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│     Tests       │──→ Verify behavior
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│   Security      │──→ Audit dependencies
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│ Validation Pass │──→ Ready for review
-└─────────────────┘
+```mermaid
+flowchart TB
+  A[PR Created] --> B[Lint Check]
+  B -->|Fail fast on style| C[Type Check]
+  C -->|Catch type errors| D[Tests]
+  D -->|Verify behavior| E[Security]
+  E -->|Audit dependencies| F["Validation Pass\nReady for review"]
 ```
 
 ### Integration Pattern

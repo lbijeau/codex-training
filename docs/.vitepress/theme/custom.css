@@ -1,0 +1,46 @@
+.codex-prompt {
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 16px 0;
+  background: var(--vp-c-bg);
+}
+
+.codex-prompt__tabs {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
+}
+
+.codex-prompt__tab {
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  cursor: pointer;
+}
+
+.codex-prompt__tab[aria-selected="true"] {
+  border-color: var(--vp-c-divider);
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+}
+
+.codex-prompt__panel {
+  padding: 12px 16px;
+}
+
+.codex-prompt__raw {
+  margin: 0;
+  padding: 12px 16px;
+  overflow-x: auto;
+  background: var(--vp-c-bg);
+}
+
+.codex-prompt__raw code {
+  white-space: pre;
+}

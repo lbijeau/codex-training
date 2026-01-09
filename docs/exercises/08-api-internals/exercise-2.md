@@ -85,9 +85,12 @@ Ask yourself: "Does this operation need information from the previous operation?
 <details>
 <summary>Hint 3: Execution flow diagram</summary>
 
-Use ASCII art to map out the flow:
-```
-[Grep for imports] → [Read file1, file2, file3 in parallel] → [Grep each for validateToken] → [Read implementation]
+Use Mermaid to map out the flow:
+```mermaid
+flowchart LR
+  A[Grep for imports] --> B[Read file1, file2, file3 in parallel]
+  B --> C[Grep each for validateToken]
+  C --> D[Read implementation]
 ```
 </details>
 

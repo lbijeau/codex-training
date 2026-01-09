@@ -502,16 +502,12 @@ Effective Codex sessions start with context and end with verification. Automatio
 <summary>Hint 1: Script organization</summary>
 
 Organize scripts by purpose:
-```
-scripts/
-├── session_start.sh    # Context gathering
-├── session_end.sh      # Verification
-├── validate.py         # Quality checks
-├── feature_workflow.sh # Complete workflow
-└── helpers/
-    ├── git_utils.sh
-    └── test_utils.sh
-```
+- `scripts/session_start.sh` — Context gathering
+- `scripts/session_end.sh` — Verification
+- `scripts/validate.py` — Quality checks
+- `scripts/feature_workflow.sh` — Complete workflow
+- `scripts/helpers/git_utils.sh`
+- `scripts/helpers/test_utils.sh`
 </details>
 
 <details>
@@ -553,33 +549,19 @@ BRANCH=$(git branch --show-current)
 
 ### Complete Script Suite
 
-```
-scripts/
-├── session_start.sh    # Run at session start
-├── session_end.sh      # Run at session end
-├── validate.py         # Quality validation
-├── feature_workflow.sh # Complete workflow
-└── README.md           # Script documentation
-```
+- `scripts/session_start.sh` — Run at session start
+- `scripts/session_end.sh` — Run at session end
+- `scripts/validate.py` — Quality validation
+- `scripts/feature_workflow.sh` — Complete workflow
+- `scripts/README.md` — Script documentation
 
 ### Integration Points
 
-```
-┌─────────────────┐
-│ session_start   │ ──→ Gather context
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  Codex Session  │ ──→ Development work
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│    validate     │ ──→ Quality checks
-└────────┬────────┘
-         ↓
-┌─────────────────┐
-│  session_end    │ ──→ Summary + commit
-└─────────────────┘
+```mermaid
+flowchart TB
+  A[session_start] -->|Gather context| B[Codex Session]
+  B -->|Development work| C[validate]
+  C -->|Quality checks| D[session_end]
 ```
 
 ### Script Best Practices
@@ -600,16 +582,14 @@ Automation scripts create a consistent, reliable workflow:
 
 ### Workflow Pattern
 
-```
-1. Start session (context)
-   ↓
-2. Do work (with Codex)
-   ↓
-3. Validate (automated)
-   ↓
-4. End session (summary)
-   ↓
-5. Commit (if ready)
+```mermaid
+flowchart TB
+  A[Start session - context]
+  B[Do work - with Codex]
+  C[Validate - automated]
+  D[End session - summary]
+  E[Commit - if ready]
+  A --> B --> C --> D --> E
 ```
 
 </details>

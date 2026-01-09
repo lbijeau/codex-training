@@ -32,23 +32,23 @@ Think of it as a structured turn-taking system where Codex only knows what you f
 ```mermaid
 flowchart TD
     subgraph init["🔧 INITIALIZATION"]
-        S[/"SYSTEM MESSAGE<br/>(tone, constraints, context)"/]
+        S["SYSTEM MESSAGE\ntone, constraints, context"]
     end
 
     subgraph conversation["💬 CONVERSATION LOOP"]
-        U[/"USER PROMPT<br/>(your request)"/]
-        A{"ASSISTANT<br/>(text or function_call)"}
+        U["USER PROMPT\nyour request"]
+        A{"ASSISTANT\ntext or function_call"}
         U --> A
     end
 
     subgraph toolexec["⚡ TOOL EXECUTION"]
-        F["YOUR CODE RUNS<br/>(execute the tool)"]
-        R[/"TOOL RESULT<br/>(JSON response)"/]
+        F["YOUR CODE RUNS\nexecute the tool"]
+        R["TOOL RESULT\nJSON response"]
         F --> R
     end
 
     subgraph response["✅ FINAL OUTPUT"]
-        FINAL["ASSISTANT RESPONSE<br/>(uses result to respond)"]
+        FINAL["ASSISTANT RESPONSE\nuses result to respond"]
     end
 
     S --> U

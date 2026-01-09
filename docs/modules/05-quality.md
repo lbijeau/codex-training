@@ -29,7 +29,7 @@ Different review methods catch different problems:
 No single layer catches everything. Stack them.
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph layer1["⚡ LAYER 1: AUTOMATED"]
         L1["Formatters"]
         L2["Linters"]
@@ -299,7 +299,7 @@ codex "Summarize all changes for my PR description"
 TDD isn't about testing—it's about design. Writing tests first forces you to think about the interface before the implementation.
 
 ```mermaid
-flowchart LR
+flowchart TB
     RED["🔴 RED\nWrite failing test"]
     GREEN["🟢 GREEN\nMinimal code to pass"]
     REFACTOR["🔵 REFACTOR\nImprove quality"]
@@ -567,29 +567,33 @@ Help me test each layer in isolation."
 Quality gates prevent bad code from progressing. Each gate must pass before moving forward.
 
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph gate1["📋 GATE 1"]
+        direction TB
         G1["Pre-Implementation"]
-        G1a["Requirements clear?"]
-        G1b["Edge cases identified?"]
+        G1 --> G1a["Requirements clear?"]
+        G1a --> G1b["Edge cases identified?"]
     end
 
     subgraph gate2["🔨 GATE 2"]
+        direction TB
         G2["During Implementation"]
-        G2a["Tests with code?"]
-        G2b["Small commits?"]
+        G2 --> G2a["Tests with code?"]
+        G2a --> G2b["Small commits?"]
     end
 
     subgraph gate3["✅ GATE 3"]
+        direction TB
         G3["Pre-Commit"]
-        G3a["All tests pass?"]
-        G3b["Lint clean?"]
+        G3 --> G3a["All tests pass?"]
+        G3a --> G3b["Lint clean?"]
     end
 
     subgraph gate4["🚀 GATE 4"]
+        direction TB
         G4["Pre-PR"]
-        G4a["Coverage adequate?"]
-        G4b["Docs updated?"]
+        G4 --> G4a["Coverage adequate?"]
+        G4a --> G4b["Docs updated?"]
     end
 
     START["💡 Idea"] --> gate1 --> gate2 --> gate3 --> gate4 --> MERGE["🎉 Merged!"]
@@ -746,26 +750,27 @@ Keep asking why until we find the root cause."
 
 For complex bugs, map all possible causes:
 
-```
-Login Failure
-├── Authentication Issue
-│   ├── Invalid credentials
-│   │   ├── Wrong password
-│   │   └── Account doesn't exist
-│   ├── Account locked
-│   └── 2FA failure
-├── Token Issue
-│   ├── Token expired
-│   ├── Token malformed
-│   └── Wrong signing key
-├── Infrastructure Issue
-│   ├── Database unreachable
-│   ├── Redis cache miss
-│   └── Network timeout
-└── Client Issue
-    ├── CORS blocked
-    ├── Cookie not sent
-    └── JavaScript error
+```mermaid
+flowchart TB
+  Root[Login Failure]
+  Root --> Auth[Authentication Issue]
+  Auth --> Creds[Invalid credentials]
+  Creds --> WrongPassword[Wrong password]
+  Creds --> MissingAccount[Account doesn't exist]
+  Auth --> Locked[Account locked]
+  Auth --> TwoFA[2FA failure]
+  Root --> Token[Token Issue]
+  Token --> Expired[Token expired]
+  Token --> Malformed[Token malformed]
+  Token --> WrongKey[Wrong signing key]
+  Root --> Infra[Infrastructure Issue]
+  Infra --> DB[Database unreachable]
+  Infra --> Redis[Redis cache miss]
+  Infra --> Network[Network timeout]
+  Root --> Client[Client Issue]
+  Client --> CORS[CORS blocked]
+  Client --> Cookie[Cookie not sent]
+  Client --> JS[JavaScript error]
 ```
 
 ```bash
